@@ -1,0 +1,184 @@
+
+ 
+#store-name {
+    font-family: 'Josefin Sans', sans-serif;
+    text-align: center;
+    margin: auto;
+    padding-top: 5px;
+    padding-bottom: 5px;;
+    padding-left: 95px;
+    letter-spacing: 12px;
+    font-size: 50px;
+}
+
+#header-info {
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 0px;
+    margin: 0 40px;
+}
+
+#header-info p {
+    letter-spacing: 2px;
+    margin: 0px 15px;
+    font-size: 15px;
+}
+
+#nav-bar {
+    background-color: black;
+    overflow: hidden;
+    width: 100%;
+    padding: 8px 0px;
+    text-align: center;
+    font-family: 'Barlow Semi Condensed', sans-serif
+}
+
+#nav-bar a {
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    overflow: hidden;
+    font-size: 18px;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: white;
+    padding: 5px 50px;
+    border-left: 5px solid white;
+}
+
+#nav-bar a:hover {
+    background-color: white;
+    color: black;
+}
+
+#three-box-info {
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    display: flex;
+    justify-content: center;
+}
+
+#box-one {
+    background-color: #A0EBFB;
+    width: 200px;
+    height: 100px;
+    margin: 5px 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#sale {
+    width: 50px;
+    margin: 0 5px;
+}
+
+#box-two {
+    background-color: #A0EBFB;
+    width: 200px;
+    height: 100px;
+    margin: 5px 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#delivery {
+    width: 50px;
+    margin: 0px 15px;
+}
+
+#box-three {
+    background-color: #A0EBFB;
+    width: 200px;
+    height: 100px;
+    margin: 5px 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#box-three p {
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 3px;
+    padding: 15px 15px;
+    border: 5px dashed white;
+}
+
+.logo{
+
+  width: 80px;
+  height: 80px;
+}
+
+.card{
+  width: 200px;
+  height: 250px;
+  margin: 10px;
+}
+
+.row{
+  display: flex;
+}
+
+
+/*footer*/
+footer {
+    background-color: #333;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+    /* position: fixed; */
+    bottom: 0;
+    width: 100%;
+   margin-top: 150px;
+  }
+  
+  .footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .footer-logo {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .footer-links { 
+    margin: 0;
+    padding: 0;
+  }
+  
+  .footer-links li {
+    margin-right: 20px;
+    margin-top: 20px;
+    list-style: none;
+  }
+  
+  .footer-links a {
+    text-decoration: none;
+    color: #fff;
+    transition: color 0.3s ease;
+  }
+  
+  .footer-links a:hover {
+    color: #ffd700; /* Change color on hover, you can use your preferred color */
+  }
+  
+  .social-icons{
+    width: 200px;
+    height: 50px;
+    display: flex;
+    margin-top: 20px;
+  }
+  
+  .icon-div{
+    margin-right: 20px;
+  }
+   
+  

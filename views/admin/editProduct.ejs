@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Product</title>
+    <link rel="stylesheet" href="/stylesheets/admin/editProduct.css" />
+  </head>
+  <body>
+    <div class="title">
+      <h2>Edit Product Form</h2>
+    </div>
+    <div class="main">
+      <form
+        action="/admin/editproduct/<%=items._id%>"
+        method="post"
+        enctype="multipart/form-data"
+      >
+        <label for="productName">Product Name:</label>
+        <input
+          type="text"
+          id="productName"
+          name="name"
+          placeholder="<%=items.name%>"
+        />
+
+        <label for="Category">Category:</label>
+        <select id="Category" name="category">
+          <% category.forEach((category) => { %>
+          <option><%= category.categoryName %></option>
+          <% }); %>
+        </select>
+
+        <label for="images">Images:</label>
+        <input
+          class="form-control"
+          type="file"
+          id="images"
+          name="productImage"
+          accept="image/*"
+          multiple
+          required
+        />
+
+        <label for="description">Description:</label>
+        <textarea
+          id="description"
+          name="description"
+          placeholder="<%=items.description%>"
+        ></textarea>
+
+        <label for="rating">Rating:</label>
+        <input
+          type="number"
+          id="rating"
+          name="rating"
+          step="1"
+          placeholder="<%=items.rating%>"
+        />
+
+        <label for="price">Price:</label>
+        <input
+          type="number"
+          id="price"
+          name="price"
+          placeholder="<%=items.price%>"
+        />
+
+        <label for="discount">Discount:</label>
+        <input
+          type="number"
+          id="discount"
+          name="discount"
+          step="0.01"
+          placeholder="<%=items.discount%>"
+        />
+
+        <label for="stock">Stock:</label>
+        <input
+          type="number"
+          id="stock"
+          name="stock"
+          step="1"
+          placeholder="<%=items.stock%>"
+        />
+
+        <!-- Removed increase/decrease buttons for price and discount -->
+        <div>
+          <button type="submit">Submit</button>
+
+          <button type="button">Cancel</button>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      function cancelForm() {
+        // Add logic to handle cancel action
+        alert("Form canceled");
+      }
+    </script>
+  </body>
+</html>

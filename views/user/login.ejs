@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/stylesheets/user/login.css" />
+  </head>
+  <body>
+    <div class="login-container">
+      <form action="/userlogin" method="post">
+        <h2>
+          Login <br />
+          <small style="color: red"><%=locals.error%></small>
+        </h2>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" />
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" />
+        <button type="submit">Login</button>
+        <div class="row justify-content-center">
+          <div class="col-md-12 text-center" style="margin-top: 30px">
+            <!-- <h6>
+              <a href="forgotPassword.ejs">Forgot password?</a>
+            </h6> -->
+            <button>New user? <a href="/signup">Register here</a></button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

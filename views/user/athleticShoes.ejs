@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/stylesheets/user/athletic.css">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+   
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <body>
+        <header>
+          <div id="header-info">
+            <!-- <p id="contactus">Contact Us</p> -->
+            <img src="/img/siteLogo1.png" class="logo" />
+            <h1 id="store-name">STEPUP SHOES</h1>
+            <p id="signin">LOGOUT</p>
+            <img src="" id="sign-in-icon" />
+            <p id="addtocart">Add to cart</p>
+            <img src="" id="cart-icon" />
+          </div>
+    
+          <nav id="nav-bar">
+            <a href="">Home</a>
+            <a href="">Athletic shoes</a>
+            <a href="">Boots</a>
+            <a href="">Sneekers</a>
+            <img src="" id="search-icon" />
+          </nav>
+        </header>
+
+       
+       <!--BODY SECTION-->
+       <div class="container-fluid">
+        <br />
+        <h1>ATHLETIC SHOES</h1>
+        <div class="row gy-3">
+          <% productList.forEach((product) => { %>
+            <% if (product.isListed) { %>
+              <div class="col-md-4">
+                <div class="card">
+                  <img src="<%= product.productImage %>" class="card-img-top" alt="..." />
+                  <div class="card-body">
+                    <p class="card-text">
+                      <%= product.name %>
+                    </p>
+                    <h5 class="card-title"><%= product.price %></h5>
+                    <a href="/admin/athleticshoes/<%= product._id %>" class="btn btn-sm btn-success">Buy now</a>
+                    <i class="fa-regular fa-heart fa-xl"></i>
+                  </div>
+                </div>
+              </div>
+            <% } %>
+          <% }) %>
+        </div>
+      </div>
+      
+
+      
+   <!--FOOTER SECTION-->
+   <footer>
+    <div class="footer-content">
+      <div class="footer-logo">
+        <img src="/img/siteLogo2.jpeg" class="logo" />
+      </div>
+      <h2>FOLLOW US</h2>
+      <div class="social-icons">
+        <div class="icon-div">
+          <a href="#" class="icon"><i class="fa-brands fa-facebook fa-xl" style="color: #f1f3f3;"></i></a>
+        </div>
+        <div class="icon-div">
+          <a href="#" class="icon"><i class="fa-brands fa-twitter fa-xl" style="color: #f1f3f3;"></i></a>
+        </div>
+         <div class="icon-div">
+        <a href="#" class="icon"><i class="fa-brands fa-instagram fa-xl" style="color: #f1f3f3;"></i></i></a>
+         </div>
+         <div class="icon-div">
+          <a href="#" class="icon"><i class="fa-brands fa-youtube fa-xl" style="color: #f1f3f3;"></i></a>
+         </div>         
+      </div>
+      <ul class="footer-links">
+        <li><a href="#">FAQS</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Shippping and Delivery</a></li>
+        <li><a href="#">Payments</a></li>
+      </ul>
+    </div>
+    <p>&copy; 2024 Your Company. All rights reserved.</p>
+  </footer>
+
+    
+</body>
+</html>

@@ -1,0 +1,109 @@
+<html>
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/stylesheets/admin/userManage.css" />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+  </head>
+
+  <body>
+    <main>
+      <header>
+        <h2>Admin Dashboard</h2>
+        <form action="/admin/adminlogout" method="post">
+          <button class="logout">LOGOUT</button>
+        </form>
+      </header>
+      <section class="row">
+        <article class="col-md-3 article-left">
+          <img src="/img/admin/adminlogo.png" />
+          <h2 class="text-center title">Admin Dashboard</h2>
+          <ul class="fa-ul">
+            <li>
+              <a href="/admin/dashboard">Dashboard</a>
+            </li>
+            <li>
+              <a href="/admin/usermanage">User</a>
+            </li>
+            <li>
+              <a href="/admin/productmanage">Product</a>
+            </li>
+            <li>
+              <a href="/admin/category">Category</a>
+            </li>
+            <li>
+              <a href="#">Order and Payment</a>
+            </li>
+            <li>
+              <a href="#">Sales Report</a>
+            </li>
+            <li>
+              <a href="#">Banners</a>
+            </li>
+            <li>
+              <a href="#">Coupons</a>
+            </li>
+          </ul>
+        </article>
+        <article class="col-md-9 article-right">
+          <h1>Customer Details</h1>
+          <hr />
+
+          <table>
+            <thead>
+              <tr>
+                <th>name</th>
+                <th>email</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (userFind && userFind.length> 0) { %> <%
+              userFind.forEach((userFin)=> { %>
+              <tr>
+                <td><%= userFin.name %></td>
+                <td><%= userFin.email %></td>
+                <td>
+                  <form
+                    action="/admin/blockuser/<%= userFin._id %>"
+                    method="POST"
+                  >
+                    <button
+                      id="myButton"
+                      type="submit"
+                      class="toggle-button <%= userFin.isBlocked ? 'unblocked-user' : 'blocked-user' %>"
+                    >
+                      <% if (userFin.isBlocked) { %> Unblock User <% } else { %>
+                      Block User <% } %>
+                    </button>
+                  </form>
+                </td>
+              </tr>
+              <% }); %> <% } else { %>
+              <tr>
+                <td colspan="3">No users found</td>
+              </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </article>
+      </section>
+    </main>
+
+    <!--JS-->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

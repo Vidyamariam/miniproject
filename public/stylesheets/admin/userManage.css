@@ -1,0 +1,205 @@
+/* Reset some default styles */
+body, h1, h2, h3, p, ul, li {
+	margin: 0;
+	padding: 0;
+  }
+  
+  body {
+	font-family: 'Arial', sans-serif;
+	background-color: #f4f4f4;
+	font-family: 'Josefin Sans', sans-serif;
+    overflow-y: scroll;
+  }
+  
+  main {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+	flex: 1; /* Allow main section to take remaining height */
+  overflow-y: auto;
+  }
+  
+  header {
+	background-color: #333;
+	color: white;
+	text-align: center;
+	padding: 10px 0;
+	position: fixed;
+	width: 100%;
+	z-index: 1;
+	top: 0;
+  }
+
+  header button{
+	background-color: #333;
+	color: white;
+	border: none;
+  }
+
+   .logout {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    /* You can add additional styling as needed */
+  } 
+ 
+  .row {
+	display: flex;
+	flex: 1;
+  }
+  
+  .article-left {
+	flex: 1;
+	background-color: #333;
+	color: white;
+	padding: 20px;
+	text-align: center;
+	z-index: 1;
+	height: calc(100vh - 40px); /* 40px is the header height */
+	overflow-y: auto; /* Enable scrolling for the left article */
+  
+  }
+  
+  .article-left i {
+	color: #ff4081;
+  }
+  
+  .article-left h2 {
+	font-size: 24px;
+	margin-top: 10px;
+  }
+  
+  .article-left ul {
+	list-style-type: none;
+	padding: 0;
+	margin-top: 20px;
+  }
+  
+  .article-left li {
+	margin-bottom: 70px;
+  }
+  
+  .article-left a {
+	color: white;
+	text-decoration: none;
+	font-size: 18px;
+  }
+  
+  .article-left a:hover {
+	text-decoration: underline;
+  }
+  
+  .article-right {
+	flex: 3;
+	padding: 20px;
+	overflow-y: auto; /* Enable scrolling for the right article */
+	max-height: 80vh; /* Adjust the maximum height as needed */
+  }
+  
+  .article-right h1 {
+	font-size: 28px;
+  }
+  
+  hr {
+	border: 1px solid #ddd;
+	margin-top: 20px;
+	margin-bottom: 20px;
+  }
+
+.article-left img{        
+	width: 60px;
+	height: 60px;
+  }
+
+  /*table*/
+  table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: 20px;
+	overflow-y: auto; 
+	
+  }
+  thead tr th{
+	padding-left: 60px;
+	padding-right: 60px;
+  }
+
+  thead, tbody {
+	display: block; /* Separate the header and body */
+  }
+  
+  tbody {
+	max-height: 60vh; /* Adjust the maximum height of the tbody as needed */
+	overflow-y: auto; /* Enable scrolling for the tbody */
+  }
+  
+
+  th, td {
+	padding: 12px;
+	text-align: left;
+	border-bottom: 1px solid #ddd;
+	width: 20%; /* Adjust the column width as needed */
+  }
+
+  th {
+	background-color: #f2f2f2;
+  }
+
+  tr:hover {
+	background-color: #f5f5f5;
+  }
+
+  /*block/unblock*/
+  .block-btn {
+	background-color: #4CAF50;
+	color: white;
+	padding: 10px 20px;
+	font-size: 16px;
+	border: none;
+	cursor: pointer;
+	border-radius: 5px;
+  }
+
+  .blocked {
+	background-color: #f44336;
+  }
+
+  .block-btn:hover {
+	background-color: #45a049;
+  }
+
+  /*Delete icon*/
+  .delete-icon {
+	color: #ff0000; /* Red color for delete icon */
+	font-size: 24px;
+	cursor: pointer;
+  }
+
+  .delete-icon:hover {
+	color: #cc0000; /* Darker red color on hover */
+  }
+
+  /* //toggle-button */
+  .toggle-button {
+	padding: 10px 20px;
+	font-size: 16px;
+	border: none;
+	cursor: pointer;
+	border-radius: 5px;
+	transition: background-color 0.3s ease; /* Add smooth transition effect */
+  }
+  
+  .blocked-user {
+	background-color:  #4CAF50; /* Red color for blocked user */
+	color: white;
+  }
+  
+  .unblocked-user {
+	background-color: #f44336; /* Green color for unblocked user */
+	color: white;
+  }
+  
+  .toggle-button:hover {
+	opacity: 0.8; /* Adjust opacity on hover as needed */
+  }

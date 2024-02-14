@@ -1,0 +1,425 @@
+
+/*This be the CSS*/
+
+/* Box sizing rules */
+* {
+    box-sizing: border-box;
+  }
+  
+  /* Remove default padding */
+  ul[class],
+  ol[class] {
+    padding: 0;
+  }
+  
+  /* Remove default margin */
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  p,
+  ul[class],
+  ol[class],
+  li,
+  figure,
+  figcaption,
+  blockquote,
+  dl,
+  dd {
+    margin: 0;
+  }
+  
+  /* Set core body defaults 
+  body {
+    min-height: 100vh;
+    scroll-behavior: smooth;
+    text-rendering: optimizeSpeed;
+    line-height: 1.5;
+  } */
+  
+  /* Remove list styles on ul, ol elements with a class attribute */
+  ul[class],
+  ol[class] {
+    list-style: none;
+  }
+  
+  /* A elements that don't have a class get default styles */
+  a:not([class]) {
+    text-decoration-skip-ink: auto;
+  }
+  
+  /* Make images easier to work with */
+  img {
+    max-width: 100%;
+    display: block;
+  }
+  
+  
+  /* Inherit fonts for inputs and buttons */
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+  }
+  
+  /*END OF CSS RESET*/
+  
+  /*font-family: 'Barlow Semi Condensed', sans-serif;
+  font-family: 'Josefin Sans', sans-serif;*/
+  
+  #store-name {
+      font-family: 'Josefin Sans', sans-serif;
+      text-align: center;
+      margin: auto;
+      padding-top: 5px;
+      padding-bottom: 5px;;
+      padding-left: 95px;
+      letter-spacing: 12px;
+      font-size: 50px;
+  }
+  
+  #header-info {
+      font-family: 'Barlow Semi Condensed', sans-serif;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 10px 0px;
+      margin: 0 40px;
+  }
+  
+  #header-info p {
+      letter-spacing: 2px;
+      margin: 0px 15px;
+      font-size: 15px;
+  }
+  
+  #nav-bar {
+      background-color: black;
+      overflow: hidden;
+      width: 100%;
+      padding: 8px 0px;
+      text-align: center;
+      font-family: 'Barlow Semi Condensed', sans-serif
+  }
+  
+  #nav-bar a {
+      font-family: 'Barlow Semi Condensed', sans-serif;
+      overflow: hidden;
+      font-size: 18px;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: white;
+      padding: 5px 50px;
+      border-left: 5px solid white;
+  }
+  
+  #nav-bar a:hover {
+      background-color: white;
+      color: black;
+  }
+  
+  #three-box-info {
+      font-family: 'Barlow Semi Condensed', sans-serif;
+      display: flex;
+      justify-content: center;
+  }
+  
+  #box-one {
+      background-color: #A0EBFB;
+      width: 200px;
+      height: 100px;
+      margin: 5px 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+  
+  #sale {
+      width: 50px;
+      margin: 0 5px;
+  }
+  
+  #box-two {
+      background-color: #A0EBFB;
+      width: 200px;
+      height: 100px;
+      margin: 5px 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+  
+  #delivery {
+      width: 50px;
+      margin: 0px 15px;
+  }
+  
+  #box-three {
+      background-color: #A0EBFB;
+      width: 200px;
+      height: 100px;
+      margin: 5px 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+  
+  #box-three p {
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 3px;
+      padding: 15px 15px;
+      border: 5px dashed white;
+  }
+  
+  .logo{
+  
+    width: 80px;
+    height: 80px;
+  }
+  
+  .nav-icons a{
+   margin: 10px;
+    
+  }
+  
+  #navbarNavDarkDropdown{
+    width: 30px;
+    height: 20px;
+  }
+  
+  @import url('https://fonts.googleapis.com/css?family=Roboto');
+  
+  body {
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.87);
+  }
+
+
+
+
+
+.product-details {
+    font-family: 'Arial', sans-serif;
+    max-width: 600px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    color: #333;
+}
+
+.main-image {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.side-images{
+  display: flex;
+}
+
+.side-images img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.price {
+    color: #333;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.ratings {
+    color: #ffa500; /* gold */
+}
+
+.size-chart {
+    margin-top: 15px;
+}
+
+button {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+}
+
+button#addToFavouritesBtn {
+    background-color: #ff8c00; /* dark orange */
+    margin-left: 10px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/*footer*/
+footer {
+    background-color: #333;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+    /* position: fixed; */
+    bottom: 0;
+    width: 100%;
+  }
+  
+  .footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .footer-logo {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .footer-links { 
+    margin: 0;
+    padding: 0;
+  }
+  
+  .footer-links li {
+    margin-right: 20px;
+    margin-top: 20px;
+  }
+  
+  .footer-links a {
+    text-decoration: none;
+    color: #fff;
+    transition: color 0.3s ease;
+  }
+  
+  .footer-links a:hover {
+    color: #ffd700; /* Change color on hover, you can use your preferred color */
+  }
+  
+  .social-icons{
+    width: 200px;
+    height: 50px;
+    display: flex;
+    margin-top: 20px;
+  }
+  
+  .icon-div{
+    margin-right: 20px;
+  }
+
+  /* Media query for tablets */
+@media only screen and (max-width: 768px) {
+    .footer-content {
+      flex-direction: column; /* Stack items vertically on smaller screens */
+      text-align: center;
+    }
+  
+    .footer-links {
+      margin-top: 20px;
+    }
+  
+    .social-icons {
+      margin-top: 20px;
+    }
+  }
+  
+  /* Media query for mobile devices */
+  @media only screen and (max-width: 480px) {
+    .footer-links li {
+      margin-right: 0;
+      margin-bottom: 10px;
+    }
+  
+    .social-icons {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+/*header-section*/
+/* Media query for tablets */
+@media only screen and (max-width: 768px) {
+    header {
+      padding: 10px;
+    }
+  
+    #header-info {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .logo {
+      margin-bottom: 10px;
+    }
+  
+    .nav-icons {
+      margin-top: 10px;
+    }
+  
+    #nav-bar {
+      display: none; /* Hide the navigation bar on smaller screens */
+    }
+  }
+  
+  /* Media query for mobile devices */
+  @media only screen and (max-width: 480px) {
+    header {
+      padding: 10px;
+    }
+  
+    #header-info {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .logo {
+      margin-bottom: 10px;
+    }
+  
+    .nav-icons {
+      margin-top: 10px;
+    }
+  
+    #nav-bar {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    #nav-bar a {
+      margin-bottom: 5px;
+    }
+  
+    #search-icon {
+      display: none; /* Hide the search icon on smaller screens */
+    }
+  
+    #user-dropdown {
+      position: static;
+      display: none;
+      width: 100%;
+    }
+  }
+   
+
