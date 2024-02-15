@@ -33,7 +33,7 @@
           </div>
     
           <nav id="nav-bar">
-            <a href="">Home</a>
+            <a href="/home">Home</a>
             <a href="">Athletic shoes</a>
             <a href="">Boots</a>
             <a href="">Sneekers</a>
@@ -51,13 +51,13 @@
             <% if (product.isListed) { %>
               <div class="col-md-4">
                 <div class="card">
-                  <img src="<%= product.productImage %>" class="card-img-top" alt="..." />
+                  <img src="<%= product.productImage[0] %>" class="card-img-top" alt="..." />
                   <div class="card-body">
-                    <p class="card-text">
+                    <h4 class="card-text">
                       <%= product.name %>
-                    </p>
-                    <h5 class="card-title"><%= product.price %></h5>
-                    <a href="/admin/athleticshoes/<%= product._id %>" class="btn btn-sm btn-success">Buy now</a>
+                    </h4>
+                    <h6 class="card-title"><%= product.price %></h6>
+                    <a href="/productDetails/<%= product._id %>" class="btn btn-sm btn-success">Buy now</a>
                     <i class="fa-regular fa-heart fa-xl"></i>
                   </div>
                 </div>

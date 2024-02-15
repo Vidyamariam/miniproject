@@ -27,7 +27,7 @@ router.get("/adminlogout", adminController.getAdminLogout);
 router.post("/login",adminController.loginpost);
 router.post("/addcategory",categoryController.postAddCategory);
 router.post("/editcategory/:id", categoryController.postEditCategory);
-router.post("/deletecategory/:categoryId", categoryController.postDeleteCategory);
+router.post("/categoryvisibility/:id",categoryController.categoryVisibility );
 router.post("/addproduct/:productid",uploads,productController.postAddProduct);
 router.post("/editproduct/:id",uploads,productController.postEditProduct);
 router.post("/visibility/:id",productController.productVisibility);

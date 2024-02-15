@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Add Product</title>
     <link rel="stylesheet" href="/stylesheets/admin/addProduct.css" />
+
+    <!-- CROPPER-LINK -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/cropperjs/dist/cropper.min.css"
+    />
+    <script src="https://unpkg.com/cropperjs/dist/cropper.min.js"></script>
+    <link rel="stylesheet" href="/stylesheets/admin/addProduct.css" />
   </head>
 
   <body>
@@ -22,9 +30,10 @@
 
         <label for="Category">Category:</label>
         <select id="Category" name="category">
-          <% categories.forEach((category) => { %>
+          <% categories.forEach((category) => { %> <% if (category.isListed) {
+          %>
           <option><%= category.categoryName %></option>
-          <% }); %>
+          <% } %> <% }); %>
         </select>
 
         <label for="images">Images:</label>
@@ -36,8 +45,11 @@
           accept="image/*"
           multiple
           required
-          onchange="previewImage(this)"
+          onchange="handleImageSelection(this)"
         />
+
+        <!--Cropper-container-->
+        <div id="cropperContainer"></div>
 
         <!-- Image preview container -->
         <div id="imagePreviewContainer">
@@ -97,6 +109,39 @@
       function cancelForm() {
         // Add logic to handle cancel action
         alert("Form canceled");
+      }
+
+      function handleImageSelection(input) {
+        previewImage(input); // Call the image preview function
+        initCropper(input); // Call the cropper initialization function
+      }
+
+      function initCropper(input) {
+        var cropperContainer = document.getElementById("cropperContainer");
+        cropperContainer.innerHTML = ""; // Clear previous cropper instances
+
+        if (input.files && input.files[0]) {
+          var cropper = new Cropper(cropperContainer, {
+            aspectRatio: 1, // Adjust the aspect ratio as needed
+            viewMode: 2, // Set the view mode (0, 1, 2, 3)
+            crop: function (event) {
+              // Access cropped data: event.detail.x, event.detail.y, event.detail.width, event.detail.height
+            },
+          });
+
+          var reader = new FileReader();
+
+          reader.onload = function (e) {
+            cropper.replace(e.target.result);
+          };
+
+          reader.readAsDataURL(input.files[0]);
+
+          // Display the cropper container
+          cropperContainer.style.display = "block";
+        } else {
+          cropperContainer.style.display = "none";
+        }
       }
     </script>
   </body>

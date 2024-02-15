@@ -4,6 +4,10 @@ const categorySchema = new mongoose.Schema({
 
    categoryName:{
     type: String,
+   },
+   isListed: {
+      type: Boolean,
+       default: true,
    }
 
 })

@@ -201,6 +201,12 @@
   }
 
 
+  .small-images-row img{
+
+     margin: 20px;
+     width: 50px;
+     height: 40px;
+  }
 
 
 
@@ -219,7 +225,7 @@ h2 {
     color: #333;
 }
 
-.main-image {
+/* .main-image {
     width: 100%;
     max-height: 400px;
     object-fit: cover;
@@ -240,7 +246,7 @@ h2 {
     border-radius: 4px;
     margin-right: 10px;
     cursor: pointer;
-}
+} */
 
 .price {
     color: #333;
@@ -271,6 +277,10 @@ button#addToFavouritesBtn {
 
 button:hover {
     background-color: #45a049;
+}
+
+.highlights-section{
+  margin-top: 20px;
 }
 
 /*footer*/

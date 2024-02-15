@@ -119,30 +119,49 @@ const postEditCategory = async (req,res)=> {
     }
 };
 
-const postDeleteCategory = async (req, res) => {
-    const categoryId = req.params.categoryId;
+// const postDeleteCategory = async (req, res) => {
+//     const categoryId = req.params.categoryId;
 
-    try {
-        const category = await categoryCollection.findById(categoryId);
+//     try {
+//         const category = await categoryCollection.findById(categoryId);
+
+//         if (!category) {
+//             return res.status(404).send("Category not found");
+//         }
+
+//         const result = await categoryCollection.findByIdAndDelete(categoryId);
+
+//         console.log("Deleted", result);
+//         res.redirect("/admin/category");
+//     } catch (error) {
+//         console.error("Error deleting category:", error);
+//         res.status(500).send("Internal Server Error");
+//     }
+// };
+
+const categoryVisibility = async (req,res)=> {
+
+    try{
+        const categId = req.params.id;
+        const category = await categoryCollection.findById(categId);
 
         if (!category) {
-            return res.status(404).send("Category not found");
-        }
+            return res.status(404).send("category not found");
+          }
 
-        const result = await categoryCollection.findByIdAndDelete(categoryId);
-
-        console.log("Deleted", result);
-        res.redirect("/admin/category");
-    } catch (error) {
-        console.error("Error deleting category:", error);
+          category.isListed = !category.isListed;
+  
+      await category.save();
+      res.redirect("/admin/category");
+    }catch (err) {
+        console.log(err);
         res.status(500).send("Internal Server Error");
-    }
-};
-
+      }
+}
 
 module.exports = {
 
-    getCategoryManage,getaddcategory,postAddCategory,getEditCategory,postEditCategory,postDeleteCategory
+    getCategoryManage,getaddcategory,postAddCategory,getEditCategory,postEditCategory,categoryVisibility
     
 
 }

@@ -3,6 +3,7 @@ const router = express.Router();
 
 // const userController = require('../controllers/userCtrl');
 const userController = require('../controllers/userCtrl');
+const productDetailsCtrl = require('../controllers/productDetailsCtrl');
 
 //GET METHODS
 router.get("/", userController.landing);
@@ -12,6 +13,7 @@ router.get("/home", userController.home);
 router.get("/verifyemail", userController.getVerifyEmail);
 router.get("/athleticshoes",userController.getAthletics);
 router.get("/logout",userController.getLogout);
+router.get("/productDetails/:id",productDetailsCtrl.getProductDetails);
 
 
 

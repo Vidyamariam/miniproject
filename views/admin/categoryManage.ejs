@@ -86,11 +86,15 @@
                     </form>
 
                     <form
-                      action="/admin/deletecategory/<%= category._id %>"
+                      action="/admin/categoryvisibility/<%= category._id %>"
                       method="post"
                     >
-                      <button class="btn btn-danger ctdltbtn" type="submit">
-                        Delete
+                      <button
+                        type="submit"
+                        class="btn btn-lg btn-danger sListed <%= category.isListed? 'unblocked-user' : 'blocked-user' %>"
+                      >
+                        <% if (category.isListed) { %> Listed <% } else { %> Not
+                        Listed <% } %>
                       </button>
                     </form>
                   </div>
