@@ -27,6 +27,14 @@
     font-size: 15px;
 }
 
+.nav-icons{
+  display: flex;
+  align-items: center;
+}
+.nav-icons a{
+  margin-right: 10px;
+}
+
 #nav-bar {
     background-color: black;
     overflow: hidden;

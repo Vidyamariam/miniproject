@@ -70,71 +70,17 @@
       </div>
 
       <div class="main-content">
-        <form   action="/verifyemail" id="otp-form"    method="post">
-            <label for="otp">Enter OTP:</label>
-            <input type="text" id="otp" name="otp" required>
-            <br>
-            <button   type="submit" >Verify OTP</button>
-            <br> 
-            <button id="resend-timer" >Resend OTP (60s)</button>
-        </form>
+        <form action="/verifyemail" id="otp-form" method="post">
+          <label for="otp">Enter OTP:</label>
+          <input type="text" id="otp" name="otp" required>
+          <br>
+          <button type="submit">Verify OTP</button>
+          <br> 
+      </form>
+      <p id="timer">10</p>
+      <button id="resendButton" disabled>Resend OTP</button>
+
       </div>
-
-     
-  
-      <!-- Add your scripts or JavaScript here -->
-      <script>
-          let resendTimer;
-          let timerSeconds = 60;
-  
-          function startResendTimer() {
-              document.getElementById('resend-timer').innerText = `Resend OTP (${timerSeconds}s)`;
-              resendTimer = setInterval(function () {
-                  timerSeconds--;
-                  if (timerSeconds <= 0) {
-                      clearInterval(resendTimer);
-                      document.getElementById('resend-timer').innerText = 'Resend OTP';
-                  } else {
-                      document.getElementById('resend-timer').innerText = `Resend OTP (${timerSeconds}s)`;
-                  }
-              }, 1000);
-          }
-  
-          function resendOTP() {
-              // Add logic to resend OTP
-              // For now, just resetting the timer for demo purposes
-              clearInterval(resendTimer);
-              timerSeconds = 60;
-              startResendTimer();
-          }
-  
-         
-          // Start the resend timer initially
-          startResendTimer();
-
-          const timer = document.getElementById('timer');
-  const resendBtn = document.getElementById('resendButton');
-
-  let timeLeft = 10; // Set the timer duration in seconds
-
-  const countdown = setInterval(() => {
-    timeLeft--;
-    timer.textContent = timeLeft;
-    if (timeLeft <= 0) {
-      clearInterval(countdown);
-      resendBtn.removeAttribute('disabled');
-      resendBtn.classList.remove('disabled');
-      resendBtn.classList.add('exceeded');
-      resendBtn.textContent = 'Resend OTP';
-    }
-  }, 1000)
-</script>
-</body>
-<script>
-  if ( window.history.replaceState ) {
-window.history.replaceState( null, null, window.location.href );
-}
-      </script>
 
  <!--FOOTER SECTION-->
  <footer>
@@ -166,6 +112,33 @@ window.history.replaceState( null, null, window.location.href );
     </div>
     <p>&copy; 2024 Your Company. All rights reserved.</p>
   </footer>
+
+
+  <script>
+    const timer = document.getElementById('timer');
+    const resendBtn = document.getElementById('resendButton');
+
+    let timeLeft = 20; // Set the timer duration in seconds
+
+    const countdown = setInterval(() => {
+        timeLeft--;
+        timer.textContent = timeLeft;
+        if (timeLeft <= 0) {
+            clearInterval(countdown);
+            resendBtn.removeAttribute('disabled');
+            resendBtn.classList.remove('disabled');
+            resendBtn.classList.add('exceeded');
+            resendBtn.textContent = 'Resend OTP';
+        }
+    }, 1000);
+</script>
+
+<script>
+    if (window.history.replaceState) {
+        window.history.replaceState(null, null, window.location.href);
+    }
+</script>
+
     
 </body>
 </html>

@@ -26,10 +26,14 @@
             <!-- <p id="contactus">Contact Us</p> -->
             <img src="/img/siteLogo1.png" class="logo" />
             <h1 id="store-name">STEPUP SHOES</h1>
-            <p id="signin">LOGOUT</p>
-            <img src="" id="sign-in-icon" />
-            <p id="addtocart">Add to cart</p>
-            <img src="" id="cart-icon" />
+            <div class="nav-icons">
+              <a id="favourite"><i class="fa fa-regular fa-heart fa-xl"></i></a>
+              <a id="addtocart"><i class="fa fa-duotone fa-cart-shopping fa-xl"></i></a>
+              <form action="/logout" method="post">
+                <button type="submit" style="border-radius: 10px;">logout</button>
+              </form>
+              
+            </div>
           </div>
     
           <nav id="nav-bar">

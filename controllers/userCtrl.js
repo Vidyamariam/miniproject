@@ -30,8 +30,10 @@ const signupPost = async (req, res) => {
             return res.render("user/signup", { mes: "User already exists" });
         }
 
-        console.log("check1");
+        //generate otp
         const otpCode = Math.floor(100000 + Math.random() * 900000);
+
+      
 
         const userData = new signupCollection({
             name,
@@ -49,8 +51,9 @@ const signupPost = async (req, res) => {
         await sendOTPVerificationEmail(email, otpCode);
         console.log("email otp");
 
-        // Store email in session for OTP verification
+        // Store email and user data in session for OTP verification
         req.session.verifyEmail = email;
+        req.session.userData = userData;
 
         // Redirect to verify OTP page
         return res.render('user/verifyEmail');
@@ -61,14 +64,7 @@ const signupPost = async (req, res) => {
 }
 
 
-//     }
-//     catch(error){
-//         console.error("Error in signupPost:", error);
-//             res.status(500).send("Internal Server Error");
-//     }
-    
-    
-// }
+
 
 const sendOTPVerificationEmail = async(email, otp)=>{
     try {
@@ -86,7 +82,7 @@ const sendOTPVerificationEmail = async(email, otp)=>{
             from: 'vidyamathew13@gmail.com',
             to: email,
             subject: 'OTP Verification',
-            text: `Your OTP for signup is: ${otp}`
+            text: `Your OTP for signup is: ${otp}.`
         };
 
         // Send email
@@ -104,14 +100,15 @@ const verifyEmailPost=async(req,res)=>{
 
     try {
         let verifyEmail = "";
-
+        let userData;
  
         const { otp } = req.body;
         console.log(otp,"showing otp");
 
-        // Retrieve the email from the session
-        if (req.session.verifyEmail) {
+        // Retrieve the email and user data from the session
+        if (req.session.verifyEmail && req.session.userData) {
             verifyEmail = req.session.verifyEmail;
+            userData = req.session.userData;
         }
 
         const user = await signupCollection.findOne({ email: verifyEmail });
@@ -124,7 +121,7 @@ const verifyEmailPost=async(req,res)=>{
         // Check if OTP is expired 
         if (user.otp.expiration && user.otp.expiration < new Date()) {
          const message=  'OTP has expired'
-          return res.render({ message});
+          return res.render("user/verifyEmail",{ message});
         }
     
         // Check if the entered OTP matches the stored OTP
@@ -143,12 +140,16 @@ const verifyEmailPost=async(req,res)=>{
     
         await user.save();
         console.log('OTP verified successfully in verifyOtp. Please Login Again')
+
+        // Clear the resendEnabled flag in the session after successful verification
+        delete req.session.resendEnabled;
+
         res.redirect('/userlogin')
       } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal Server Error while verifying OTP' });
       }
-    }
+}
 
 
 
@@ -258,7 +259,7 @@ const getAthletics = async (req,res) => {
 
 
 module.exports = {
-    login, loginpost,home,signupGet,signupPost,landing,getVerifyEmail,verifyEmailPost,getLogout,postLogout,getAthletics
+    login, loginpost,home,signupGet,signupPost,landing,getVerifyEmail,verifyEmailPost,getLogout,postLogout,getAthletics, 
 }
 
 

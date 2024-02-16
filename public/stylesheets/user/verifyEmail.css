@@ -227,9 +227,10 @@ button {
 }
 
 
-#resend-timer {
-    display: none;
-} 
+/* #resend-timer {
+   display: none;
+}  
+} */
 
 .title{
     display: flex;
@@ -244,9 +245,7 @@ button {
     justify-content: center;
     align-items: center;
 }
-.otp-form label{
 
-}
 
 
   /*footer*/

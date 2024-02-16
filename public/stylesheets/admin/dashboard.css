@@ -1,3 +1,4 @@
+/* Reset some default styles */
 body, h1, h2, h3, p, ul, li {
 	margin: 0;
 	padding: 0;
@@ -7,21 +8,15 @@ body, h1, h2, h3, p, ul, li {
 	font-family: 'Arial', sans-serif;
 	background-color: #f4f4f4;
 	font-family: 'Josefin Sans', sans-serif;
+    overflow-y: scroll;
   }
   
-  .logout {
-	position: absolute;
-	top: 10px;
-	right: 10px;
-	cursor: pointer;
-	/* You can add additional styling as needed */
-  }  
-
-
   main {
 	display: flex;
 	flex-direction: column;
 	min-height: 100vh;
+	flex: 1; /* Allow main section to take remaining height */
+  overflow-y: auto;
   }
   
   header {
@@ -29,14 +24,26 @@ body, h1, h2, h3, p, ul, li {
 	color: white;
 	text-align: center;
 	padding: 10px 0;
+	position: fixed;
+	width: 100%;
+	z-index: 1;
+	top: 0;
   }
-  
+
   header button{
 	background-color: #333;
 	color: white;
 	border: none;
   }
 
+   .logout {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    /* You can add additional styling as needed */
+  } 
+ 
   .row {
 	display: flex;
 	flex: 1;
@@ -48,6 +55,10 @@ body, h1, h2, h3, p, ul, li {
 	color: white;
 	padding: 20px;
 	text-align: center;
+	z-index: 1;
+	height: calc(100vh - 40px); /* 40px is the header height */
+	overflow-y: auto; /* Enable scrolling for the left article */
+  
   }
   
   .article-left i {
@@ -82,6 +93,8 @@ body, h1, h2, h3, p, ul, li {
   .article-right {
 	flex: 3;
 	padding: 20px;
+	overflow-y: auto; /* Enable scrolling for the right article */
+	max-height: 80vh; /* Adjust the maximum height as needed */
   }
   
   .article-right h1 {
