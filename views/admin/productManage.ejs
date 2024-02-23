@@ -13,6 +13,8 @@
       integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
       crossorigin="anonymous"
     />
+
+    <link rel="stylesheet" href="/stylesheets/admin/paginationStyle.css">
   </head>
   <body>
     <main>
@@ -70,7 +72,7 @@
                 <th>Category</th>
                 <th>image</th>
                 <th>Description</th>
-                <th>Rating</th>
+                <th>Sizes Available</th>
                 <th>Price</th>
                 <th>discount</th>
                 <th>Stock</th>
@@ -89,17 +91,18 @@
                   <div class="category"><%= items.category %></div>
                 </td>
                 <td>
-                  <img
-                    src="<%= items.productImage[0] %>"
-                    style="width: 50px; height: 50px"
-                    class="image"
-                  />
+                  <div class="image-container">
+                    <% items.productImage.forEach((image, imageIndex) => { %>
+                        <img src="<%= image %>" style="width: 50px; height: 50px" class="image" />
+                    <% }); %>
+                </div>
+        
                 </td>
                 <td>
                   <div class="description"><%= items.description %></div>
                 </td>
                 <td>
-                  <div class="rating"><%= items.rating %></div>
+                  <div class="sizes"><%= items.sizes %></div>
                 </td>
                 <td>
                   <div class="price"><%= items.price %></div>
@@ -138,7 +141,22 @@
               <!-- Add more rows as needed -->
             </tbody>
           </table>
+
+          <div class="pagination">
+            <ul>
+              <% if (currentPage > 1) { %>
+                <li><a href="/admin/productmanage/<%= currentPage - 1 %>">Previous</a></li>
+              <% } %>
+              <% for (let i = 1; i <= totalPages; i++) { %>
+                <li <% if (i === currentPage) { %>class="active"<% } %>><a href="/admin/productmanage/<%= i %>"><%= i %></a></li>
+              <% } %>
+              <% if (currentPage < totalPages) { %>
+                <li><a href="/admin/productmanage/<%= currentPage + 1 %>">Next</a></li>
+              <% } %>
+            </ul>
+          </div>
         </article>
+        
       </section>
     </main>
 

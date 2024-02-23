@@ -42,6 +42,7 @@ body, h1, h2, h3, p, ul, li {
   .article-left h2 {
 	font-size: 24px;
 	margin-top: 10px;
+  color: white;
   }
   
   .article-left ul {
@@ -51,7 +52,7 @@ body, h1, h2, h3, p, ul, li {
   }
   
   .article-left li {
-	margin-bottom: 70px;
+	margin-bottom: 20px;
   }
   
   .article-left a {
@@ -62,6 +63,7 @@ body, h1, h2, h3, p, ul, li {
   
   .article-left a:hover {
 	text-decoration: underline;
+  color: #ff4081;
   }
   
   .article-right {

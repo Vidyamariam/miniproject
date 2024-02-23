@@ -14,10 +14,6 @@ const productSchema = new mongoose.Schema({
     description: {
         type: String,
     },
-    rating: {
-        type: Number,
-        default: 0,
-    },
     price: {
         type: Number,
     },
@@ -32,6 +28,9 @@ const productSchema = new mongoose.Schema({
         type: Boolean,
         default: true,
     },
+    sizes: {
+        type: [String],
+    }
 });
 
 const AddProduct = mongoose.model('products', productSchema);

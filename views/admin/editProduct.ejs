@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Add Product</title>
+    <title>Edit Product</title>
     <link rel="stylesheet" href="/stylesheets/admin/editProduct.css" />
   </head>
   <body>
@@ -21,13 +21,13 @@
           type="text"
           id="productName"
           name="name"
-          placeholder="<%=items.name%>"
+          value="<%=items.name %>"
         />
 
         <label for="Category">Category:</label>
         <select id="Category" name="category">
-          <% category.forEach((category) => { %>
-          <option><%= category.categoryName %></option>
+          <% category.forEach((cat) => { %>
+            <option <%= cat.categoryName === items.category ? 'selected' : '' %>><%= cat.categoryName %></option>
           <% }); %>
         </select>
 
@@ -38,32 +38,27 @@
           id="images"
           name="productImage"
           accept="image/*"
-          multiple
-          required
+          onchange="previewImage(this)"
         />
+
+        <!-- Image preview container -->
+        <div id="imagePreviewContainer">
+          <img id="imagePreview" src="<%=items.productImage %>" alt="Product Image" />
+        </div>
 
         <label for="description">Description:</label>
         <textarea
           id="description"
           name="description"
-          placeholder="<%=items.description%>"
-        ></textarea>
+        ><%= items.description %></textarea>
 
-        <label for="rating">Rating:</label>
-        <input
-          type="number"
-          id="rating"
-          name="rating"
-          step="1"
-          placeholder="<%=items.rating%>"
-        />
-
+      
         <label for="price">Price:</label>
         <input
           type="number"
           id="price"
           name="price"
-          placeholder="<%=items.price%>"
+          value="<%= items.price %>"
         />
 
         <label for="discount">Discount:</label>
@@ -72,7 +67,7 @@
           id="discount"
           name="discount"
           step="0.01"
-          placeholder="<%=items.discount%>"
+          value="<%= items.discount %>"
         />
 
         <label for="stock">Stock:</label>
@@ -81,14 +76,13 @@
           id="stock"
           name="stock"
           step="1"
-          placeholder="<%=items.stock%>"
+          value="<%= items.stock %>"
         />
 
         <!-- Removed increase/decrease buttons for price and discount -->
         <div>
           <button type="submit">Submit</button>
-
-          <button type="button">Cancel</button>
+          <button type="button" onclick="cancelForm()">Cancel</button>
         </div>
       </form>
     </div>
@@ -97,6 +91,36 @@
       function cancelForm() {
         // Add logic to handle cancel action
         alert("Form canceled");
+      }
+
+      function previewImage(input) {
+        var previewImage = document.getElementById("imagePreview");
+        var previewContainer = document.getElementById("imagePreviewContainer");
+
+    // Clear previous previews
+    previewContainer.innerHTML = "";
+
+        if (input.files && input.files[0]) {
+          var reader = new FileReader();
+
+          reader.onload = function (e) {
+            previewImage.src = e.target.result;
+          };
+
+          reader.readAsDataURL(input.files[0]);
+
+          
+      // Display the new image preview
+      previewContainer.appendChild(previewImage);
+        } else {
+          // If no new image is selected, retain the existing product images
+      <% items.productImage.forEach((imageUrl) => { %>
+        var existingImage = '<%= imageUrl %>';
+        var img = document.createElement("img");
+        img.src = existingImage;
+        previewContainer.appendChild(img);
+      <% }); %>
+        }
       }
     </script>
   </body>

@@ -77,17 +77,20 @@ body, h1, h2, h3, p, ul, li {
   }
   
   .article-left li {
-	margin-bottom: 70px;
+	margin-bottom: 20px;
   }
+  
   
   .article-left a {
 	color: white;
 	text-decoration: none;
 	font-size: 18px;
+	transition: color 0.3s;
   }
   
   .article-left a:hover {
 	text-decoration: underline;
+  color: #ff4081;
   }
   
   .article-right {

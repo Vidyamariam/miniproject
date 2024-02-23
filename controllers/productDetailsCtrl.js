@@ -1,5 +1,5 @@
 const express = require("express");
-const productData = require("../model/productSchema");
+const productsCollection = require("../model/productSchema");
 
 
 const getProductDetails = async (req,res)=>{
@@ -7,7 +7,7 @@ const getProductDetails = async (req,res)=>{
    try{
     const id = req.params.id;
     console.log("dhgash",id);
-    const productdetails = await productData.findOne({_id: id});
+    const productdetails = await productsCollection.findOne({_id: id});
     console.log("dsfa", productdetails);
 
     if(!productdetails){

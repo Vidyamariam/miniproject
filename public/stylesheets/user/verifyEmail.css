@@ -10,7 +10,7 @@
   ol[class] {
     padding: 0;
   }
-  
+ 
   /* Remove default margin */
   body,
   h1,
@@ -197,6 +197,9 @@
     font-family: 'Roboto', sans-serif;
     font-size: 14px;
     color: rgba(0, 0, 0, 0.87);
+
+      background-color: #A0EBFB;
+    
   }
 
   .main-content {
@@ -205,27 +208,48 @@
     align-items: center;
 }
 
-#otp-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 20px;
+form .input-field {
+  flex-direction: row;
+  column-gap: 10px;
 }
-
-label {
-    margin-bottom: 8px;
+.input-field input {
+  height: 45px;
+  width: 42px;
+  border-radius: 13px;
+  outline: none;
+  font-size: 1.125rem;
+  text-align: center;
+  border: 1px solid black;
+ 
 }
-
-input {
-    padding: 10px;
-    margin-bottom: 16px;
+.input-field input:focus {
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
 }
-
-button {
-    padding: 10px;
-    cursor: pointer;
+.input-field input::-webkit-inner-spin-button,
+.input-field input::-webkit-outer-spin-button {
+  display: none;
 }
-
+.main-content button {
+  margin-top: 25px;
+  width: 100%;
+  color: #fff;
+  font-size: 1rem;
+  border: none;
+  padding: 9px 0;
+  cursor: pointer;
+  border-radius: 25px;
+  pointer-events: none;
+  background: grey;
+  transition: all 0.2s ease;
+}
+form button.active {
+  background: #04a843;
+  pointer-events: auto;
+}
+form button:hover {
+  background: #04a8439c;
+  color: rgb(255, 255, 255);
+}
 
 /* #resend-timer {
    display: none;
@@ -244,6 +268,12 @@ button {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.main-content button{
+
+   border: 1px solid black;
+   border-radius: 5px;
 }
 
 
@@ -304,4 +334,104 @@ button {
     margin-right: 20px;
   }
    
+  /* Css from anandhu 
+  :where(.container, form, .input-field, header) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .container {
+    height: 390px;
+    width: 390px;
+    background: #ffffff28;
+    padding: 30px 65px;
+    margin-top: 180px;
+    margin-left: 560px;
+    border-radius: 25px;
+    row-gap: 20px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.299);
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(9px);
+    
+  }
+  .container header {
+    height: 65px;
+    width: 65px;
+    background: #04a84363;
+    color: #fff;
+    font-size: 2.5rem;
+    border-radius: 50%;
+  }
+  .container h4 {
+    font-size: 1.25rem;
+    color: #e7e7e7;
+    font-weight: 500;
+  }
+  form .input-field {
+    flex-direction: row;
+    column-gap: 10px;
+  }
+  .input-field input {
+    height: 45px;
+    width: 42px;
+    border-radius: 13px;
+    outline: none;
+    font-size: 1.125rem;
+    text-align: center;
+    border: none;
+    border: 1px solid #ddd; 
+  }
+  .input-field input:focus {
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+  }
+  .input-field input::-webkit-inner-spin-button,
+  .input-field input::-webkit-outer-spin-button {
+    display: none;
+  }
+  form button {
+    margin-top: 25px;
+    width: 100%;
+    color: #fff;
+    font-size: 1rem;
+    border: none;
+    padding: 9px 0;
+    cursor: pointer;
+    border-radius: 25px;
+    pointer-events: none;
+    background: #04a843;
+    transition: all 0.2s ease;
+  }
+  form button.active {
+    background: #04a843;
+    pointer-events: auto;
+  }
+  form button:hover {
+    background: #04a8439c;
+    color: rgb(255, 255, 255);
+  }
+  #resendOTP{
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.808);
+    border: none;
+    background-color:rgba(255, 255, 255, 0);
+   position: absolute;
+   margin-bottom: 15px;
+  }
   
+  .Errormsg{
+    font-size: 11px;
+    font-weight: 200;
+    top: 10px;
+    left: 60px;
+    width: 450px;
+    position: absolute;
+    color: white;
+  }
+  
+  #otp-timer{
+    color: rgba(255, 255, 255, 0.808);
+  } 
+  /* Css from anandhu */

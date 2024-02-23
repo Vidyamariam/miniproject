@@ -14,35 +14,17 @@ let userSignupSchema = new mongoose.Schema({
         type : String,
        
     },
+    confirmPassword: {
+       type: String,
+    },
     
     isBlocked: { 
         type: Boolean, 
         default: false,
     },
-    otp: {
-        code: {
-            type: String,
-            default: null
-        },
-        expiration: {
-            type: Date,
-            default: null
-        }
-    }
-}, { 
-    
-    timestamps: true 
+});
+
+module.exports = mongoose.model("newusers",userSignupSchema);
 
 
-
-})
-
-
-
-
-
-
-const signupCollection = mongoose.model("newusers",userSignupSchema);
-
-module.exports = signupCollection;
 

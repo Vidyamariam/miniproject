@@ -1,6 +1,8 @@
 
 /*This be the CSS*/
 
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
 /* Box sizing rules */
 * {
     box-sizing: border-box;
@@ -192,7 +194,7 @@
     height: 20px;
   }
   
-  @import url('https://fonts.googleapis.com/css?family=Roboto');
+  
   
   body {
     font-family: 'Roboto', sans-serif;
@@ -208,80 +210,127 @@
      height: 40px;
   }
 
+  /*ANIMATION*/
+.animate {
+  -webkit-animation: animatezoom 0.6s;
+  animation: animatezoom 0.6s
+  }
+  
+  @-webkit-keyframes animatezoom {
+  from {-webkit-transform: scale(0)} 
+  to {-webkit-transform: scale(1)}
+  }
+  
+  @keyframes animatezoom {
+  from {transform: scale(0)} 
+  to {transform: scale(1)}
+  }
+  .inline-photo {
+  opacity: 0;
+  transform: translateY(4em) rotateZ(-0deg);
+  transition: transform 4s .25s cubic-bezier(0,1,.3,1),opacity .3s .25s ease-out;
+  will-change: transform, opacity;
+  }
+  .inline-photo.is-visible {
+  opacity: 1;
+  transform: rotateZ(-0deg);
+  }
+  .inline-photo2 {
+  opacity: 0;
+  transform: translateX(-15em) rotateZ(-0deg);
+  transition: transform 4s .25s cubic-bezier(0,1,.3,1),opacity .3s .25s ease-out;
+  will-change: transform, opacity;
+  }
+  .inline-photo2.is-visible2 {
+  opacity: 1;
+  transform: rotateZ(-0deg);
+  }
+  
+  /*DEFAULT*/
+a{
+  text-decoration:none;
+  }
+  .title{
+  font-size:1.5em;
+  font-family: 'Archivo Black', sans-serif;
+  }
+  .sub-title{
+  display:block;
+  }
+  li{
+  list-style:none;
+  }
+  input,button{
+  outline:none;
+  }
+  .btn1{
+  padding:10px 20px;
+  border-radius:20px;
+  text-align:center;
+  color:#fff;
+  background:#000;
+  width:90%;
+  border:0;
+  }
+  .btn2{
+  padding:10px 20px;
+  text-align:center;
+  color:#fff;
+  background:#f79500;
+  width:100%;
+  border:0;
+  }
+  .btn3{
+  padding:10px 20px;
+  text-align:center;
+  color:#fff;
+  background:#384aeb;
+  width:100%;
+  border:0;
+  }
+  .btn4{
+  padding:10px 20px;
+  text-align:center;
+  color:#000;
+  border-radius:20px;
+  background:#fff;
+  width:150px;
+  border:0;
+  margin:0 20px;
+  box-shadow:0px 6px 16px -6px rgba(1,1,1,0.5);
+  }
+  label{
+  color:gray;
+  }
+  .checked{
+  color:#f79500;
+  }
+  
+  
+  .banner{
+  width:100%;
+  height:150px;
+  background-image:url("https://i.ibb.co/vcBQN6m/aboutus-header.webp");
+  background-repeat:no-repeat;
+  background-size:cover;
+  background-attachment:fixed;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  }
+  
+  .banner section,.banner a{
+  color:#fff;
+  margin:0 10px;
+  }
+  
+/*changes applied*/
 
 
-.product-details {
-    font-family: 'Arial', sans-serif;
-    max-width: 600px;
-    margin: 20px auto;
-    background-color: #fff;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
 
-h2 {
-    color: #333;
-}
 
-/* .main-image {
-    width: 100%;
-    max-height: 400px;
-    object-fit: cover;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-bottom: 15px;
-}
 
-.side-images{
-  display: flex;
-}
 
-.side-images img {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-right: 10px;
-    cursor: pointer;
-} */
-
-.price {
-    color: #333;
-    font-size: 18px;
-    margin-bottom: 10px;
-}
-
-.ratings {
-    color: #ffa500; /* gold */
-}
-
-.size-chart {
-    margin-top: 15px;
-}
-
-button {
-    background-color: #4caf50;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    cursor: pointer;
-}
-
-button#addToFavouritesBtn {
-    background-color: #ff8c00; /* dark orange */
-    margin-left: 10px;
-}
-
-button:hover {
-    background-color: #45a049;
-}
-
-.highlights-section{
-  margin-top: 20px;
-}
 
 /*footer*/
 footer {

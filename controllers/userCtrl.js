@@ -5,60 +5,58 @@ const session = require("express-session");
 const signupCollection = require('../model/userSignupSchema');
 const productsCollection = require('../model/productSchema');
 const nodemailer = require('nodemailer');
+const otpCollection = require("../model/otpSchema");
 
 
 
-
-const signupGet = (req,res) =>{ //user signUp chyeyunnathu
+const signupGet = (req,res) =>{ //user signUp cheyunnathu
     res.render("user/signup");
    
 }
 
 const signupPost = async (req, res) => {
-    console.log(req.body, "here in the signup");
-    
+    const { name, email, password, confirmPassword } = req.body;
+
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/;
+
     try {
-        const { name, email, password } = req.body;
-
-        console.log("entered");
-
         const existingUser = await signupCollection.findOne({ email });
 
         console.log(existingUser);
 
         if (existingUser) {
-            return res.render("user/signup", { mes: "User already exists" });
+            return res.render("user/signup", { message: "User already exists" });
+        }
+
+        // Validate password
+        if (!password.match(passwordRegex)) {
+           return res.render("user/signup", { message: "Invalid password format" });
         }
 
         //generate otp
-        const otpCode = Math.floor(100000 + Math.random() * 900000);
+        const otpGenerated = Math.floor(1000 + Math.random() * 9000).toString();
 
-      
-
-        const userData = new signupCollection({
+        req.session.signupData = {
             name,
             email,
             password,
-            otp: {
-                code: otpCode.toString(),
-                expiration: new Date(Date.now() + 1 * 60 * 1000) // OTP expiration time (1 minute)
-            }
+            confirmPassword,
+        };
+
+        const newOTP = new otpCollection({
+            email,
+            otp: otpGenerated,
         });
+        await newOTP.save();
 
-        await userData.save();
-
-        // Send OTP via email
-        await sendOTPVerificationEmail(email, otpCode);
+        const mailBody = `Your OTP for registration is ${otpGenerated}`;
+        await sendOTPVerificationEmail(email, "otp registration", mailBody);
         console.log("email otp");
 
-        // Store email and user data in session for OTP verification
-        req.session.verifyEmail = email;
-        req.session.userData = userData;
-
         // Redirect to verify OTP page
-        return res.render('user/verifyEmail');
+        return res.redirect('/verifyemail');
     } catch (error) {
-        console.error(error);
+        console.error(error); // Log the error details
         res.status(500).json({ message: 'Internal Server Error for signup' });
     }
 }
@@ -66,10 +64,11 @@ const signupPost = async (req, res) => {
 
 
 
-const sendOTPVerificationEmail = async(email, otp)=>{
+
+const sendOTPVerificationEmail = async(email, title, body)=>{
     try {
-        // Configure nodemailer with your email service provider details
-        const transporter = nodemailer.createTransport({
+       
+        let transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
                 user: 'vidyamathew13@gmail.com',
@@ -78,15 +77,15 @@ const sendOTPVerificationEmail = async(email, otp)=>{
         });
 
         // Define email content
-        const mailOptions = {
+        let info = await transporter.sendMail({
             from: 'vidyamathew13@gmail.com',
-            to: email,
-            subject: 'OTP Verification',
-            text: `Your OTP for signup is: ${otp}.`
-        };
+            to: `${email}`,
+            subject: `${title}`,
+            html: `${body}`,
+        });
 
-        // Send email
-        await transporter.sendMail(mailOptions);
+       console.log("Info is here: ", info);
+       return info;
     } catch (error) {
         console.error("Error sending email:", error);
         throw error;
@@ -95,56 +94,59 @@ const sendOTPVerificationEmail = async(email, otp)=>{
 }
 
 
+const getVerifyEmail = (req,res)=>{
+
+    res.render("user/verifyEmail");
+} 
+
 
 const verifyEmailPost=async(req,res)=>{
 
     try {
-        let verifyEmail = "";
-        let userData;
- 
-        const { otp } = req.body;
-        console.log(otp,"showing otp");
+        const { n1, n2, n3, n4 } = req.body;
+        
+         // Validate input: Check for presence, numeric values, and no white spaces
+    const isValidInput = n1 && n2 && n3 && n4 && /^\d+$/.test(n1 + n2 + n3 + n4);
 
-        // Retrieve the email and user data from the session
-        if (req.session.verifyEmail && req.session.userData) {
-            verifyEmail = req.session.verifyEmail;
-            userData = req.session.userData;
-        }
-
-        const user = await signupCollection.findOne({ email: verifyEmail });
-        console.log(user, "verifyEmail in verifyOtp");
-
-        if (!user) {
-          console.log('User not found signupVerifyOtp')
-        }
+    if (!isValidInput) {
+        return res.render("user/verifyEmail",{message:"Only numeric values, and no white spaces"})
+      }
     
-        // Check if OTP is expired 
-        if (user.otp.expiration && user.otp.expiration < new Date()) {
-         const message=  'OTP has expired'
-          return res.render("user/verifyEmail",{ message});
-        }
-    
-        // Check if the entered OTP matches the stored OTP
-        if (user.otp.code !== otp) {
-         const wrongOtp="Invalid OTP, Recheck Your OTP"
+      const otpData = `${n1}${n2}${n3}${n4}`;
+      console.log(otpData);
 
-          return res.render("user/verifyEmail",{wrongOtp})
-    
-        }
-    
-        // Clear the OTP details after successful verification
-        user.otp = {
-          code: null,
-          expiration: null
-        };
-    
-        await user.save();
-        console.log('OTP verified successfully in verifyOtp. Please Login Again')
+      const signupData = req.session.signupData;
 
-        // Clear the resendEnabled flag in the session after successful verification
-        delete req.session.resendEnabled;
+      if (!signupData) {
+        return res.json({ error: "User data not found. Please sign up again." });
+      }
 
-        res.redirect('/userlogin')
+      const otpRecord = await otpCollection.findOne({ email: signupData.email });
+
+      if (!otpRecord) {
+        return res.json({ error: "OTP not found. Please request a new one." });
+      }
+
+      console.log(otpRecord.otp);
+
+       if(otpData === otpRecord.otp){
+
+            const newUser = new signupCollection({
+                name: signupData.name,
+                email: signupData.email,
+                password: signupData.password,
+                confirmPassword: signupData.confirmPassword,
+            });
+
+            await newUser.save();
+
+            delete req.session.signupData;
+      
+            res.redirect("/userlogin");
+       } else{
+           return res.render("user/verifyEmail", {message:"Incorrect OTP. Please try again."});
+       }
+        
       } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal Server Error while verifying OTP' });
@@ -165,29 +167,41 @@ const landing=(req,res)=>{
 
 
 const loginpost = async (req, res) => {
+   
+
     try {
-        const { email, password } = req.body;
 
-        console.log(email + " loginpost");
-        const user = await signupCollection.findOne({ email: email });
+        const data = {
+            email: req.body.email,
+            password: req.body.password,
+            
+        };
+    
+        console.log("user data form Req body ", data);
 
-        if (user) {
-            // Check if the user is blocked
-            if (user.isBlocked) {
-                return res.render('user/login', { error: 'User is blocked. Please contact support.' });
-            }
+        const user = await signupCollection.findOne({
+            email: data.email,
+            password: data.password,
+            
+        });
 
-            // Check if the entered password is correct
-            if (user.password === password) {
-                console.log("next chq");
-                console.log(user.email);
-                req.session.user = email;
-                res.redirect('/home'); // Redirect to the homepage route
-            } else {
-                res.render('user/login', { error: 'Wrong password' });
-            }
+        console.log("user data:", user);
+
+        if (!user) {
+            return res.render("user/login", { message: "User does not exist" });
+        }
+
+        // Check if the user is blocked
+        if (user.isBlocked) {
+            return res.render('user/login', { error: 'User is blocked. Please contact support.' });
+        }
+
+        // Check if the entered password is correct
+        if (user.password === data.password) {
+            req.session.user = { email: data.email };
+            return res.redirect('/home');
         } else {
-            res.render('user/login', { error: 'User not found' });
+            return res.render('user/login', { error: 'Wrong password' });
         }
 
     } catch (error) {
@@ -195,6 +209,7 @@ const loginpost = async (req, res) => {
         return res.status(500).json({ error: 'Internal server error' });
     }
 };
+
 
 
 
@@ -243,10 +258,7 @@ const home =async (req,res)=>{
     }
 }
 
-const getVerifyEmail = (req,res)=>{
 
-    res.render("user/verifyEmail");
-} 
 
 const getAthletics = async (req,res) => {
 

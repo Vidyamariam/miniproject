@@ -38,13 +38,13 @@
         <h2 class="text-center title">Admin</h2>
         <ul class="fa-ul">
           <li>
-            <a href="#">Dashboard</a>
+            <a href="/admin/dashboard">Dashboard</a>
           </li>
           <li>
-            <a href="#">User</a>
+            <a href="/admin/usermanage">User</a>
           </li>
           <li>
-            <a href="#">Product</a>
+            <a href="/admin/productmanage">Product</a>
           </li>
           <li>
             <a href="/categoryManage.ejs">Category</a>
@@ -68,23 +68,24 @@
       </article>
 
       <article class="col-md-9 article-right">
-        <% if (typeof message !== 'undefined') { %>
-        <div class="Errormsg">
-          <h3><%= message %></h3>
-        </div>
-        <% } %>
         <div class="title">
           <h2>Admin - Edit Category</h2>
+          <% if (typeof message !== 'undefined') { %>
+          <div class="Errormsg">
+            <small style="color: blue"><%= message %></small>
+          </div>
+          <% } %>
         </div>
-        <form action="/admin/editcategory/<%=id%>" method="post">
+        <form action="/admin/editcategory/<%= id %>" method="post">
           <div class="form-group">
             <label for="category">Category:</label>
-            <!-- Add the 'name' attribute to capture form data -->
+
             <input
               type="text"
               id="categoryName"
               name="categoryName"
               placeholder="Enter category name"
+              value="<%= name %>"
             />
           </div>
           <button class="save-btn" type="submit">save</button>

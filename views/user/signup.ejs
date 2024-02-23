@@ -1,69 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="UTF-8" />
+    <meta charset="utf-8" />
+    <title>RegistrationForm_v2 by Colorlib</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link rel="stylesheet" href="/stylesheets/user/signup.css" />
 
-    <!-- <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const form = document.querySelector("form");
+    <!-- MATERIAL DESIGN ICONIC FONT -->
+    <link
+      rel="stylesheet"
+      href="fonts/material-design-iconic-font/css/material-design-iconic-font.min.css"
+    />
 
-        form.addEventListener("submit", function (event) {
-          const name = document.getElementById("name").value;
-          const email = document.getElementById("email").value;
-          const password = document.getElementById("password").value;
-
-          // Validate if name is not empty
-          if (!name.trim()) {
-            alert("Please enter your name.");
-            event.preventDefault();
-            return;
-          }
-
-          // Validate email format
-          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          if (!emailRegex.test(email)) {
-            alert("Please enter a valid email address.");
-            event.preventDefault();
-            return;
-          }
-
-          // Validate password format
-          const passwordRegex =
-            /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
-          if (!passwordRegex.test(password)) {
-            alert(
-              "Password must contain at least 8 characters, 1 alphabet, 1 number, and 1 special character."
-            );
-            event.preventDefault();
-            return;
-          }
-        });
-      });
-    </script> -->
+    <!-- STYLE CSS -->
+    <link rel="stylesheet" href="/stylesheets/user/signupNew.css" />
   </head>
+
   <body>
-    <div class="signup-container">
-      <h2>
-        <b
-          >Sign Up <br />
-          <small style="color: red"> <%=locals.mes%> </small>
-        </b>
-      </h2>
-      <form action="/signup" method="post">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required />
+    <div
+      class="wrapper"
+      style="background-image: url('/img/user/signupWp.jpg')"
+    >
+      <div class="inner">
+        <form action="/signup" method="post">
+          <h3>
+            Registration Form <br />
+            <small style="color: rgb(255, 0, 0)"> <%=locals.message%> </small>
+          </h3>
+          <div class="form-group">
+            <div class="form-wrapper">
+              <label for="name">Name</label>
+              <input type="text" id="name" name="name" />
+            </div>
+          </div>
+          <div class="form-wrapper">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" />
+          </div>
+          <div class="form-wrapper">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" />
+          </div>
+          <div class="form-wrapper">
+            <label for="confirmPassword">Confirm Password</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+            />
+          </div>
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required />
-
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required />
-
-        <button href="/verifyemail" type="submit">Sign Up</button>
-      </form>
+          <button type="submit" href="/verifyemail">Register Now</button>
+          <div class="userlogin">
+            <p>Already have an account? <a href="/userlogin">Login</a></p>
+          </div>
+        </form>
+      </div>
     </div>
   </body>
+  <!-- This templates was made by Colorlib (https://colorlib.com) -->
 </html>

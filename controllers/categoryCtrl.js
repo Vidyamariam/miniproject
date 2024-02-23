@@ -59,15 +59,17 @@ const postAddCategory = async (req, res) => {
 
 
 const getEditCategory = async(req,res)=>{
-       let id = req.params.categoryId;
+      
     try{    
-        const data = await categoryCollection.find();
-        const name = await categoryCollection.findById(id);
-        console.log("Category ID:", data);
-        console.log("Category ID:", id);
+        const id = req.params.categoryId;
 
-        res.render("admin/editCategory", { data, id, name: name.categoryName });
+    // Find the category by ID
+    const category = await categoryCollection.findById(id);
 
+    res.render("admin/editCategory", {
+      id,
+      name: category ? category.categoryName : "", // Ensure category exists before accessing its name
+    });
     }
     catch(error){
         console.log(error);
@@ -76,48 +78,58 @@ const getEditCategory = async(req,res)=>{
 };
 
 
-const postEditCategory = async (req,res)=> {
+const postEditCategory = async (req, res) => {
+    try {
+      const categoryId = req.params.id;
+      console.log("categoryId:", categoryId);
+      console.log("req.body:", req.body);
+  
+      // Find the category by id
+      const category = await categoryCollection.findById(categoryId);
+      console.log("Category found ", category);
+  
+      if (!category) {
+        console.log("category not found");
+        return res.status(404).send("category not found");
+      }
+  
+      const newCategory = req.body.categoryName;
+      console.log("New category", newCategory);
 
-    try{
-        const categoryId = req.params.id;
-        console.log("categoryId:", categoryId);
-        console.log("req.body:", req.body);
-
-        //find the category by id
-        const category = await categoryCollection.findById(categoryId);
-        console.log("Category found ",category);
-
-        if(!category){
-            console.log("category not found");
-            return res.status(404).send("category not found");
-        }
-
-        const newCategory = req.body.categoryName;
-        console.log("New category", newCategory);
-
+      // Check if the new category name is different from the existing one
+      if (newCategory !== category.categoryName) {
+        // Check if the new category name already exists
         const existsCategory = await categoryCollection.findOne({
-            categoryName: newCategory,
-            _id: { $ne: category._id }, 
+          categoryName: newCategory,
+          _id: { $ne: category._id },
+        });
+  
+        if (existsCategory) {
+          return res.render("admin/editCategory", {
+            id: categoryId,
+            name: newCategory,
+            message: "Category Already Exists",
           });
-
-          if (existsCategory) {
-            return res.render("admin/editCategory", { message: "Category Already Exists" });
-          }
-
-           // Update the properties
-      category.categoryName = newCategory;
-
-      // Save the updated category
-      const updatedCategory = await category.save();
-
-      console.log("Update", updatedCategory);
-
+        }
+  
+        // Update the properties
+        category.categoryName = newCategory;
+  
+        // Save the updated category
+        const updatedCategory = await category.save();
+  
+        console.log("Update", updatedCategory);
+      }
+  
       res.redirect("/admin/category");
-    }catch(error){
-        console.error("Error updateing category:", error);
-        res.status(500).send("Internal server error");
+    } catch (error) {
+      console.error("Error updating category:", error);
+      res.status(500).send("Internal server error");
     }
-};
+  };
+
+  
+  
 
 // const postDeleteCategory = async (req, res) => {
 //     const categoryId = req.params.categoryId;

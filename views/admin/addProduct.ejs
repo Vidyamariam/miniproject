@@ -4,14 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Add Product</title>
-    <link rel="stylesheet" href="/stylesheets/admin/addProduct.css" />
-
-    <!-- CROPPER-LINK -->
     <link
       rel="stylesheet"
       href="https://unpkg.com/cropperjs/dist/cropper.min.css"
     />
-    <script src="https://unpkg.com/cropperjs/dist/cropper.min.js"></script>
+
     <link rel="stylesheet" href="/stylesheets/admin/addProduct.css" />
   </head>
 
@@ -21,7 +18,7 @@
     </div>
     <div class="main">
       <form
-        action="/admin/addproduct/:<%=product._id%>"
+        action="/admin/addproduct"
         method="POST"
         enctype="multipart/form-data"
       >
@@ -30,9 +27,12 @@
 
         <label for="Category">Category:</label>
         <select id="Category" name="category">
+          <option value="" disabled selected>Select Category</option>
           <% categories.forEach((category) => { %> <% if (category.isListed) {
           %>
-          <option><%= category.categoryName %></option>
+          <option value="<%= category.categoryName %>">
+            <%= category.categoryName %>
+          </option>
           <% } %> <% }); %>
         </select>
 
@@ -45,39 +45,46 @@
           accept="image/*"
           multiple
           required
-          onchange="handleImageSelection(this)"
+          onchange="previewImage(this)"
         />
-
-        <!--Cropper-container-->
-        <div id="cropperContainer"></div>
 
         <!-- Image preview container -->
         <div id="imagePreviewContainer">
           <img id="imagePreview" src="#" alt="Image Preview" />
         </div>
 
+        <!-- Cropper container -->
+        <!-- <div>
+          <label for="cropperContainer">Crop Image:</label>
+          <div id="cropperContainer"></div> -->
+        <!-- Button to trigger cropping -->
+        <!-- <button type="button" onclick="cropImage()"></button>
+        </div> -->
+
         <label for="description">Description:</label>
         <textarea id="description" name="description"></textarea>
 
-        <label for="rating">Rating:</label>
-        <input type="number" id="rating" name="rating" step="1" required />
+        <label for="sizes">Sizes:</label>
+        <select id="sizes" name="sizes" multiple>
+          <option value="" disabled selected>Select the size</option>
+          <option value="S">S</option>
+          <option value="M">M</option>
+          <option value="L">L</option>
+        </select>
 
         <label for="price">Price:</label>
-        <input type="number" id="price" name="price" required />
+
+        <input type="number" id="price" name="price" />
 
         <label for="discount">Discount:</label>
-        <input
-          type="number"
-          id="discount"
-          name="discount"
-          step="0.01"
-          required
-        />
+        <input type="number" id="discount" name="discount" step="0.01" />
 
         <label for="stock">Stock:</label>
-        <input type="number" id="stock" name="stock" step="1" required />
+        <input type="number" id="stock" name="stock" step="1" />
+        <br />
 
-        <!-- Removed increase/decrease buttons for price and discount -->
+        <small style="color: orange"><%= locals.msg %></small>
+
         <div>
           <button type="submit">Submit</button>
           <button type="button" onclick="cancelForm()">Cancel</button>
@@ -85,23 +92,36 @@
       </form>
     </div>
 
+    <!--JS-->
+    <!-- ... (your existing HTML) -->
+
+    <script src="https://unpkg.com/cropperjs/dist/cropper.min.js"></script>
+
     <script>
       function previewImage(input) {
         var previewContainer = document.getElementById("imagePreviewContainer");
-        var previewImage = document.getElementById("imagePreview");
 
-        // Check if a file is selected
-        if (input.files && input.files[0]) {
-          var reader = new FileReader();
+        // Clear previous previews
+        previewContainer.innerHTML = "";
 
-          reader.onload = function (e) {
-            previewImage.src = e.target.result;
-            previewContainer.style.display = "block";
-          };
+        // Check if files are selected
+        if (input.files && input.files.length > 0) {
+          for (let i = 0; i < input.files.length; i++) {
+            // Create an image element for each file
+            var reader = new FileReader();
+            reader.onload = function (e) {
+              var img = document.createElement("img");
+              img.className = "preview-image";
+              img.src = e.target.result;
+              previewContainer.appendChild(img);
+            };
+            reader.readAsDataURL(input.files[i]);
+          }
 
-          reader.readAsDataURL(input.files[0]);
+          // Display the preview container
+          previewContainer.style.display = "block";
         } else {
-          previewImage.src = "";
+          // Hide the preview container if no files are selected
           previewContainer.style.display = "none";
         }
       }
@@ -111,38 +131,12 @@
         alert("Form canceled");
       }
 
-      function handleImageSelection(input) {
-        previewImage(input); // Call the image preview function
-        initCropper(input); // Call the cropper initialization function
-      }
-
-      function initCropper(input) {
-        var cropperContainer = document.getElementById("cropperContainer");
-        cropperContainer.innerHTML = ""; // Clear previous cropper instances
-
-        if (input.files && input.files[0]) {
-          var cropper = new Cropper(cropperContainer, {
-            aspectRatio: 1, // Adjust the aspect ratio as needed
-            viewMode: 2, // Set the view mode (0, 1, 2, 3)
-            crop: function (event) {
-              // Access cropped data: event.detail.x, event.detail.y, event.detail.width, event.detail.height
-            },
-          });
-
-          var reader = new FileReader();
-
-          reader.onload = function (e) {
-            cropper.replace(e.target.result);
-          };
-
-          reader.readAsDataURL(input.files[0]);
-
-          // Display the cropper container
-          cropperContainer.style.display = "block";
-        } else {
-          cropperContainer.style.display = "none";
-        }
-      }
+      // // Attach the previewImage function to the change event of the file input
+      document
+        .getElementById("productImage")
+        .addEventListener("change", function () {
+          previewImage(this);
+        });
     </script>
   </body>
 </html>
