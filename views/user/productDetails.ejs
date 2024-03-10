@@ -7,102 +7,35 @@
   <title>Product Details</title>
   <link rel="stylesheet" href="/stylesheets/user/productDetails.css" />
 
-  <link
+  <!-- <link
     href="https://fonts.googleapis.com/css?family=Barlow+Semi+Condensed|Josefin+Sans&display=swap|Permanent+Marker&display&display=swap"
-    rel="stylesheet" />
+    rel="stylesheet" /> -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
-  
+   
 
-  <!-- Add Bootstrap JS (jQuery and Popper.js are required) -->
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;700&display=swap" rel="stylesheet"> -->
 
-  <!-- Add Lightbox CSS -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css"
-    integrity="sha512-Qrgw8QvOfRE4BIsKHth9eDT6AsmUqOXWqgeg4FujjC2MS8IPfNTtsFwxSiLQ3BmyUZCgpL22dqoE/yduXVY2KQ=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-  <!-- Add Lightbox JS -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"
-    integrity="sha512-1Q3F/1CtBl/Zj1mBVKz8qIUjZZK3U+MDfEAl32I56SzVI+7lmG2vE2H0MmzDOwGpr48Bqjowpl6p6M3EsTky1g=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
+  
   <!--GOOGLE FONTS-->
-  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <!-- <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo+Narrow&display=swap"
-    rel="stylesheet">
+    rel="stylesheet"> -->
 
   <!--FONT AWESOME-->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <style>
 
-body {
-  font-family: 'Roboto', sans-serif;
-  font-size: 14px;
-  color: rgba(0, 0, 0, 0.87);
-  background-color: #f4f4f4;
-  margin: 0;
-}
-
-.product-container {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px;
-}
-
-.images-section {
-  width: 30%; /* Adjust as needed */
-}
-
-.images-section img {
-  width: 100%;
-  height: auto;
-  margin-bottom: 10px;
-}
-
-.small-images-column {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 10px;
-
-}
-
-.small-images-column img {
-  width: 70px;
-  height: auto;
-  cursor: pointer;
-  
-}
-
-.MasterImg {
-  width: 30%; /* Adjust as needed */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.details-section {
-  width: 30%; /* Adjust as needed */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 60px;
-}
-
-    
-    </style>
 
 </head>
 
@@ -121,7 +54,6 @@ body {
 
     <nav id="nav-bar">
       <a href="/home">Home</a>
-      <a href="/athleticshoes">Athletic shoes</a>
       <a href="">Boots</a>
       <a href="">Sneakers</a>
       <img src="" id="search-icon" />
@@ -131,7 +63,9 @@ body {
   <!-- Breadcrumbs -->
   <div class="breadcrumbs">
     <a href="/home">Home</a> &gt;
-    <a href="/athleticshoes">Athletic shoes</a> &gt;
+    <% if (productdetails.category) { %>
+      <a href="/<%= productdetails.category.toLowerCase().replace(/\s+/g, '-') %>"><%= productdetails.category %></a> &gt;
+    <% } %>
     <a href="/productDetails/<%= productdetails.name %>">
       <%= productdetails.name %>
     </a> &gt;
@@ -152,7 +86,7 @@ body {
   <!-- Main Image -->
   <div id="container" class="MasterImg">
     <img style="width: 300px; height: 300px;" src="<%= productdetails.productImage[0] %>" alt="Main Product Image"
-         class="lightbox-image" data-lightbox="product-gallery" data-title="<%= productdetails.name %>" />
+         class="lightbox-image" data-lightbox="product-gallery" data-title="<%= productdetails.name %>" id="mainImage"/>
   </div>
 
   <!-- Details Section -->
@@ -160,6 +94,7 @@ body {
     <h1 class="title">
       <%= productdetails.name %>
     </h1>
+     <h6><%= productdetails.category %></h6>
     <span class="price">
      Rs <%= productdetails.price %>
     </span>
@@ -167,28 +102,29 @@ body {
     <p>
       <%= productdetails.description %>
     </p>
-    <ul class="sub-details">
-      <li><i class="fa fa-shield"></i> Secured Payment</li>
-      <li><i class="fa fa-truck"></i> Delivered in 2-5 working days</li>
-    </ul>
-    <table>
-      <tr>
-        <td><label for="pincode">Check Availability</label></td>
-      </tr>
-      <tr>
-        <td><input type="email" name="email" id="email" placeholder="check Availability"></td>
-        <td><button class="btn1" type="submit">CHECK</button></td>
-      </tr>
-      <tr>
-        <td><button class="btn2">ADD TO CART</button></td>
-        <td><button class="btn3">BUY NOW</button></td>
-      </tr>
-      <tr>
-        <td>
-          <button type="submit" class="btn btn-warning" style="border-radius: none; color: white;">REVIEWS</button>
-        </td>
-      </tr>
-    </table>
+   
+    <% if (productdetails.stock > 0) { %>
+      <table>
+      
+        <tr>
+          <td> 
+            <form action="/add-to-cart/<%= productdetails._id %>" method="post">
+              <button type="submit" class="btn btn-lg btn-warning">
+                Add to Cart
+              </button>
+            </form>
+          </td>
+          <td><button class="btn3">BUY NOW</button></td>
+        </tr>
+        <tr>
+          <td>
+            <button type="submit" class="btn btn-warning" style="border-radius: none; color: white;">REVIEWS</button>
+          </td>
+        </tr>
+      </table>
+    <% } else { %>
+      <p class="out-of-stock-message">Product is currently out of stock.</p>
+    <% } %>
   </div>
 
  
@@ -229,192 +165,43 @@ body {
     <p>&copy; 2024 Your Company. All rights reserved.</p>
   </footer>
 
-  <!--JS-SECTION-->
+ <!--JS-SECTION-->
 
+  <!-- Add Bootstrap JS (jQuery and Popper.js are required) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
 
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const container = document.querySelector(".MasterImg");
+    const img = container.querySelector("img");
 
-  <script>
-    
-    const containers = document.querySelectorAll(".MasterImg");
-containers.forEach((container) => {
-  const img = container.querySelector("img");
+    container.addEventListener("mousemove", (e) => {
+      const rect = container.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
 
-  container.addEventListener("mousemove", (e) => {
-    const x = e.clientX - container.offsetLeft;
-    const y = e.clientY - container.offsetTop;
+      const xOffset = (x / container.offsetWidth - 0.5) * 100;
+      const yOffset = (y / container.offsetHeight - 0.5) * 100;
+      const zOffset = 10;
 
-    const xOffset = (x / container.offsetWidth) * 100;
-    const yOffset = (y / container.offsetHeight) * 100;
-    const zOffset = 10;
+      img.style.transformOrigin = `${xOffset + 50}% ${yOffset + 50}%`;
+      img.style.transform = `scale(2) translateZ(${zOffset}px)`;
+    });
 
-    img.style.transformOrigin = `${xOffset}% ${yOffset}%`;
-    img.style.transform = `scale(2) translateZ(${zOffset}px)`;
+    container.addEventListener("mouseleave", () => {
+      img.style.transformOrigin = 'center center';
+      img.style.transform = 'scale(1)';
+    });
   });
 
-  container.addEventListener("mouseleave", () => {
-    img.style.transformOrigin = 'center center';
-    img.style.transform = 'scale(1)';
-  });
-});
-
-
-
-    // const container = document.getElementById("container");
-    // const img = document.querySelector("img");
-
-    //   container.addEventListener("mousemove", (e) => {
-    //     const x = e.clientX - e.target.offsetLeft;
-    //     const y = e.clientY - e.target.offsetTop;
-
-    //     // const xOffset = (x / container.offsetWidth) * 100;
-    //     // const yOffset = (y / container.offsetHeight) * 100;
-
-    //     img.style.transformOrigin = `${x}% ${y}%`;
-    //     img.style.transform = "scale(2)";
-    //   });
-
-    //   container.addEventListener("mouseleave", () => {
-    //     img.style.transformOrigin = 'center center';
-    //     img.style.transform = 'scale(1)';
-    //   });
-  
-
-  </script>
-
-  <script>
-
-    const mainImage = document.getElementById("mainImage").querySelector("img");
-    //  const  img = document.querySelector("img");
-
-    mainImage.addEventListener("mousemove", (e) => {
-      const x = e.clientX - e.target.offsetLeft;
-      const y = e.clientY - e.target.offsetTop;
-
-      console.log(x, y);
-
-      img.style.transformOrigin = `${x}px ${y}px`;
-      img.style.transform = "scale(2)"
-    })
-
-    mainImage.addEventListener("mouseleave", () => {
-
-      img.style.transformOrigin = "center";
-      img.style.transform = "scale(1)";
-    })
-  
-
-
-    function changeMainImage(imageSrc) {
-      console.log('Changing main image to:', imageSrc);
-      document.getElementById('mainImage').src = imageSrc;
-    }
-
-
-    function opentab_type(evt, tab_typeName) {
-      var i, x, tablinks;
-      x = document.getElementsByClassName("tab_type");
-      for (i = 0; i < x.length; i++) {
-        x[i].style.display = "none";
-      }
-      tablinks = document.getElementsByClassName("tablink");
-      for (i = 0; i < x.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace("active_button", "");
-      }
-      document.getElementById(tab_typeName).style.display = "block";
-      evt.currentTarget.className += " active_button";
-    }
-
-    //SCROLL ANIMATE
-    var scroll = window.requestAnimationFrame ||
-      function (callback) { window.setTimeout(callback, 1000 / 60) };
-    var elementsToShow = document.querySelectorAll('.show-on-scroll');
-    function loop() {
-
-      Array.prototype.forEach.call(elementsToShow, function (element) {
-        if (isElementInViewport(element)) {
-          element.classList.add('is-visible');
-        } else {
-          element.classList.remove('is-visible');
-        }
-      });
-
-      scroll(loop);
-    }
-    loop();
-
-    function isElementInViewport(el) {
-      // special bonus for those using jQuery
-      if (typeof jQuery === "function" && el instanceof jQuery) {
-        el = el[0];
-      }
-      var rect = el.getBoundingClientRect();
-      return (
-        (rect.top <= 0
-          && rect.bottom >= 0)
-        ||
-        (rect.bottom >= (window.innerHeight || document.documentElement.clientHeight) &&
-          rect.top <= (window.innerHeight || document.documentElement.clientHeight))
-        ||
-        (rect.top >= 0 &&
-          rect.bottom <= (window.innerHeight || document.documentElement.clientHeight))
-      );
-    }
-
-
-
-
-    //SCROLL ANIMATE
-    var scroll2 = window.requestAnimationFrame ||
-      function (callback2) { window.setTimeout(callback2, 1000 / 60) };
-    var elementsToShow2 = document.querySelectorAll('.show-on-scroll2');
-    function loop2() {
-
-      Array.prototype.forEach.call(elementsToShow2, function (element) {
-        if (isElementInViewport(element)) {
-          element.classList.add('is-visible2');
-        } else {
-          element.classList.remove('is-visible2');
-        }
-      });
-
-      scroll2(loop2);
-    }
-    loop2();
-
-    function isElementInViewport(el) {
-      // special bonus for those using jQuery
-      if (typeof jQuery === "function" && el instanceof jQuery) {
-        el = el[0];
-      }
-      var rect2 = el.getBoundingClientRect();
-      return (
-        (rect2.top <= 0
-          && rect2.bottom >= 0)
-        ||
-        (rect2.bottom >= (window.innerHeight || document.documentElement.clientHeight) &&
-          rect2.top <= (window.innerHeight || document.documentElement.clientHeight))
-        ||
-        (rect2.top >= 0 &&
-          rect2.bottom <= (window.innerHeight || document.documentElement.clientHeight))
-      );
-    }
-
-  </script>
-
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-    crossorigin="anonymous"></script>
-
-  <script type="text/javascript">
-    $(document).ready(function () {
-      $('.big_img').imagezoomsl({
-        zoomrange: [3, 3]
-      });
-    })
-  </script>
-  
-
+  function changeMainImage(imageSrc) {
+    console.log('Changing main image to:', imageSrc);
+    // Replace 'mainImage' with the actual ID of the image element you want to change
+    document.getElementById('mainImage').src = imageSrc;
+  }
+</script>
 
 </body>
 

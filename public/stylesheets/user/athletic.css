@@ -1,7 +1,7 @@
 
  
 #store-name {
-    font-family: 'Josefin Sans', sans-serif;
+    font-family: "Kanit", sans-serif;
     text-align: center;
     margin: auto;
     padding-top: 5px;
@@ -12,7 +12,7 @@
 }
 
 #header-info {
-    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-family:  "Kanit", sans-serif;
     text-transform: uppercase;
     display: flex;
     justify-content: space-around;
@@ -41,11 +41,11 @@
     width: 100%;
     padding: 8px 0px;
     text-align: center;
-    font-family: 'Barlow Semi Condensed', sans-serif
+    font-family:  "Kanit", sans-serif;
 }
 
 #nav-bar a {
-    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-family: "Kanit", sans-serif;
     overflow: hidden;
     font-size: 18px;
     text-decoration: none;
@@ -62,7 +62,7 @@
 }
 
 #three-box-info {
-    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-family: "Kanit", sans-serif;
     display: flex;
     justify-content: center;
 }
@@ -121,14 +121,47 @@
   height: 80px;
 }
 
-.card{
+.nav-icons{
+  display: flex;
+  align-items: center;
+}
+
+.nav-icons button{
+  width: 60px;
+  height: 30px;
+  border-radius: 10px;
+}
+
+.nav-icons a{
+ margin: 10px;
+  
+}
+
+#product{
   width: 200px;
-  height: 250px;
+  height: 350px;
   margin: 10px;
+}
+
+.card-img-top{
+
+  width: 250px;
+  height: 200px;
 }
 
 .row{
   display: flex;
+}
+
+#categories-sidebar table tr{
+   
+    width: 200px;
+
+}
+
+.card-icons{
+
+  margin-left: 100px;
 }
 
 

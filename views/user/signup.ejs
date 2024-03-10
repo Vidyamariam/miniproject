@@ -16,12 +16,9 @@
   </head>
 
   <body>
-    <div
-      class="wrapper"
-      style="background-image: url('/img/user/signupWp.jpg')"
-    >
+    <div class="wrapper">
       <div class="inner">
-        <form action="/signup" method="post">
+        <form action="/signup" method="post" onsubmit="return validateForm()">
           <h3>
             Registration Form <br />
             <small style="color: rgb(255, 0, 0)"> <%=locals.message%> </small>
@@ -29,16 +26,41 @@
           <div class="form-group">
             <div class="form-wrapper">
               <label for="name">Name</label>
-              <input type="text" id="name" name="name" />
+              <input
+                type="text"
+                id="name"
+                name="name"
+                onblur="validateName()"
+              />
+              <small id="nameError" style="color: red"></small>
             </div>
           </div>
           <div class="form-wrapper">
             <label for="email">Email</label>
-            <input type="email" id="email" name="email" />
+            <input
+              type="email"
+              id="email"
+              name="email"
+              onblur="validateEmail()"
+            />
+            <small id="emailError" style="color: red"></small>
           </div>
+          <input
+            type="hidden"
+            id="resendEmail"
+            name="resendEmail"
+            value="<%=locals.email%>"
+          />
+
           <div class="form-wrapper">
             <label for="password">Password</label>
-            <input type="password" id="password" name="password" />
+            <input
+              type="password"
+              id="password"
+              name="password"
+              onblur="validatePassword()"
+            />
+            <small id="passwordError" style="color: red"></small>
           </div>
           <div class="form-wrapper">
             <label for="confirmPassword">Confirm Password</label>
@@ -46,7 +68,9 @@
               type="password"
               id="confirmPassword"
               name="confirmPassword"
+              onblur="validateConfirmPassword()"
             />
+            <small id="confirmPasswordError" style="color: red"></small>
           </div>
 
           <button type="submit" href="/verifyemail">Register Now</button>
@@ -56,6 +80,93 @@
         </form>
       </div>
     </div>
+
+    <script>
+      function validateForm() {
+        // Add additional validation logic here if needed
+        return (
+          validateName() &&
+          validateEmail() &&
+          validatePassword() &&
+          validateConfirmPassword()
+        );
+      }
+
+      function validateName() {
+        var nameInput = document.getElementById("name");
+        var nameError = document.getElementById("nameError");
+        var nameValue = nameInput.value.trim();
+
+        if (nameValue === "") {
+          nameError.innerText = "Name is required.";
+          return false;
+        } else {
+          nameError.innerText = "";
+          return true;
+        }
+      }
+
+      function validateEmail() {
+        var emailInput = document.getElementById("email");
+        var emailError = document.getElementById("emailError");
+        var emailValue = emailInput.value.trim();
+
+        // Simple email format validation (you can use a regex for more complex validation)
+        if (/^\S+@\S+\.\S+$/.test(emailValue)) {
+          emailError.innerText = "";
+          return true;
+        } else {
+          emailError.innerText = "Invalid email format.";
+          return false;
+        }
+      }
+
+      function validatePassword() {
+        var passwordInput = document.getElementById("password");
+        var passwordError = document.getElementById("passwordError");
+        var passwordValue = passwordInput.value;
+
+        // Password should have at least 6 characters
+        if (passwordValue.length < 6) {
+          passwordError.innerText =
+            "Password should have at least 6 characters.";
+          return false;
+        }
+
+        // Password should contain numbers, alphabets, and a special character (you can customize the regex)
+        if (
+          !/^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*()_+]).{6,}$/.test(
+            passwordValue
+          )
+        ) {
+          passwordError.innerText =
+            "Password should contain numbers, alphabets, and a special character.";
+          return false;
+        } else {
+          passwordError.innerText = "";
+          return true;
+        }
+      }
+
+      function validateConfirmPassword() {
+        var passwordInput = document.getElementById("password");
+        var confirmPasswordInput = document.getElementById("confirmPassword");
+        var confirmPasswordError = document.getElementById(
+          "confirmPasswordError"
+        );
+        var confirmPasswordValue = confirmPasswordInput.value;
+
+        // Confirm password should match the password
+        if (confirmPasswordValue !== passwordInput.value) {
+          confirmPasswordError.innerText = "Passwords do not match.";
+          return false;
+        } else {
+          confirmPasswordError.innerText = "";
+          return true;
+        }
+      }
+    </script>
   </body>
+
   <!-- This templates was made by Colorlib (https://colorlib.com) -->
 </html>

@@ -1,0 +1,112 @@
+.title{
+  color: #ddd;
+  font-size: 30px;
+    text-align: center;
+}
+
+table {
+    width: 900px;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f2f2f2;
+  }
+
+  .total-price {
+    margin-top: 20px;
+  }
+
+  .billing-details{
+    width: 200px;
+    height: 200px;
+    border: 1px solid black;
+    color: gray;
+  }
+
+  .checkout-content {
+    max-width: 100%;
+    margin: 50px auto; /* Center the checkout-content */
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add box shadow */
+    background-color: #333; /* Add background color */
+  }
+
+  .billing-details{
+    
+    width: 800px;
+    border-radius: 5px;
+
+
+  }
+  .billing-details button{
+
+    margin-top: 40px;
+  }
+
+  .billing-details,
+  .product-list,
+  .payment-section
+  .coupon-section {
+    margin-top: 20px;
+    border: 1px solid #ddd;
+    padding: 20px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Add box shadow */
+    margin-bottom: 20px;
+    background-color: #fff; /* Add background color */
+    border-radius: 5px;
+  }
+
+  .product-list table{
+
+    width: 100%;
+  }
+
+  .product-list table tbody{
+
+    height: 150px;
+  }
+
+  .coupon-section{
+
+  width: 300px;
+  height: 100px;
+  border-radius: 5px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  
+  }
+
+  .coupon-section input{
+    width: 200px
+  }
+
+  .coupon-section button{
+
+    width: 60px;
+    margin-top: 5px;
+    border-radius: 5px;
+  }
+  .coupon-section label input button{
+
+    margin-left: 10px;
+    border-radius: 10px;
+  }
+
+  .payment-section{
+
+    width: 300px;
+    height: 300px;
+    border-radius: 5px;
+    background-color: white;
+    color: black;
+  }

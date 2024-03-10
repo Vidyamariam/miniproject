@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const bodyParser = require('body-parser');
 const categoryCollection = require("../model/category");
-const AddProduct = require("../model/productSchema");
+const productsCollection = require("../model/productSchema");
 const multer = require("../middleware/upload");
 const gm = require("gm").subClass({ imageMagick: true });
 
@@ -31,16 +31,16 @@ const getProductManage = async (req, res) => {
     const page = parseInt(req.params.page) || 1;
     const skip = (page - 1) * PRODUCTS_PER_PAGE;
 
-    const totalProducts = await AddProduct.countDocuments();
+    const totalProducts = await productsCollection.countDocuments();
     const totalPages = Math.ceil(totalProducts / PRODUCTS_PER_PAGE);
 
-    const products = await AddProduct.find()
+    const products = await productsCollection.find()
       .skip(skip)
       .limit(PRODUCTS_PER_PAGE);
 
-    const categories = await AddProduct.find();
+    const categories = await productsCollection.find();
 
-    const productId = await AddProduct.findById(); // You may need to adjust this line based on your requirements
+    const productId = await productsCollection.findById(); // You may need to adjust this line based on your requirements
 
     res.render("admin/productManage", {
       categories,
@@ -59,7 +59,7 @@ const getProductManage = async (req, res) => {
 
 const getAddProduct = async (req, res) => {
   try {
-      const product = await AddProduct.find();
+      const product = await productsCollection.find();
       const categories = await categoryCollection.find();
      
       
@@ -92,6 +92,8 @@ const postAddProduct = async (req, res) => {
             sizes,
         } = req.body;
 
+        console.log("product details", req.body);
+
       //    // Validate for negative values
          if (price < 0 || discount < 0 || stock < 0) {
           const categories = await categoryCollection.find();
@@ -108,7 +110,7 @@ const postAddProduct = async (req, res) => {
           const fileUrls = req.files.map((file) => ` /uploads/${file.filename}`);
           productImage = fileUrls;
         }
-
+        
       
         const data = {
             
@@ -121,11 +123,10 @@ const postAddProduct = async (req, res) => {
             stock: stock,
             isListed: isListed,
             sizes: Array.isArray(sizes) ? sizes : [sizes], // Ensure sizes is an array
-        };
+        };       
+       console.log('data',data)
 
-        
-
-        const updatedProduct = await AddProduct.create(data);
+        const updatedProduct = await productsCollection.create(data);
         res.redirect("/admin/productmanage");
 
 
@@ -141,7 +142,7 @@ const getProductEdit = async (req,res)=>{
     const id = req.params.id;
     try{
         const category = await categoryCollection.find();
-        const items = await AddProduct.findById(id);
+        const items = await productsCollection.findById(id);
         console.log("productsss", items, category);
         res.render("admin/editProduct", {items,category});
     }catch(error){
@@ -163,7 +164,7 @@ const postEditProduct = async (req,res)=>{
         productImage = fileUrls;
       }
        
-        await AddProduct.findByIdAndUpdate(productId, {
+        await productsCollection.findByIdAndUpdate(productId, {
             name: req.body.name,
             category: req.body.category,
             description: req.body.description,
@@ -188,7 +189,7 @@ const postEditProduct = async (req,res)=>{
 const productVisibility = async (req, res) => {
     try {
       const productId = req.params.id;
-      const product = await AddProduct.findById(productId);
+      const product = await productsCollection.findById(productId);
   
       if (!product) {
         return res.status(404).send("Product not found");

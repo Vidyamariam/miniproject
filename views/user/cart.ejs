@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="/stylesheets/user/home.css" type="text/css" rel="stylesheet" />
+  <!-- <link
+    href="https://fonts.googleapis.com/css?family=Barlow+Semi+Condensed|Josefin+Sans&display=swap|Permanent+Marker&display&display=swap"
+    rel="stylesheet" /> -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+  <!-- //font-awesome link -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;700&display=swap" rel="stylesheet"> -->
+
+  <!-- <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet"> -->
+  <link rel="stylesheet" href="/stylesheets/user/cart.css">
+  <link rel="stylesheet" href="/stylesheets/user/profile.css" />
+ 
+  
+  <!-- SweetAlert2 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.0/dist/sweetalert2.min.css">
+
+  <title>STEPUP SHOES</title>
+
+  <style>
+    body {
+      font-family: "Kanit", sans-serif;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div id="header-info">
+      <!-- <p id="contactus">Contact Us</p> -->
+      <img src="/img/siteLogo1.png" class="logo" />
+      <h1 id="store-name">STEPUP SHOES</h1>
+      <div class="nav-icons">
+        <div class="dropdown" id="my-account-dropdown">
+          <a id="my-account" onclick="toggleDropdown()"><i class="fa fa-regular fa-user fa-xl"></i> My Account</a>
+          <div class="dropdown-content" id="account-options">
+            <a href="/profile"><i class="fa fa-regular fa-user fa-sm"></i> My Profile</a>
+            <a href="#"><i class="fa fa-regular fa-receipt fa-sm"></i> Orders</a>
+            <a href="#"><i class="fa fa-regular fa-heart fa-sm"></i> Wishlist</a>
+            <a href="#"><i class="fa fa-regular fa-ticket fa-sm"></i> Coupons</a>
+            <a href="/logout"><i class="fa fa-regular fa-sign-out-alt fa-sm"></i> Logout</a>
+          </div>
+        </div>
+
+        <a id="addtocart" href="/cart" style="color: black; text-decoration: none;">My Cart<i
+            class="fa fa-duotone fa-cart-shopping fa-xl"></i></a>
+      </div>
+    </div>
+    </div>
+
+    <nav id="nav-bar">
+      <a href="/home">Home</a>
+      <a href="">About us</a>
+      <a href="">Contact</a>
+      <a href="/athletic-shoes">Products</a>
+
+      <img src="" id="search-icon" />
+    </nav>
+  </header>
+
+
+  <!-- CART CONTENT SECTION -->
+  <main class="page">
+    <section class="shopping-cart dark">
+      <div class="container">
+        <div class="block-heading">
+          <h2>Shopping Cart</h2>
+          <h4 style="color: green;">
+            <%= locals.message %>
+          </h4>
+        </div>
+        <div class="content">
+          <div class="row">
+            <div class="col-md-12 col-lg-8">
+              <% if (cart && cart.items && cart.items.length> 0) { %>
+                <div class="items">
+
+                  <% cart.items.forEach((item, index)=> { %>
+                    <div class="product">
+                      <div class="row">
+                        <div class="col-md-3">
+                          <img class="img-fluid mx-auto d-block image" src="<%= item.productId.productImage[0] %>" />
+                        </div>
+                        <div class="col-md-8">
+                          <div class="info">
+                            <div class="row">
+                              <div class="col-md-5 product-name">
+                                <div class="product-name">
+                                  <a href="#">
+                                    <%= item.productId.name %>
+                                  </a>
+                                  <div id="id" hidden>
+                                    <%= item.productId._id %>
+                                  </div>
+                                  <div class="product-info">
+                                    <div>Category: <span class="value">
+                                        <%= item.productId.category %>
+                                      </span></div>
+                                    <div>Price: <span class="value">Rs<%= item.productId.price %></span></div>
+                                    <div>Quantity: <span class="value" id="item-quantity">
+                                        <%= item.quantity %>
+                                      </span></div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-md-4 quantity">
+                                <label for="quantity">Update Quantity:</label>
+                                <div class="quantityUpdate">
+                                  <button class="quantity-button"
+                                    onclick="decreaseQuantity('<%= item._id %>')">-</button>
+                                  <input data-item-id="<%= item._id %>" id="quantity_<%= item._id %>" type="number"
+                                    value="<%= item.quantity %>" min="1" max="<%= item.productId.stock %>"
+                                    class="form-control quantity-input" onchange="updateQuantity('<%= item._id %>')" />
+                                  <button class="quantity-button"
+                                    onclick="increaseQuantity('<%= item._id %>')">+</button>
+                                </div>
+                                <br>
+                                <form action="/remove/<%= item._id %>" method="get">
+                                  <button type="button" class="btn btn-primary" onclick="confirmRemove('<%= item._id %>')" >Remove</button>
+                                </form>
+                              </div>
+
+                              <div class="col-md-3 price">
+                                <label style="font-size: 20px;">Price</label>
+                                <span id="price_<%= item._id %>">Rs<%= item.price %></span>
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <% }) %>
+
+                </div>
+                <% } else { %>
+                  <div class="cart-empty">
+                    <img src="/img/admin/emptyCart.jpeg">
+                    <p style="color: red; font-size: 20px;">Your cart is Empty..</p>
+                  </div>
+
+                  <% } %>
+            </div>
+            <div class="col-md-12 col-lg-4">
+              <div class="summary">
+                <h3>Summary</h3>
+                <!-- <div class="summary-item">
+                  <span class="text">Subtotal</span><span class="price"></span>
+                </div>
+                <div class="summary-item">
+                  <span class="text">Discount</span><span class="price">$0</span>
+                </div>
+                <div class="summary-item">
+                  <span class="text">Shipping</span><span class="price">$0</span>
+                </div> -->
+                <div class="summary-item">
+                  <span class="text" id="total-price">Total Price: Rs.<%= sum %></span>
+                </div>
+                <a href="/checkout"> 
+                  <button type="submit" class="btn btn-primary btn-lg btn-block" >
+                    Checkout
+                  </button>
+                </a>
+               
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!--FOOTER SECTION-->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-logo">
+        <img src="/img/siteLogo2.jpeg" class="logo" />
+      </div>
+      <h2>FOLLOW US</h2>
+      <div class="social-icons">
+        <div class="icon-div">
+          <a href="#" class="icon"><i class="fa-brands fa-facebook fa-xl" style="color: #f1f3f3;"></i></a>
+        </div>
+        <div class="icon-div">
+          <a href="#" class="icon"><i class="fa-brands fa-twitter fa-xl" style="color: #f1f3f3;"></i></a>
+        </div>
+        <div class="icon-div">
+          <a href="#" class="icon"><i class="fa-brands fa-instagram fa-xl" style="color: #f1f3f3;"></i></i></a>
+        </div>
+        <div class="icon-div">
+          <a href="#" class="icon"><i class="fa-brands fa-youtube fa-xl" style="color: #f1f3f3;"></i></a>
+        </div>
+      </div>
+      <ul class="footer-links">
+        <li><a href="#">FAQS</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Shippping and Delivery</a></li>
+        <li><a href="#">Payments</a></li>
+      </ul>
+    </div>
+    <p>&copy; 2024 Your Company. All rights reserved.</p>
+  </footer>
+
+
+  <!-- Bootstrap JS dependencies -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+
+
+    <script>
+      function confirmRemove(itemId) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Are you sure?',
+          text: 'Do you really want to remove this product from the cart?',
+          showCancelButton: true,
+          confirmButtonColor: '#007bff',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, remove it!',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // If the user confirms, send a Fetch request to remove the product
+            removeProduct(itemId);
+          }
+        });
+      }
+      
+      function removeProduct(itemId) {
+        fetch(`/remove/${itemId}`, {
+          method: 'GET',
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          // You can handle the response or reload the page if needed
+          location.reload();
+        })
+        .catch(error => {
+          console.error('Error removing product:', error);
+          // Handle the error as needed
+        });
+      }
+      </script>
+      
+
+  <script>
+    function decreaseQuantity(itemId) {
+      var quantityInput = document.getElementById('quantity_' + itemId);
+      var currentQuantity = parseInt(quantityInput.value, 10);
+
+      if (currentQuantity > 1) {
+        quantityInput.value = currentQuantity - 1;
+        updateQuantity(itemId);
+      }
+    }
+
+    function increaseQuantity(itemId) {
+      var quantityInput = document.getElementById('quantity_' + itemId);
+      var currentQuantity = parseInt(quantityInput.value, 10);
+      var maxStock = parseInt(quantityInput.getAttribute('max'), 10);
+
+      if (currentQuantity < maxStock) {
+        quantityInput.value = currentQuantity + 1;
+        updateQuantity(itemId);
+      } else {
+        // Display SweetAlert2 popup when stock limit is reached
+        showStockLimitReachedPopup();
+      }
+    }
+
+    function showStockLimitReachedPopup() {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Stock Limit Reached',
+        text: 'The maximum stock limit has been reached for this item.',
+        confirmButtonColor: '#007bff',
+      });
+    }
+  </script>
+
+
+  <script>
+    function updateQuantity(itemId) {
+      var quantityInput = document.getElementById('quantity_' + itemId);
+      var newQuantity = quantityInput.value;
+
+      // Make an AJAX request to update the quantity on the server
+      fetch('/updateQuantity/' + itemId + '?quantity=' + newQuantity, {
+        method: 'POST',
+      })
+        .then(response => response.json())
+        .then(data => {
+          // Update the quantity in the UI
+          var quantityElement = document.getElementById('quantity_' + itemId);
+          if (quantityElement) {
+            quantityElement.innerText = newQuantity;
+          } else {
+            console.error('Quantity element not found for item ID: ' + itemId);
+          }
+
+          // Update the quantity display in the product info section
+          var itemQuantityElement = document.getElementById('item-quantity');
+          if (itemQuantityElement) {
+            var item = data.cart.items.find(item => item._id === itemId);
+            itemQuantityElement.innerText = item.quantity;
+          } else {
+            console.error('Item Quantity element not found');
+          }
+
+          // Update the price in the UI
+          var priceElement = document.getElementById('price_' + itemId);
+          if (priceElement) {
+            // Update with the correct property from the server response
+            var newPrice = data.cart.items.find(item => item._id === itemId).price;
+            priceElement.innerText = 'Rs' + newPrice;
+          } else {
+            console.error('Price element not found for item ID: ' + itemId);
+          }
+
+          // Update the total price in the summary section
+          var totalPriceElement = document.getElementById('total-price');
+          if (totalPriceElement) {
+            totalPriceElement.innerText = 'Total Price: Rs.' + data.cart.totalPrice;
+          } else {
+            console.error('Total Price element not found');
+          }
+
+
+
+          // Show SweetAlert2 popup for successful update
+          showUpdateSuccessPopup();
+        })
+        .catch(error => console.error('Error:', error));
+    }
+  </script>
+
+
+
+
+
+  <!-- SweetAlert2 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.0/dist/sweetalert2.all.min.js"></script>
+
+
+  <script>
+    function toggleDropdown() {
+      var dropdown = document.getElementById("account-options");
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    }
+
+    // Close the dropdown if the user clicks outside of it
+    window.onclick = function (event) {
+      if (!event.target.matches('#my-account')) {
+        var dropdown = document.getElementById("account-options");
+        if (dropdown.style.display === "block") {
+          dropdown.style.display = "none";
+        }
+      }
+    };
+  </script>
+
+
+
+</body>
+
+</html>

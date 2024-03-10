@@ -6,7 +6,7 @@ const getProductDetails = async (req,res)=>{
   
    try{
     const id = req.params.id;
-    console.log("dhgash",id);
+    // console.log("dhgash",id);
     const productdetails = await productsCollection.findOne({_id: id});
     console.log("dsfa", productdetails);
 

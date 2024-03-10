@@ -47,7 +47,7 @@ const getUserManage = async(req, res) => {
 
     try{
         const userFind = await userCollection.find();
-        console.log("ifhsjdifhisjhfijoia",userFind);
+        // console.log("ifhsjdifhisjhfijoia",userFind);
         res.render("admin/userManagement",{userFind});
 
     }catch(error){

@@ -1,109 +1,112 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="/stylesheets/user/athletic.css">
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-      crossorigin="anonymous"
-    />
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-      crossorigin="anonymous"
-    ></script>
-   
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-</head>
-<body>
-    <body>
-        <header>
-          <div id="header-info">
-            <!-- <p id="contactus">Contact Us</p> -->
-            <img src="/img/siteLogo1.png" class="logo" />
-            <h1 id="store-name">STEPUP SHOES</h1>
-            <div class="nav-icons">
-              <a id="favourite"><i class="fa fa-regular fa-heart fa-xl"></i></a>
-              <a id="addtocart"><i class="fa fa-duotone fa-cart-shopping fa-xl"></i></a>
-              <form action="/logout" method="post">
-                <button type="submit" style="border-radius: 10px;">logout</button>
-              </form>
-              
-            </div>
-          </div>
-    
-          <nav id="nav-bar">
-            <a href="/home">Home</a>
-            <a href="">Athletic shoes</a>
-            <a href="">Boots</a>
-            <a href="">Sneekers</a>
-            <img src="" id="search-icon" />
-          </nav>
-        </header>
+<%- include('header')%>
 
-       
-       <!--BODY SECTION-->
-       <div class="container-fluid">
+<div class="container-fluid">
+  <div class="row">
+    <!-- Categories Section -->
+    <aside id="categories-sidebar" class="col-md-2">
+      <table>
+        <thead class="category-title">
+          <tr>
+            <th>CATEGORIES</th>
+          </tr>
+        </thead>
+        <tr>
+          <td>
+            <a href="/athletic-shoes"
+              >Athletic Shoes <i class="fa fa-duotone fa-caret-right"></i
+            ></a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="/boots"
+              >Boots <i class="fa fa-duotone fa-caret-right"></i
+            ></a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="/casual-shoes"
+              >Casual Shoes <i class="fa fa-duotone fa-caret-right"></i
+            ></a>
+          </td>
+        </tr>
+      </table>
+    </aside>
+
+    <!-- Product Cards Section -->
+    <div class="col-md-10">
+      <div class="container-fluid">
         <br />
         <h1>ATHLETIC SHOES</h1>
         <div class="row gy-3">
-          <% productList.forEach((product) => { %>
-            <% if (product.isListed) { %>
-              <div class="col-md-4">
-                <div class="card">
-                  <img src="<%= product.productImage[0] %>" class="card-img-top" alt="..." />
-                  <div class="card-body">
-                    <h4 class="card-text">
-                      <%= product.name %>
-                    </h4>
-                    <h6 class="card-title"><%= product.price %></h6>
-                    <a href="/productDetails/<%= product._id %>" class="btn btn-sm btn-success">Buy now</a>
-                    <i class="fa-regular fa-heart fa-xl"></i>
-                  </div>
-                </div>
+          <% productList.forEach((product)=> { %> <% if (product.isListed) { %>
+          <div class="col-md-3">
+            <div class="card" id="product">
+              <a href="/productDetails/<%= product._id %>">
+                <img
+                  src="<%= product.productImage[0] %>"
+                  class="card-img-top"
+                  alt="..."
+                />
+              </a>
+
+              <div class="card-body">
+                <h6 class="card-text"><%= product.name %></h6>
+                <h6 class="card-title"><%= product.price %></h6>
+                <form action="/add-to-cart/<%= product._id %>" method="post">
+                  <% if (product.isListed && product.stock > 0) { %>
+                  <!-- Product is available, show Add to Cart button -->
+                  <button type="submit" class="btn btn-lg btn-warning">
+                    Add to Cart
+                  </button>
+                  <% } else { %>
+                  <!-- Product is not available, show Out of Stock message -->
+                  <span class="text-danger">Out of Stock</span>
+                  <% } %>
+                </form>
+                <button type="submit" class="btn btn-sm">
+                  <i class="fa fa-duotone fa-heart"></i> Add to wishlist
+                </button>
               </div>
-            <% } %>
-          <% }) %>
+            </div>
+          </div>
+          <% } %> <% }) %>
         </div>
       </div>
-      
-
-      
-   <!--FOOTER SECTION-->
-   <footer>
-    <div class="footer-content">
-      <div class="footer-logo">
-        <img src="/img/siteLogo2.jpeg" class="logo" />
-      </div>
-      <h2>FOLLOW US</h2>
-      <div class="social-icons">
-        <div class="icon-div">
-          <a href="#" class="icon"><i class="fa-brands fa-facebook fa-xl" style="color: #f1f3f3;"></i></a>
-        </div>
-        <div class="icon-div">
-          <a href="#" class="icon"><i class="fa-brands fa-twitter fa-xl" style="color: #f1f3f3;"></i></a>
-        </div>
-         <div class="icon-div">
-        <a href="#" class="icon"><i class="fa-brands fa-instagram fa-xl" style="color: #f1f3f3;"></i></i></a>
-         </div>
-         <div class="icon-div">
-          <a href="#" class="icon"><i class="fa-brands fa-youtube fa-xl" style="color: #f1f3f3;"></i></a>
-         </div>         
-      </div>
-      <ul class="footer-links">
-        <li><a href="#">FAQS</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Shippping and Delivery</a></li>
-        <li><a href="#">Payments</a></li>
-      </ul>
     </div>
-    <p>&copy; 2024 Your Company. All rights reserved.</p>
-  </footer>
+  </div>
+</div>
 
-    
-</body>
-</html>
+<script>
+  async function addToCart(productId) {
+    try {
+      const quantity = 1; // You can customize this based on your requirements
+      const response = await fetch(
+        `/api/add-to-cart?productId=${productId}&quantity=${quantity}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          // Include credentials if needed
+          credentials: "include",
+        }
+      );
+
+      const responseData = await response.json();
+
+      if (responseData.success) {
+        alert("Product added to cart successfully!");
+        // You can also update the UI to reflect the changes, e.g., update cart icon
+      } else {
+        alert("Failed to add product to cart. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
+      alert("An error occurred. Please try again later.");
+    }
+  }
+</script>
+
+<%- include('footer') %>

@@ -24,9 +24,9 @@
         </form>
       </header>
       <section class="row">
-        <article class="col-md-3 article-left">
+        <article class="col-md-2 col-sm-3 article-left">
           <img src="/img/admin/adminlogo.png" />
-          <h2 class="text-center title">Admin Dashboard</h2>
+          <h2 class="text-center title">Admin</h2>
           <ul class="fa-ul">
             <li>
               <a href="/admin/dashboard">Dashboard</a>
@@ -93,7 +93,7 @@
                     >
                       <button
                         type="submit"
-                        class="btn btn-lg btn-danger sListed <%= category.isListed? 'unblocked-user' : 'blocked-user' %>"
+                        class="btn btn-danger sListed <%= category.isListed? 'unblocked-user' : 'blocked-user' %>"
                       >
                         <% if (category.isListed) { %> Listed <% } else { %> Not
                         Listed <% } %>

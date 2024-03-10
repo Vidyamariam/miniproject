@@ -12,7 +12,7 @@ const categorySchema = new mongoose.Schema({
 
 })
 
-const categoryCollection = mongoose.model("productcategories",categorySchema);
+const categoryCollection = mongoose.model("categories",categorySchema);
 
 module.exports = categoryCollection;
 

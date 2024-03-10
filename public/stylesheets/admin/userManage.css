@@ -58,7 +58,7 @@ body, h1, h2, h3, p, ul, li {
 	z-index: 1;
 	height: calc(100vh - 40px); /* 40px is the header height */
 	overflow-y: auto; /* Enable scrolling for the left article */
-  
+    width: 100px;
   }
   
   .article-left i {
@@ -96,10 +96,12 @@ body, h1, h2, h3, p, ul, li {
 	padding: 20px;
 	overflow-y: auto; /* Enable scrolling for the right article */
 	max-height: 80vh; /* Adjust the maximum height as needed */
+	margin-top: 200px;
   }
   
   .article-right h1 {
 	font-size: 28px;
+	margin-top: 100px;
   }
   
   hr {
@@ -124,6 +126,7 @@ body, h1, h2, h3, p, ul, li {
   thead tr th{
 	padding-left: 60px;
 	padding-right: 60px;
+	text-align: center;
   }
 
   thead, tbody {
@@ -133,6 +136,11 @@ body, h1, h2, h3, p, ul, li {
   tbody {
 	max-height: 60vh; /* Adjust the maximum height of the tbody as needed */
 	overflow-y: auto; /* Enable scrolling for the tbody */
+  }
+
+  table tbody tr td{
+      width: 276px;
+	text-align: center;
   }
   
 

@@ -6,7 +6,7 @@ const signupCollection = require('../model/userSignupSchema');
 const productsCollection = require('../model/productSchema');
 const nodemailer = require('nodemailer');
 const otpCollection = require("../model/otpSchema");
-
+const bcrypt = require('bcrypt');
 
 
 const signupGet = (req,res) =>{ //user signUp cheyunnathu
@@ -15,9 +15,8 @@ const signupGet = (req,res) =>{ //user signUp cheyunnathu
 }
 
 const signupPost = async (req, res) => {
-    const { name, email, password, confirmPassword } = req.body;
+    const { name, email, password } = req.body;
 
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/;
 
     try {
         const existingUser = await signupCollection.findOne({ email });
@@ -28,10 +27,6 @@ const signupPost = async (req, res) => {
             return res.render("user/signup", { message: "User already exists" });
         }
 
-        // Validate password
-        if (!password.match(passwordRegex)) {
-           return res.render("user/signup", { message: "Invalid password format" });
-        }
 
         //generate otp
         const otpGenerated = Math.floor(1000 + Math.random() * 9000).toString();
@@ -39,8 +34,8 @@ const signupPost = async (req, res) => {
         req.session.signupData = {
             name,
             email,
-            password,
-            confirmPassword,
+            password: await bcrypt.hash(password, 10),
+            
         };
 
         const newOTP = new otpCollection({
@@ -131,12 +126,7 @@ const verifyEmailPost=async(req,res)=>{
 
        if(otpData === otpRecord.otp){
 
-            const newUser = new signupCollection({
-                name: signupData.name,
-                email: signupData.email,
-                password: signupData.password,
-                confirmPassword: signupData.confirmPassword,
-            });
+            const newUser = new signupCollection(signupData);
 
             await newUser.save();
 
@@ -153,11 +143,38 @@ const verifyEmailPost=async(req,res)=>{
       }
 }
 
+const resendOTP = async (req, res) => {
+    try {
+        const signupdata = req.session.signupData;
+        if (!signupdata) {
+            return res.json({ error: "User data not found. Please sign up again." });
+        }
+
+        const generatedOTP = Math.floor(1000 + Math.random() * 9000).toString();
+        const email = signupdata.email;
+
+        // Save the new OTP to the database
+        await otpCollection.findOneAndUpdate(
+            { email: email },
+            { $set: { otp: generatedOTP } },
+            { upsert: true }
+        );
+
+        // Send the new OTP to the user's email
+        const mailBody = `Your new OTP for registration is ${generatedOTP}`;
+        await sendOTPVerificationEmail(email, "New Registration OTP", mailBody);
+
+        return res.redirect('/verifyemail');
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+}
 
 
-
-const login= (req,res)=> {
-  res.render("user/login")
+const login=  (req,res)=> {      
+   
+       res.render("user/login");
 }
 
 const landing=(req,res)=>{
@@ -181,7 +198,6 @@ const loginpost = async (req, res) => {
 
         const user = await signupCollection.findOne({
             email: data.email,
-            password: data.password,
             
         });
 
@@ -196,8 +212,10 @@ const loginpost = async (req, res) => {
             return res.render('user/login', { error: 'User is blocked. Please contact support.' });
         }
 
-        // Check if the entered password is correct
-        if (user.password === data.password) {
+        // Compare hashed password
+        const isPasswordValid = await bcrypt.compare(data.password, user.password);
+
+        if (isPasswordValid) {
             req.session.user = { email: data.email };
             return res.redirect('/home');
         } else {
@@ -209,7 +227,6 @@ const loginpost = async (req, res) => {
         return res.status(500).json({ error: 'Internal server error' });
     }
 };
-
 
 
 
@@ -245,33 +262,58 @@ const postLogout = (req,res)=> {
   })
 }
 
+const getHome = async (req,res)=> {
+     
+    const productList = await productsCollection.find();
 
+    res.render('user/home', {productList});
 
-const home =async (req,res)=>{
-
-    if (!req.session.user) {
-        // If the user is not logged in, redirect to the login page
-        res.redirect('/userlogin');
-    } else {
-        // If the user is logged in, render the home page
-        res.render('user/home');
-    }
 }
+
+
+//POST
+// const home =async (req,res)=>{
+     
+//     if (!req.session.user) {
+//         // If the user is not logged in, redirect to the login page
+//         res.redirect('/userlogin');
+//     } else {
+
+//         const productList = await productsCollection.find();
+//         // If the user is logged in, render the home page
+//         res.render('user/home', {productList});
+//     }
+// }
 
 
 
 const getAthletics = async (req,res) => {
 
-    const productList = await productsCollection.find();
+    const productList = await productsCollection.find({category: "Athletic shoes"});
 
-    console.log("dhadsjf",productList);
     res.render("user/athleticShoes", { productList });
   
 }
 
+const boots =  async (req,res)=> {
+     
+    const productList = await productsCollection.find({category: "Boots"});
+
+    res.render("user/boots", { productList });
+}
+
+const casualShoes =  async (req,res)=> {
+     
+    const productList = await productsCollection.find({category: "Casual Shoes"});
+
+    res.render("user/casualShoes", { productList });
+}
+
 
 module.exports = {
-    login, loginpost,home,signupGet,signupPost,landing,getVerifyEmail,verifyEmailPost,getLogout,postLogout,getAthletics, 
+    login, loginpost,signupGet,signupPost,landing,getVerifyEmail,verifyEmailPost,getLogout,postLogout,getAthletics, getHome,boots,casualShoes,resendOTP,
 }
+
+
 
 

@@ -1,7 +1,7 @@
 
 /*This be the CSS*/
 
-@import url('https://fonts.googleapis.com/css?family=Roboto');
+
 
 /* Box sizing rules */
 * {
@@ -72,7 +72,7 @@
   font-family: 'Josefin Sans', sans-serif;*/
   
   #store-name {
-      font-family: 'Josefin Sans', sans-serif;
+    font-family: "Kanit", sans-serif;
       text-align: center;
       margin: auto;
       padding-top: 5px;
@@ -83,7 +83,7 @@
   }
   
   #header-info {
-      font-family: 'Barlow Semi Condensed', sans-serif;
+    font-family: "Kanit", sans-serif;
       text-transform: uppercase;
       display: flex;
       justify-content: space-around;
@@ -104,11 +104,11 @@
       width: 100%;
       padding: 8px 0px;
       text-align: center;
-      font-family: 'Barlow Semi Condensed', sans-serif
+      font-family:  "Kanit", sans-serif;
   }
   
   #nav-bar a {
-      font-family: 'Barlow Semi Condensed', sans-serif;
+      font-family: "Kanit", sans-serif;
       overflow: hidden;
       font-size: 18px;
       text-decoration: none;
@@ -197,7 +197,7 @@
   
   
   body {
-    font-family: 'Roboto', sans-serif;
+    font-family:  "Kanit", sans-serif;
     font-size: 14px;
     color: rgba(0, 0, 0, 0.87);
   }
@@ -208,6 +208,67 @@
      margin: 20px;
      width: 50px;
      height: 40px;
+  }
+
+  body {
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.87);
+    background-color: #f4f4f4;
+    margin: 0;
+  }
+  
+  .product-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+  }
+  
+  .images-section {
+    width: 30%; /* Adjust as needed */
+  }
+  
+  .images-section img {
+    width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+  }
+  
+  .small-images-column {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+  
+  }
+  
+  .small-images-column img {
+    width: 70px;
+    height: auto;
+    cursor: pointer;
+    
+  }
+  
+  .MasterImg {
+    width: 30%; /* Adjust as needed */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .details-section {
+    width: 30%; /* Adjust as needed */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 60px;
+  }
+
+  .out-of-stock-message {
+    color: red; /* or any other color you prefer for out of stock message */
+    font-weight: bold;
+    
   }
 
   /*ANIMATION*/

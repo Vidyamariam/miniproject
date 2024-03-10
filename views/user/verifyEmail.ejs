@@ -87,9 +87,7 @@
           <br> 
         </form>
         <div id="otp-timer"></div>
-        <form action="/resendOtp" method="POST">
-          <button id="resendOTP">Resend OTP</button>
-         </form>
+         <a href="/resend">resend otp</a>    
 
       </div>
 
@@ -125,25 +123,6 @@
   </footer>
 
 
-  <!-- <script>
-    const timer = document.getElementById('timer');
-    const resendBtn = document.getElementById('resendButton');
-
-    let timeLeft = 20; // Set the timer duration in seconds
-
-    const countdown = setInterval(() => {
-        timeLeft--;
-        timer.textContent = timeLeft;
-        if (timeLeft <= 0) {
-            clearInterval(countdown);
-            resendBtn.removeAttribute('disabled');
-            resendBtn.classList.remove('disabled');
-            resendBtn.classList.add('exceeded');
-            resendBtn.textContent = 'Resend OTP';
-        }
-    }, 1000);
-</script>
-
 <script>
     if (window.history.replaceState) {
         window.history.replaceState(null, null, window.location.href);
@@ -155,6 +134,7 @@
   const inputs = document.querySelectorAll("input");
   const button = document.querySelector("button");
   const resendButton = document.getElementById("resendOTP");
+  const emailInput = document.getElementById("resendEmail");
 
   inputs.forEach((input, index1) => {
     input.addEventListener("keyup", (e) => {
@@ -194,17 +174,33 @@
     });
   });
 
-  resendButton.addEventListener("click", () => {
-    inputs.forEach((input) => {
-      input.value = "";
-      input.removeAttribute("disabled");
+
+  resendButton.addEventListener("click", async () => {
+      try {
+        // Make an AJAX request to the backend to resend OTP
+        const response = await fetch("/resendOtp", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: emailInput.value }), // Replace with the actual email
+        });
+
+        const responseData = await response.json();
+
+        if (responseData.success) {
+          // Handle success, e.g., show a message to the user
+          console.log("OTP resent successfully");
+        } else {
+          // Handle failure, e.g., show an error message to the user
+          console.error(responseData.error);
+        }
+      } catch (error) {
+        console.error("An error occurred:", error);
+      }
     });
 
-    inputs[0].focus();
-    button.classList.remove("active");
-  });
 
-  window.addEventListener("load", () => inputs[0].focus());
 });
 
 
@@ -214,7 +210,7 @@
 
 document.addEventListener("DOMContentLoaded", function () {
   // Set the initial time (in seconds)
-  let timeLeft = 120; // Change this to your desired time
+  let timeLeft = 20; // Change this to your desired time
 
   // Function to update the timer display
   function updateTimer() {

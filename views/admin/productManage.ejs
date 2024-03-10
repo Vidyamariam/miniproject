@@ -25,7 +25,7 @@
         </form>
       </header>
       <section class="row">
-        <article class="col-md-3 article-left">
+        <article class="col-md-2 col-sm-4 article-left">
           <img src="/img/admin/adminlogo.png" />
           <h2 class="text-center title">Admin</h2>
 
@@ -129,7 +129,7 @@
                   >
                     <button
                       type="submit"
-                      class="btn btn-lg btn-danger sListed <%= items.isListed? 'unblocked-user' : 'blocked-user' %>"
+                      class="btn btn-danger sListed <%= items.isListed? 'unblocked-user' : 'blocked-user' %>"
                     >
                       <% if (items.isListed) { %> Listed <% } else { %> Not
                       Listed <% } %>

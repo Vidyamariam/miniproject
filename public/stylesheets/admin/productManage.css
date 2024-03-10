@@ -93,7 +93,9 @@ header button {
 
 .article-right {
 	flex: 3;
+	overflow-x: auto;
 	padding: 20px;
+	width: 80%;
 	overflow-y: auto; /* Enable scrolling for the right article */
 	max-height: 80vh; /* Adjust the maximum height as needed */
 }

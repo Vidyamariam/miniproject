@@ -13,7 +13,7 @@
     box-sizing: border-box; }
   
   body {
-    font-family: "Muli-Regular";
+    font-family: 'Josefin Sans', sans-serif;
     color: white;
     font-size: 13px;
     margin: 0; }
@@ -47,6 +47,7 @@
     align-items: center; }
   
   .inner {
+    
     min-width: 850px;
     margin: auto;
     padding-top: 68px;
@@ -111,7 +112,7 @@
     align-items: center;
     justify-content: center;
     padding: 0;
-    background: #ae3c33;
+    background: #e3b04b;
     font-size: 13px;
     color: #fff;
     text-transform: uppercase;
@@ -134,7 +135,7 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: #f11a09;
+      background: #e3b04b ;
       -webkit-transform: scaleX(0);
       transform: scaleX(0);
       -webkit-transform-origin: 0 50%;
@@ -191,7 +192,7 @@
       }
       .userlogin a{
 
-        color: violet;
+        color: #e3b04b;
       }
   
   @media (max-width: 991px) {
