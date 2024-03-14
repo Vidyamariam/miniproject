@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
+        integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="/stylesheets/admin/userManage.css">
+    <title>Bootstrap Dashboard</title>
+
+    <style>
+        .form-control-primary {
+            margin: 10px;
+            opacity: 0.2;
+            border-radius: 2px;
+        }
+
+        .navbar {
+            background-color: black;
+        }
+
+        .nav-item:hover {
+            color: gray;
+        }
+
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            top: 0;
+            z-index: 100;
+            padding: 70px 0 0 10px;
+            border-right: 1px solid #d3d3d3;
+        }
+
+        .left-sidebar {
+            position: sticky;
+            top: 0;
+            height: calc(100vh - 70px)
+        }
+
+        .sidebar-nav li .nav-link {
+            color: #333;
+            font-weight: 500;
+        }
+
+        main {
+            padding-top: 90px;
+        }
+
+        main .card {
+            margin-bottom: 20px;
+        }
+
+        .navbar-brand {
+            margin: 10px;
+        }
+
+        .table {
+            background-color: #d3d3d3;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-dark fixed-top flex-md-nowrap p-0 shadow">
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Stepup Shoes</a>
+        <input type="text" class="form-control form-control-primary w-100" placeholder="Search...">
+        <ul class="navbar-nav px-3">
+            <li class="nav-item text-nowrap">
+                <a class="nav-link" href="/admin/adminlogout">Logout</a>
+            </li>
+        </ul>
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 bg-light d-none d-md-block sidebar">
+                <div class="left-sidebar">
+                    <ul class="nav flex-column sidebar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/admin/dashboard">
+                                <svg class="bi bi-chevron-right" width="16" height="16" viewBox="0 0 20 20"
+                                    fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd"
+                                        d="M6.646 3.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L12.293 10 6.646 4.354a.5.5 0 010-.708z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/usermanage">
+                                <svg class="bi bi-chevron-right" width="16" height="16" viewBox="0 0 20 20"
+                                    fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd"
+                                        d="M6.646 3.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L12.293 10 6.646 4.354a.5.5 0 010-.708z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                User
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/category">
+                                <svg class="bi bi-chevron-right" width="16" height="16" viewBox="0 0 20 20"
+                                    fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd"
+                                        d="M6.646 3.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L12.293 10 6.646 4.354a.5.5 0 010-.708z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                Category
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/productmanage">
+                                <svg class="bi bi-chevron-right" width="16" height="16" viewBox="0 0 20 20"
+                                    fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd"
+                                        d="M6.646 3.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L12.293 10 6.646 4.354a.5.5 0 010-.708z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                Products
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/order-list">
+                                <svg class="bi bi-chevron-right" width="16" height="16" viewBox="0 0 20 20"
+                                    fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd"
+                                        d="M6.646 3.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L12.293 10 6.646 4.354a.5.5 0 010-.708z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                Orders
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <svg class="bi bi-chevron-right" width="16" height="16" viewBox="0 0 20 20"
+                                    fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd"
+                                        d="M6.646 3.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L12.293 10 6.646 4.354a.5.5 0 010-.708z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                Reports
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <svg class="bi bi-chevron-right" width="16" height="16" viewBox="0 0 20 20"
+                                    fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd"
+                                        d="M6.646 3.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L12.293 10 6.646 4.354a.5.5 0 010-.708z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                Coupons
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <svg class="bi bi-chevron-right" width="16" height="16" viewBox="0 0 20 20"
+                                    fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd"
+                                        d="M6.646 3.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L12.293 10 6.646 4.354a.5.5 0 010-.708z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                Banners
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+                <h3>User Details</h3>
+                <hr>
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Order ID</th>
+
+                                <th>User name</th>
+                                <th>Date</th>
+                                <th>TotalPrice</th>
+                                <th>Payment</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% orders.forEach((order, index)=> { %>
+                                <% order.products.forEach((product, productIndex)=> { %>
+                                    <tr>
+                                        <td>
+                                            <%= index + 1 %>
+                                        </td>
+                                        <td>
+                                            <%= order.orderId %>
+                                        </td>
+
+                                        <td>
+                                            <%= order.userId.name %>
+                                        </td>
+                                        <td>
+                                            <%= new Date(order.orderDate).toLocaleDateString() %>
+                                        </td>
+                                        <td>$<%= order.totalPrice %>
+                                        </td>
+                                        <td>
+                                            <%= order.paymentMethod %>
+                                        </td>
+                                        <td>
+
+                                            <% if (product.status==='cancelled' ) { %>
+                                                <!-- Display a link for cancelled orders -->
+                                                <a href="#" onclick="showCancelReason('<%= product.reason %>')">Order
+                                                    Cancelled</a>
+                                                <% } else if (product.status==='delivered' ) { %>
+                                                    <!-- Display a link to show reason for returns -->
+                                                    <a href="#"
+                                                        onclick="showReturnReason('<%= product.reason %>')">Order
+                                                        Returned</a>
+                                                    <% } else { %>
+                                                        <!-- Display select dropdown for other statuses -->
+                                                        <!-- <select id="onchangeValue" onclick="updateOrderStatus('<%= order._id %>', '<%= product.productId %>')">
+                                                    <option value="pending" <%= product.status ==='Pending' ? 'selected' : '' %>>Pending</option>
+                                                    <option value="shipped" <%= product.status ==='Shipped' ? 'selected' : '' %>>Shipped</option>
+                                                    <option value="out_for_delivery" <%= product.status ==='Out for Delivery' ? 'selected' : '' %>>Out for Delivery</option>
+                                                    <option value="delivered" <%= product.status ==='Delivered' ? 'selected' : '' %>>Delivered</option>
+                                                    <option value="cancelled">Cancel Order</option>
+                                                    
+                                
+                                                </select> -->
+
+                                                        <p id="order" style="display: none;">
+                                                            <%= order._id %>
+                                                        </p>
+                                                        <p id="product" style="display: none;">
+                                                            <%= product._id %>
+                                                        </p>
+
+
+                                                        <select class="onchangeValue" data-order-id="<%= order._id %>" data-product-id="<%= product._id %>">
+                                                            <option value="pending" <%= product.status==='Pending' ? 'selected' : '' %>>Pending</option>
+                                                            <option value="shipped" <%= product.status==='Shipped' ? 'selected' : '' %>>Shipped</option>
+                                                            <option value="out_for_delivery" <%= product.status==='Out for Delivery' ? 'selected' : '' %>>Out for Delivery</option>
+                                                            <option value="delivered" <%= product.status==='Delivered' ? 'selected' : '' %>>Delivered</option>
+                                                            <option value="cancelled">Cancel Order</option>
+                                                        </select>
+                                                        
+                                                        <% } %>
+                                        </td>
+                                    </tr>
+                                    <% }); %>
+                                        <% }); %>
+
+
+                        </tbody>
+                    </table>
+                </div>
+
+
+
+            </main>
+        </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"
+        integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/"
+        crossorigin="anonymous"></script>
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+
+    <script>
+        function showCancelReason(reason) {
+            // Display SweetAlert prompt with cancel reason
+            Swal.fire({
+                title: 'Order Cancelled',
+                text: 'Cancellation Reason: ' + reason, // Display the cancellation reason
+                icon: 'info',
+                confirmButtonText: 'Close'
+            });
+        }
+
+        function showReturnReason(reason) {
+            // Display SweetAlert prompt with return reason
+            Swal.fire({
+                title: 'Order Returned',
+                text: 'Return Reason: ' + reason, // Display the return reason
+                icon: 'info',
+                confirmButtonText: 'Close'
+            });
+        }
+
+
+        document.querySelectorAll('.onchangeValue').forEach(selectElement => {
+    selectElement.addEventListener("change", function () {
+        const orderId = this.dataset.orderId;
+        const productId = this.dataset.productId;
+        const status = this.value;
+        console.log("orderId",orderId);
+        
+        
+        updateOrderStatus(orderId, productId, status);
+    });
+});
+
+
+
+        function updateOrderStatus(orderId, productId, status) {
+            fetch('/admin/updateOrderStatus', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ orderId, productId, status }),
+            })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Order status updated successfully');
+                        // Optionally, you can update the UI here without reloading the page
+                    } else {
+                        console.error('Failed to update order status');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error updating order status:', error);
+                });
+        }
+
+
+    </script>
+
+
+
+
+</body>
+
+</html>

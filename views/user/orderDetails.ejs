@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      .order-main,
+      .address,
+      .product-details {
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Add box shadow */
+        padding: 20px; /* Add some padding for better visual */
+        margin-bottom: 20px; /* Add margin bottom for separation */
+      }
+      .order-main {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 200px;
+        margin: 300px;
+      }
+      .address .product-details {
+        margin: 20px;
+      }
+      .address {
+        width: 300px;
+        height: 300px;
+      }
+      .product-details {
+        width: 800px;
+        height: 300px;
+      }
+      .product {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .product img {
+        width: 60px;
+        height: 60px;
+        margin-right: 10px;
+      }
+      .pd-text {
+        display: flex;
+        flex-direction: column;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="order-main">
+      <div class="address">
+        <h5>Delivery Address</h5>
+        <p>Name: <%= orders.shippingAddress.name %></p>
+        <p>Address: <%= orders.shippingAddress.address %></p>
+        <p>Phone: <%= orders.shippingAddress.phone %></p>
+      </div>
+      <div class="product-details">
+        <h5>Product Details</h5>
+
+        <div class="product">
+          <img src="<%= orders.productId.productImage %>" alt="" />
+          <br />
+          <br />
+
+          <div class="pd-text">
+            <p>Product Name: <%= orders.productName %></p>
+            <p>Quantity: <%= orders.quantity %></p>
+            <p>Price: <%= orders.price %></p>
+            <p>Total Price: <%= orders.totalPrice %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

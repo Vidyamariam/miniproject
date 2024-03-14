@@ -42,7 +42,7 @@ const getProductManage = async (req, res) => {
 
     const productId = await productsCollection.findById(); // You may need to adjust this line based on your requirements
 
-    res.render("admin/productManage", {
+    res.render("admin/productManageN", {
       categories,
       products,
       productId,

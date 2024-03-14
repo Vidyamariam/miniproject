@@ -26,8 +26,12 @@ router.get("/editprofile",isBlock.isblocked, profileController.getEditProfile);
 router.get("/address",isBlock.isblocked, profileController.getAddressManage);
 router.get("/cart",isBlock.isblocked,cartController.getCart);
 router.get("/remove/:productId",isBlock.isblocked, cartController.removeItem);
-router.get("/check-stock/:productId/:quantity", cartController.checkStock);
+// router.get("/check-stock/:productId/:quantity", cartController.checkStock);
 router.get("/checkout", cartController.getCheckoutPage);
+router.get("/order-success", cartController.orderSuccessPage);
+router.get("/order-history",cartController.orderHistory);
+router.get("/order-details/:orderId",cartController.orderDetails);
+
 
 //POST METHODSs
 router.post("/userlogin",userController.loginpost);
@@ -39,6 +43,7 @@ router.post("/editprofile",isBlock.isblocked, profileController.postEditProfile)
 router.post("/add-to-cart/:productId",isBlock.isblocked, cartController.addToCart);
 router.post("/updateQuantity/:itemId",isBlock.isblocked, cartController.updateQuantity);
 router.post("/add-address", cartController.checkoutAddAddress);
-
-
+router.post("/checkout", cartController.placeOrder);
+router.post("/cancelOrder", cartController.cancelOrder);
+router.post("/returnOrder",cartController.returnOrder);
 module.exports = router;

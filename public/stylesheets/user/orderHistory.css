@@ -1,0 +1,33 @@
+.order-table{
+
+    width: 1000px;
+}
+
+.order-table tbody tr td{
+    padding: 20px;
+}
+
+.order-table thead tr th{
+    padding: 20px;
+}
+
+.order-actions a button{
+   justify-content: space-between;
+}
+.order-actions a{
+    width: 150px;
+    height: 40px;
+    font-size: 15px;
+}
+.col-lg-8{
+    font-size: 15px;
+}
+
+.profile-options{
+    margin-left: 0px;
+}
+
+.order-main{
+    display: flex;
+    justify-content: space-between;
+}

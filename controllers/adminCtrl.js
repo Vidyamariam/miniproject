@@ -4,8 +4,8 @@ const router = express.Router();
 const bodyParser = require('body-parser');
 const categoryCollection = require("../model/category");
 const userCollection = require("../model/userSignupSchema");
-
-
+const ordersCollection = require("../model/orderSchema");
+const mongoose = require("mongoose");
 
 
 const login = (req,res)=>{
@@ -48,7 +48,7 @@ const getUserManage = async(req, res) => {
     try{
         const userFind = await userCollection.find();
         // console.log("ifhsjdifhisjhfijoia",userFind);
-        res.render("admin/userManagement",{userFind});
+        res.render("admin/userManageNew",{userFind});
 
     }catch(error){
         console.log("Error while users find in adminctrl", error);
@@ -130,10 +130,66 @@ const postAdminLogout =  (req,res)=> {
   })
 }
 
+//ORDERS
+
+const getOrders = async (req, res) => {
+  try {
+    // Fetch orders from the database
+    const orders = await ordersCollection.find().populate({
+      path: 'userId',
+      model: 'newusers'
+    }).populate({
+      path: 'products.productId',
+      model: 'products'
+    });
+
+  //  console.log("orders",orders);
+
+    res.render("admin/orderlistN", { orders });
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+const postOrders = async (req, res) => {
+  console.log("post order is getting in line 157");
+  try {
+    const { orderId, productId, status } = req.body; 
+    console.log("orderId", orderId);
+    console.log("productId", productId);
+    console.log("status", status);
+
+    const order = await ordersCollection.findOne({ _id: orderId });
+    console.log("order",order);
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+
+    const product = order.products.find(product => String(product._id) === productId);
+    console.log("product",product);
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found in the order' });
+    }
+
+    product.status = status;
+    
+    await order.save();
+     
+    console.log("Order status updated successfully");
+    res.json(order);
+  } catch (error) {
+    console.error('Error updating product status:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+
+
 
 
 module.exports = {
-    dashboard, login,loginpost,getUserManage,blockUser,getAdminLogout,postAdminLogout
+    dashboard, login,loginpost,getUserManage,blockUser,getAdminLogout,postAdminLogout,getOrders,postOrders
 }
 
 

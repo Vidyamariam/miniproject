@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link rel="stylesheet" href="/stylesheets/admin/dashboard.css" />
-    <link rel="stylesheet" href="/stylesheets/admin/userManage.css" />
+    
+
     <link rel="stylesheet" href="/stylesheets/admin/productManage.css" />
 
     <link rel="stylesheet" href="/stylesheets/admin/paginationStyle.css" />
@@ -28,6 +28,20 @@
       integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
       crossorigin="anonymous"
     ></script>
+
+    <style>
+      .order-list tbody tr:nth-child(even) {
+        background-color: #e1dede; /* Alternate background color */
+      }
+      .order-list tbody tr td {
+        padding-left: 55px;
+        padding-right: 55px;
+      }
+
+      .order-list thead tr th{
+        padding-left: 50px;
+      }
+    </style>
   </head>
   <body>
     <header>
@@ -66,6 +80,47 @@
             <a href="#">Coupons</a>
           </li>
         </ul>
+      </article>
+
+      <article class="col-md-9 article-right order-list">
+        <h1>Order Details</h1>
+        <table>
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Order ID</th>
+              <th>User name</th>
+              <th>Date</th>
+              <th>Product Name</th>
+              <th>Quantity</th>
+              <th>Price</th>
+              <th>Payment</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% orders.forEach((order, index) => { %>
+              <tr>
+                <td><%= index + 1 %></td>
+                <td><%= order.orderId %></td>
+                <td><%= order.userId.name %></td>
+                <td><%= order.createdAt.toISOString().split('T')[0] %></td>
+                <td><%= order.productName %></td>
+                <td><%= order.quantity %></td>
+                <td>$<%= order.price.toFixed(2) %></td>
+                <td><%= order.paymentOption %></td>
+                <td>
+                  <select>
+                    <option value="pending" <%= order.status === 'pending' ? 'selected' : '' %>>Pending</option>
+                    <option value="shipped" <%= order.status === 'shipped' ? 'selected' : '' %>>Shipped</option>
+                    <option value="out_for_delivery" <%= order.status === 'out_for_delivery' ? 'selected' : '' %>>Out for Delivery</option>
+                    <option value="delivered" <%= order.status === 'delivered' ? 'selected' : '' %>>Delivered</option>
+                  </select>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
       </article>
     </section>
   </body>

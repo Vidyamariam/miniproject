@@ -10,7 +10,7 @@ const getCategoryManage = async(req,res)=>{
 
     try{
         const categories = await categoryCollection.find();
-        res.render("admin/categoryManage", { categories});
+        res.render("admin/categoryManageN", { categories});
     }catch(error){
         console.error(error);
         res.status(500).send("Internal server error");
@@ -20,7 +20,7 @@ const getCategoryManage = async(req,res)=>{
 
 const getaddcategory = (req,res)=>{
 
-    res.render("admin/addCategory");
+    res.render("admin/addCategoryN");
 }
 
 
@@ -29,14 +29,10 @@ const postAddCategory = async (req, res) => {
 
     // Validate if categoryName is provided
     if (!categoryName) {
-        return res.status(400).render("admin/addCategory", { error: 'Category name is required' });
+        return res.status(400).render("admin/addCategoryN", { error: 'Category name is required' });
     }
 
-    // Validate if categoryName starts with a capital letter
-    const firstLetter = categoryName.charAt(0);
-    if (firstLetter !== firstLetter.toUpperCase()) {
-        return res.status(400).render("admin/addCategory", { error: 'Category name should start with a capital letter' });
-    }
+    
 
     try {
         // Check if the category already exists
@@ -44,7 +40,7 @@ const postAddCategory = async (req, res) => {
 
         if (existingCategory) {
             // If the category already exists, handle the error
-            res.status(400).render("admin/addCategory", { error: 'Category with this name already exists' });
+            res.status(400).render("admin/addCategoryN", { error: 'Category with this name already exists' });
         } else {
             // Add the category to your data storage
             const newCategory = await categoryCollection.create({ categoryName });
@@ -66,7 +62,7 @@ const getEditCategory = async(req,res)=>{
     // Find the category by ID
     const category = await categoryCollection.findById(id);
 
-    res.render("admin/editCategory", {
+    res.render("admin/editCategoryN", {
       id,
       name: category ? category.categoryName : "", // Ensure category exists before accessing its name
     });
@@ -105,7 +101,7 @@ const postEditCategory = async (req, res) => {
         });
   
         if (existsCategory) {
-          return res.render("admin/editCategory", {
+          return res.render("admin/editCategoryN", {
             id: categoryId,
             name: newCategory,
             message: "Category Already Exists",

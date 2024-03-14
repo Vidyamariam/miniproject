@@ -1,0 +1,180 @@
+<%- include('header')%>
+
+<div class="container">
+  <div class="main-body">
+    <div class="row order-main">
+      <div class="col-lg-12">
+        <div
+          class="main-div"
+          style="max-height: 400px; overflow-y: auto; scrollbar-width: none"
+        >
+          <h4>Your Orders</h4>
+          <table class="order-table">
+            <thead>
+              <tr>
+                <th scope="col">Order ID</th>
+                <th scope="col">Date</th>
+                <th scope="col">Total</th>
+                <th scope="col">Status</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Loop through orders and display data -->
+              <% orders.forEach(order=> { %> <% order.products.forEach(product=>
+              { %>
+              <tr>
+                <td><%= order._id %></td>
+                <td>
+                  <%= order.orderDate.toLocaleString("en-US", { timeZone:
+                  "Asia/Kolkata" }) %>
+                </td>
+                <td>Rs. <%= order.totalPrice %></td>
+                <td>
+                  <% if(product.status==='cancelled'){ %>
+
+                  <span style="color: red">Cancelled</span>
+
+                  <% } %> <% if (product.status==='pending' ) { %>
+                  <span style="color: rgb(189, 189, 37)">Pending</span>
+                  <% } %> <% if(product.status=== 'delivered') { %>
+                  <span style="color: green">Delivered</span>
+                  <% } %> <% if(product.status=== 'out_for_delivery') { %>
+                  <span style="color: rgb(235, 156, 11)">Out For Delivery</span>
+                  <% } %>
+                </td>
+                <td>
+                  <div class="order-actions" style="display: flex; gap: 10px">
+                    <% if (product.status==='pending' ) { %>
+                    <button
+                      id="cancelButton_<%= order._id %>"
+                      class="btn btn-sm btn-danger cancelbtn"
+                      onclick="showCancelConfirmation('<%= order._id %>')"
+                    >
+                      Cancel Order
+                    </button>
+
+                    <% } %> <% if (product.status === 'delivered') { %>
+                    <button
+                      class="btn btn-sm btn-danger returnbtn"
+                      onclick="showReturnPrompt('<%= order._id %>', '<%= product.productId %>')"
+                    >
+                      Return Order
+                    </button>
+                    <% } %>
+                    <a
+                      href="/order-details/<%= order._id %>"
+                      class="btn btn-primary btn-sm"
+                      style="padding: 5px 10px"
+                    >
+                      View Details
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              <% }); %> <% }); %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<script>
+  function showCancelConfirmation(orderId) {
+    Swal.fire({
+      title: "Cancel Order",
+      input: "text",
+      inputPlaceholder: "Enter reason for cancellation",
+      showCancelButton: true,
+      confirmButtonText: "Submit",
+      cancelButtonText: "Cancel",
+      preConfirm: (reason) => {
+        if (!reason) {
+          Swal.showValidationMessage("Please enter a reason for cancellation");
+        }
+        return reason;
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Submit fetch request to cancel the order
+        fetch(`/cancelOrder`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ orderId: orderId, reason: result.value }), // Include orderId in the request body
+        })
+          .then((response) => {
+            if (response.ok) {
+              const cancelButton = document.getElementById(
+                `cancelButton_${orderId}`
+              );
+              if (cancelButton) {
+                cancelButton.innerText = "Order Cancelled";
+                cancelButton.classList.remove("btn-danger");
+                cancelButton.classList.add("btn-secondary");
+                cancelButton.disabled = true;
+                Swal.fire("Order Cancelled", "", "success");
+              } else {
+                console.error("Button not found");
+              }
+            } else {
+              Swal.fire("Error", "Failed to cancel the order", "error");
+            }
+          })
+          .catch((error) => {
+            console.error("Error cancelling order:", error);
+            Swal.fire("Error", "Failed to cancel the order", "error");
+          });
+      }
+    });
+  }
+
+  function showReturnPrompt(orderId, productId) {
+    Swal.fire({
+      title: "Return Order",
+      input: "text",
+      inputPlaceholder: "Enter reason for return",
+      showCancelButton: true,
+      confirmButtonText: "Submit",
+      cancelButtonText: "Cancel",
+      preConfirm: (reason) => {
+        if (!reason) {
+          Swal.showValidationMessage("Please enter a reason for return");
+        }
+        return reason;
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch(`/returnOrder`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            orderId: orderId,
+            productId: productId,
+            reason: result.value,
+          }), // Include productId in the request body
+        })
+          .then((response) => {
+            if (response.ok) {
+              Swal.fire("Order Returned", "", "success");
+            } else {
+              Swal.fire("Error", "Failed to return the order", "error");
+            }
+          })
+          .catch((error) => {
+            console.error("Error returning order:", error);
+            Swal.fire("Error", "Failed to return the order", "error");
+          });
+      }
+    });
+  }
+</script>
+
+<%- include('footer') %>

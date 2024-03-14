@@ -8,7 +8,8 @@ body {
 	font-family: 'Arial', sans-serif;
 	background-color: #f4f4f4;
 	font-family: 'Josefin Sans', sans-serif;
-	overflow-y: scroll;
+	/* overflow-y: scroll;
+	 */
 }
 
 main {
@@ -16,7 +17,7 @@ main {
 	flex-direction: column;
 	min-height: 100vh;
 	flex: 1; /* Allow main section to take remaining height */
-	overflow-y: auto;
+	/* overflow-y: auto; */
 	padding-top: 60px; /* Adjusted padding-top to accommodate the header */
 }
 
@@ -42,7 +43,6 @@ header button {
 	top: 10px;
 	right: 10px;
 	cursor: pointer;
-	/* You can add additional styling as needed */
 }
 
 .row {
@@ -58,7 +58,8 @@ header button {
 	text-align: center;
 	z-index: 1;
 	height: calc(100vh - 40px); /* 40px is the header height */
-	overflow-y: auto; /* Enable scrolling for the left article */
+	position: fixed; /* Fixed positioning for the left article */
+	/* overflow-y: auto; Enable scrolling for the left article */
 }
 
 .article-left i {
@@ -93,11 +94,10 @@ header button {
 
 .article-right {
 	flex: 3;
-	overflow-x: auto;
 	padding: 20px;
-	width: 80%;
-	overflow-y: auto; /* Enable scrolling for the right article */
+	/* overflow-y: auto; Enable scrolling for the right article */
 	max-height: 80vh; /* Adjust the maximum height as needed */
+	margin-left: 250px; /* Set the margin to accommodate the fixed left article */
 }
 
 .article-right h1 {
@@ -118,8 +118,9 @@ hr {
 .addcateg {
 	margin-bottom: 20px;
 }
-.addcateg button{
-  margin-top: 30px;
+
+.addcateg button {
+	margin-top: 30px;
 }
 
 #addcateg {
@@ -135,54 +136,44 @@ hr {
 
 #addcateg:hover {
 	background-color: #ddd;
-  color: black;
+	color: black;
 }
 
 header h2 {
 	text-align: center;
 }
 
-table thead th {
-	text-align: center;
-  }
-  
-  table tbody tr td {
-	padding-left: 10px;
-	padding-right: 10px;
-	width: 60px;
-	text-align: center;
-  }
-  
-  header h2 {
-	text-align: center;
-  }
-  
-  table {
+table {
+	width: 100%;
 	border-collapse: collapse;
 	margin-top: 20px;
 	background-color: #ffffff;
 	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 	border-radius: 5px;
 	overflow: hidden;
-	width: 100%;
-  }
-  
-  th, td {
-	padding: 5px;
-	text-align: center;
-	border-bottom: 1px solid #dee2e6;
-  }
-  
-  th {
-	background-color: #ddd;
-	color: black;
-  }
-  
-  tr:hover {
-	background-color: #f5f5f5;
-  }
+}
 
-.delete-icon, .fa-pen-to-square {
+th, td {
+	padding: 12px;
+	text-align: left;
+	border-bottom: 1px solid #dee2e6;
+}
+
+th {
+	background-color: #007bff;
+	color: white;
+}
+
+tr:hover {
+	background-color: #f5f5f5;
+}
+
+/* tbody tr td {
+	 width: 200px;
+} */
+
+.delete-icon,
+.fa-pen-to-square {
 	font-size: 18px;
 	cursor: pointer;
 	margin-right: 10px;
@@ -190,7 +181,8 @@ table thead th {
 	transition: color 0.3s ease;
 }
 
-.delete-icon:hover, .fa-pen-to-square:hover {
+.delete-icon:hover,
+.fa-pen-to-square:hover {
 	color: #218838;
 }
 
@@ -203,13 +195,6 @@ table thead th {
 .edit-icon:hover {
 	color: #0056b3;
 }
-
-/* table tbody tr td th{
-	padding-left: 10px;
-	padding-right: 10px;
-	width: 60px;
-	text-align: center;
-} */
 
 /* Responsive Styles */
 @media (max-width: 600px) {

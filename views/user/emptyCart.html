@@ -39,12 +39,6 @@
     body {
       font-family: "Kanit", sans-serif;
     }
-
-.quantityUpdate{
-  display: flex;
-  justify-content: space-evenly;
-}
-
   </style>
 </head>
 
@@ -131,12 +125,12 @@
                                 <label for="quantity">Update Quantity:</label>
                                 <div class="quantityUpdate">
                                   <button class="quantity-button"
-                                  onclick="decreaseQuantity('<%= item._id %>')">-</button>
-                                <input data-item-id="<%= item._id %>" id="quantity_<%= item._id %>" type="number"
-                                  value="<%= item.quantity %>" min="1" max="<%= item.productId.stock %>"
-                                  class="form-control quantity-input" onchange="updateQuantity('<%= item._id %>')" />
-                                <button class="quantity-button"
-                                  onclick="increaseQuantity('<%= item._id %>')">+</button>
+                                    onclick="decreaseQuantity('<%= item._id %>')">-</button>
+                                  <input data-item-id="<%= item._id %>" id="quantity_<%= item._id %>" type="number"
+                                    value="<%= item.quantity %>" min="1" max="<%= item.productId.stock %>"
+                                    class="form-control quantity-input" onchange="updateQuantity('<%= item._id %>')" />
+                                  <button class="quantity-button"
+                                    onclick="increaseQuantity('<%= item._id %>')">+</button>
                                 </div>
                                 <br>
                                 <form action="/remove/<%= item._id %>" method="get">
@@ -178,7 +172,7 @@
                   <span class="text">Shipping</span><span class="price">$0</span>
                 </div> -->
                 <div class="summary-item">
-                  <span class="text" id="total-price">Total Price: Rs. <%= totalPrice %> </span>
+                  <span class="text" id="total-price">Total Price: Rs.<%= sum %></span>
                 </div>
                 <a href="javascript:void(0);" onclick="validateCheckout()">
                   <button type="button" class="btn btn-primary btn-lg btn-block">

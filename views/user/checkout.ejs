@@ -41,6 +41,18 @@
 </head>
 
 <body>
+
+  <script>
+     function calculateTotalPrice(items) {
+    let totalPrice = 0;
+
+    items.forEach(item => {
+      totalPrice += item.quantity * item.price;
+    });
+
+    return totalPrice;
+  }
+  </script>
   <header>
     <div id="header-info">
       <!-- <p id="contactus">Contact Us</p> -->
@@ -75,14 +87,16 @@
 
   <div class="checkout-content">
     <div class="title">CHECKOUT</div>
+
+
     
    
-    <div class="billing-details">
+    <div class="address-details">
       <!-- <label for="fullName">Full Name:</label>
       <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" />
       <br><br> -->
       <label for="address">Select Address:</label>
-      <select id="address" name="address">
+      <select id="address" name="shippingAddresss">
         <% if (userAddress) { %>
           <% userAddress.forEach(address => { %>
             <option value="<%= address._id %>"><%= address.name %>: <%= address.address %>, <%= address.locality %>, <%= address.state %> - <%= address.pincode %></option>
@@ -147,80 +161,97 @@
       </div>
     </div>
   </div>
-</div>
+</div>  
 
-    
   
-    <div class="product-list">
-      <table>
-        <thead>
-          <tr>
-            <th>Product Name</th>
-            <th>Image</th>
-            <th>Description</th>
-            <th>Quantity</th>
-            <th>Price</th>
-          </tr>
-        </thead>
-        <tbody>
-         
-          <!-- Loop through your cart items and display relevant information -->
-          <% if (cart && cart.items && cart.items.length> 0 ) { %>
-          <% cart.items.forEach((item) => { %>
+
+    <div class="main-content">
+      <div class="product-list-container">
+      <div class="product-list">
+        <table>
+          <thead>
             <tr>
-              <td><%= item.productId.name %></td>
-              <td><img src="<%= item.productId.productImage[0] %>" alt="Product Image" style="max-width: 100px; max-height: 100px;"></td>
-              <td> <%= item.productId.description %></td>
-              <td><%= item.quantity %></td>
-              <td>Rs.<%= item.price %></td>
-          </tr>
-          <% });%>
-          <% } else { %>
-            <p>No items in the cart.</p>
-          <% } %>
-          <!-- Add more product items as needed -->
-        </tbody>
-      </table>
+              <th>Product Name</th>
+              <th>Image</th>
+              <th>Description</th>
+              <th>Quantity</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody>
+           
+            <!-- Loop through your cart items and display relevant information -->
+            <% if (cart && cart.items && cart.items.length> 0 ) { %>
+            <% cart.items.forEach((item) => { %>
+              <tr>
+                <td><%= item.productId.name %></td>
+                <td><img src="<%= item.productId.productImage[0] %>" alt="Product Image" style="max-width: 100px; max-height: 100px;"></td>
+                <td  > <%= item.productId.description %></td>
+                <td><%= item.quantity %></td>
+                <td>Rs.<%= item.price %></td>
+            </tr>
+            <% });%>
+          
+            <!-- Add more product items as needed -->
+          </tbody>
+        </table>
+    
+        <div class="total-price">
+          <p>Total Price: Rs. <span id="displayTotalPrice"><%= totalPrice %></span></p>
+        </div>
+        
+        <% } else { %>
+          <p>No items in the cart.</p>
+        <% } %>
+      </div>
+    </div>
+   
+      <div class="order-place">
+         
+        <div class="coupon-section">
   
-      <div class="total-price">
-        <h3>Total Price: <%= cart.totalPrice %></h3>
-      </div>
-    </div>
-
-    <div class="coupon-section">
-
-      <label for="coupon">Coupons</label>
-      <input name="coupon" type="text" placeholder="enter coupon code">
-      <button class="btn btn-primary" type="submit">save</button>
-
-    </div>
-  <br>
-    <div class="payment-section">
-      <!-- Use radio buttons for payment options -->
-      <h4>Payment Options</h4>
-      <div class="form-check">
-        <input class="form-check-input" type="radio" name="paymentOption" id="razorpayOption" value="razorpay" onclick="selectPaymentOption('razorpay')">
-        <label class="form-check-label" for="razorpayOption">
-          Pay with Razorpay <img src="/img/user/razorpay-icon.png" style="width: 100px; height: 30px;">
-        </label>
-      </div>
+          <h6 for="coupon">Coupons</h6>
+          <div class="coupon-input">
+            <input name="coupon" type="text" placeholder="enter coupon code">
+            <button class="btn btn-sm btn-primary" type="submit">save</button>
+          </div>
     
-      <div class="form-check">
-        <input class="form-check-input" type="radio" name="paymentOption" id="cashOption" value="cash" onclick="selectPaymentOption('cash')">
-        <label class="form-check-label" for="cashOption">
-          Cash on Delivery 
-          <i class="fa fa-duotone fa-money-bill-wave fa-lg"></i>
-        </label>
+        </div>
+       <br>
+        <div class="payment-section">
+          <!-- Use radio buttons for payment options -->
+          <h6>Payment Options</h6>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="paymentOption" id="razorpayOption" value="razorpay" onclick="selectPaymentOption('razorpay')">
+            <label class="form-check-label" for="razorpayOption">
+              Pay with Razorpay <img src="/img/user/razorpay-icon.png" style="width: 100px; height: 30px;">
+            </label>
+          </div>
+        
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="paymentOption" id="cashOption" value="cash" onclick="selectPaymentOption('cash')">
+            <label class="form-check-label" for="cashOption">
+              Cash on Delivery 
+              <i class="fa fa-duotone fa-money-bill-wave fa-lg"></i>
+            </label>
+          </div>
+        
+          <!-- Add more payment options as needed -->
+        
+          <!-- Hidden input to store the selected payment option -->
+          <input type="hidden" id="selectedPaymentOption" name="selectedPaymentOption" value="">
+        </div>
+  
       </div>
-    
-      <!-- Add more payment options as needed -->
-    
-      <!-- Hidden input to store the selected payment option -->
-      <input type="hidden" id="selectedPaymentOption" name="selectedPaymentOption" value="">
+
     </div>
+   
+   
      <br>
     <div class="place-order">
-      <button class="btn btn-lg btn-warning">Place Order</button>
+      <form action="/checkout" method="post" id="placeOrderForm">
+        <button class="btn btn-lg btn-warning" type="button" onclick="placeOrder()">Place Order</button>
+     </form> 
     </div>
   
 
@@ -263,7 +294,90 @@
 
 
 
+<!-- Add this script to include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+
+
+
+<!-- Script for modal initialization -->
 <script>
+  // Wait for the document to be ready
+  document.addEventListener('DOMContentLoaded', function () {
+     // Initialize the modal
+     new bootstrap.Modal(document.getElementById('addAddressModal'));
+  });
+</script>
+
+<!-- Script for modal dismissal -->
+<script>
+  // Wait for the document to be ready
+  document.addEventListener('DOMContentLoaded', function () {
+    // Get the modal element
+    var addAddressModal = new bootstrap.Modal(document.getElementById('addAddressModal'));
+
+    // Set up an event listener for the modal close button
+    var closeModalButton = document.querySelector('#addAddressModal .close');
+    closeModalButton.addEventListener('click', function () {
+      // Close the modal when the close button is clicked
+      addAddressModal.hide();
+    });
+  });
+
+    
+</script>
+
+<!-- <script>
+      function calculateTotalPrice(items) {
+    let totalPrice = 0;
+
+    items.forEach(item => {
+      totalPrice += item.quantity * item.price;
+    });
+
+    return totalPrice;
+  }
+</script> -->
+
+
+<script>
+
+function placeOrder() {
+   // Get the selected address
+   const selectedAddressId = $("#address").val();
+
+   // Get the selected payment option
+   const selectedPaymentOption = $("input[name='paymentOption']:checked").val();
+
+   // Get the total price
+   const totalPrice = $("#displayTotalPrice").text(); // Assuming the total price is displayed in a span with id "displayTotalPrice"
+
+   // AJAX request
+   $.ajax({
+      type: "POST",
+      url: "/checkout",
+      data: {
+         selectedAddressId: selectedAddressId,
+         selectedPaymentOption: selectedPaymentOption,
+         totalPrice: totalPrice
+      },
+      success: function (response) {
+         // Handle success response, if needed
+         console.log(response);
+
+          // Redirect to the order success page after placing the order
+          window.location.href = "/order-success";
+      },
+      error: function (error) {
+         // Handle error, if needed
+         console.error(error);
+      }
+   });
+}
+
+
+
 
 function toggleDropdown() {
 var dropdown = document.getElementById("account-options");
@@ -286,21 +400,7 @@ if (dropdown.style.display === "block") {
 <!-- Bootstrap JS dependencies -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
-<!-- Script for modal dismissal -->
-<script>
-  // Wait for the document to be ready
-  document.addEventListener('DOMContentLoaded', function () {
-    // Get the modal element
-    var addAddressModal = new bootstrap.Modal(document.getElementById('addAddressModal'));
 
-    // Set up an event listener for the modal close button
-    var closeModalButton = document.querySelector('#addAddressModal .close');
-    closeModalButton.addEventListener('click', function () {
-      // Close the modal when the close button is clicked
-      addAddressModal.hide();
-    });
-  });
-</script>
 
 </body>
 </html>

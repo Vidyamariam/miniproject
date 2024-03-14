@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
 
     <link rel="stylesheet" href="/stylesheets/admin/userManage.css">
+    <link rel="stylesheet" href="/public/stylesheets/admin/addcategory.css">
+
     <title>Bootstrap Dashboard</title>
 
     <style>
@@ -58,10 +60,6 @@
 .navbar-brand{
   margin:10px;
 }
-
-.table{
-    background-color: #d3d3d3;
-}
     </style>
 </head>
 
@@ -71,7 +69,7 @@
         <input type="text" class="form-control form-control-primary w-100" placeholder="Search...">
         <ul class="navbar-nav px-3">
             <li class="nav-item text-nowrap">
-                <a class="nav-link" href="#">Logout</a>
+                <a class="nav-link" href="/admin/adminlogout">Logout</a>
             </li>
         </ul>
     </nav>
@@ -82,7 +80,7 @@
                 <div class="left-sidebar">
                     <ul class="nav flex-column sidebar-nav">
                         <li class="nav-item">
-                            <a class="nav-link active" href="/admin/dashboard">
+                            <a class="nav-link active" href="#">
                                 <svg class="bi bi-chevron-right" width="16" height="16" viewBox="0 0 20 20"
                                     fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd"
@@ -166,9 +164,35 @@
                 </div>
             </div>
             <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-                <h3>Dashboard</h3>
-                <hr>
-              
+               
+                 
+                  <article class="col-md-9 article-right">
+                    <% if(typeof message !== 'undefined') {%>
+                    <div class="Errormsg">
+                      <h3><%= message %></h3>
+                    </div>
+                    <% } %>
+                    <div class="title">
+                      <h2>Admin - Add Category</h2>
+                    </div>
+                    <% if (locals.error) { %>
+                    <p style="color: blue"><%= locals.error %></p>
+                    <% } %>
+                    <form action="/admin/addcategory" method="post">
+                      <div class="edit-form">
+                        <div class="form-group">
+                          <label for="category">Category:</label>
+                          <input
+                            type="text"
+                            id="categoryName"
+                            placeholder="Enter category name"
+                            name="categoryName"
+                          />
+                        </div>
+                        <button class="save-btn" type="submit">ADD</button>
+                      </div>
+                    </form>
+                  </article>
 
                 <!-- <h3>Invoice</h3>
                 <hr>

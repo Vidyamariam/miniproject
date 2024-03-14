@@ -71,7 +71,7 @@
         <input type="text" class="form-control form-control-primary w-100" placeholder="Search...">
         <ul class="navbar-nav px-3">
             <li class="nav-item text-nowrap">
-                <a class="nav-link" href="#">Logout</a>
+                <a class="nav-link" href="/admin/adminlogout">Logout</a>
             </li>
         </ul>
     </nav>
@@ -82,7 +82,7 @@
                 <div class="left-sidebar">
                     <ul class="nav flex-column sidebar-nav">
                         <li class="nav-item">
-                            <a class="nav-link active" href="/admin/dashboard">
+                            <a class="nav-link active" href="#">
                                 <svg class="bi bi-chevron-right" width="16" height="16" viewBox="0 0 20 20"
                                     fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd"
@@ -166,9 +166,61 @@
                 </div>
             </div>
             <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-                <h3>Dashboard</h3>
+                <h3>User Details</h3>
                 <hr>
+                <div class="addcateg">
+                    <a href="/admin/addcategory"
+                      ><button id="addcateg" class="btn btn-dark">Add new category</button></a
+                    >
+                  </div>
+                  <br>
+                <div class="table-responsive">
+                    <table class="table ">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Category</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% categories.forEach((category, index) => { %>
+                            <tr>
+                              <td><%= index + 1 %></td>
+                              <td><%= category.categoryName %></td>
+                              <td>
+                                <div class="actions">
+                                  <form
+                                    action="/admin/editcategory/<%= category._id %>"
+                                    method="get"
+                                  >
+                                    <button
+                                      class="btn btn-primary ctdltbtnEdit"
+                                      type="submit"
+                                    >
+                                      Edit
+                                    </button>
+                                  </form>
               
+                                  <form
+                                    action="/admin/categoryvisibility/<%= category._id %>"
+                                    method="post"
+                                  >
+                                    <button
+                                      type="submit"
+                                      class="btn btn-danger sListed <%= category.isListed? 'unblocked-user' : 'blocked-user' %>"
+                                    >
+                                      <% if (category.isListed) { %> Listed <% } else { %> Not
+                                      Listed <% } %>
+                                    </button>
+                                  </form>
+                                </div>
+                                <% }); %>
+                              </td>
+                            </tr>
+                          </tbody>
+                    </table>
+                </div>
 
                 <!-- <h3>Invoice</h3>
                 <hr>

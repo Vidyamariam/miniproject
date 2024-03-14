@@ -310,6 +310,8 @@ const casualShoes =  async (req,res)=> {
 }
 
 
+
+
 module.exports = {
     login, loginpost,signupGet,signupPost,landing,getVerifyEmail,verifyEmailPost,getLogout,postLogout,getAthletics, getHome,boots,casualShoes,resendOTP,
 }

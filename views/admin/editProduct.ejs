@@ -15,6 +15,7 @@
         action="/admin/editproduct/<%=items._id%>"
         method="post"
         enctype="multipart/form-data"
+        onsubmit="return validateForm()"
       >
         <label for="productName">Product Name:</label>
         <input
@@ -91,26 +92,82 @@
       </form>
     </div>
 
-    <script>
-      function cancelForm() {
-        // Add logic to handle cancel action
-        alert("Form canceled");
+        <!-- Add this script at the end of your HTML body -->
+   <!-- ... Your existing HTML code ... -->
+
+<script>
+  function cancelForm() {
+    // Add logic to handle cancel action
+    alert("Form canceled");
+  }
+
+  function previewImages(input) {
+    var previewContainer = document.getElementById("imagePreviewContainer");
+
+    for (var i = 0; i < input.files.length; i++) {
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        var img = document.createElement("img");
+        img.src = e.target.result;
+        previewContainer.appendChild(img);
+      };
+      reader.readAsDataURL(input.files[i]);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    var form = document.querySelector("form");
+
+    form.addEventListener("submit", function (event) {
+      // Validation for Product Name
+      var productNameInput = document.getElementById("productName");
+      if (productNameInput.value.trim() === "") {
+        alert("Product Name cannot be empty");
+        event.preventDefault();
+        return;
+      } else if (!/^[a-zA-Z0-9\s]+$/.test(productNameInput.value)) {
+        alert("Product Name can only contain letters, numbers, and spaces");
+        event.preventDefault();
+        return;
       }
 
-      function previewImages(input) {
-  var previewContainer = document.getElementById("imagePreviewContainer");
+      // Validation for Description
+      var descriptionInput = document.getElementById("description");
+      if (descriptionInput.value.trim() === "") {
+        alert("Description cannot be empty");
+        event.preventDefault();
+        return;
+      } 
 
-  for (var i = 0; i < input.files.length; i++) {
-    var reader = new FileReader();
-    reader.onload = function (e) {
-      var img = document.createElement("img");
-      img.src = e.target.result;
-      previewContainer.appendChild(img);
-    };
-    reader.readAsDataURL(input.files[i]);
-  }
-}
+      // Validation for Price
+      var priceInput = document.getElementById("price");
+      if (parseFloat(priceInput.value) < 0) {
+        alert("Price cannot be negative");
+        event.preventDefault();
+        return;
+      }
 
-    </script>
+      // Validation for Discount
+      var discountInput = document.getElementById("discount");
+      if (parseFloat(discountInput.value) < 0) {
+        alert("Discount cannot be negative");
+        event.preventDefault();
+        return;
+      }
+
+      // Validation for Stock
+      var stockInput = document.getElementById("stock");
+      if (parseInt(stockInput.value) < 0) {
+        alert("Stock cannot be negative");
+        event.preventDefault();
+        return;
+      }
+    });
+  });
+</script>
+
+<!-- ... Rest of your HTML code ... -->
+
+
   </body>
 </html>

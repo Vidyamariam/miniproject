@@ -34,6 +34,7 @@
   <link rel="stylesheet" href="/stylesheets/user/address.css">
   <link rel="stylesheet" href="/stylesheets/user/editProfile.css" />
   <link rel="stylesheet" href="/stylesheets/user/athletic.css" />
+  <link rel="stylesheet" href="/stylesheets/user/orderHistory.css"
 
     <title>STEPUP SHOES</title>
     <style>
@@ -76,14 +77,19 @@
             </div>
           </div>
           
-          <a id="addtocart" href="/cart" style="color: black; text-decoration: none;">My Cart (
-              <% if(typeof quantity !== "undefined") { %>
-                <%= quantity.length %>
-                <% } else {%>
-                  0
-                  <% } %>
+          <a id="addtocart" href="/cart" style="color: black; text-decoration: none;">My Cart 
+            <i
+            class="fa fa-duotone fa-cart-shopping fa-xl"></i>
 
-          )
+
+            <!-- (
+              <% if (typeof quantityInCart !== "undefined") { %>
+                <%= quantityInCart %>
+              <% } else { %>
+                0
+              <% } %>) -->
+
+          
           </a>
         </div>
         </div>

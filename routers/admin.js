@@ -16,11 +16,12 @@ router.get("/dashboard",adminController.dashboard);
 router.get("/category", categoryController.getCategoryManage);
 router.get("/addcategory",categoryController.getaddcategory);
 router.get("/editcategory/:categoryId",categoryController.getEditCategory);
-router.get("/productmanage/:page?",productController.getProductManage);
+router.get("/productmanage",productController.getProductManage);
 router.get("/addproduct",productController.getAddProduct);
 router.get("/editproduct/:id",productController.getProductEdit);
 router.get("/usermanage", adminController.getUserManage);
 router.get("/adminlogout", adminController.getAdminLogout);
+router.get("/order-list", adminController.getOrders);
 
 
 //POST METHODS
@@ -33,6 +34,5 @@ router.post("/editproduct/:id",uploads,productController.postEditProduct);
 router.post("/visibility/:id",productController.productVisibility);
 router.post("/blockuser/:userId",adminController.blockUser);
 router.post("/adminlogout", adminController.postAdminLogout);
-
-
+router.post("/updateOrderStatus", adminController.postOrders);
 module.exports = router;

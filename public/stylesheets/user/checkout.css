@@ -1,5 +1,5 @@
 .title{
-  color: #ddd;
+  color: black;
   font-size: 30px;
     text-align: center;
 }
@@ -24,7 +24,7 @@ table {
     margin-top: 20px;
   }
 
-  .billing-details{
+  .product-details{
     width: 200px;
     height: 200px;
     border: 1px solid black;
@@ -37,36 +37,39 @@ table {
     padding: 20px;
     border: 1px solid #ccc;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add box shadow */
-    background-color: #333; /* Add background color */
+    
   }
 
-  .billing-details{
+  .address-details{
     
     width: 800px;
     border-radius: 5px;
 
 
   }
-  .billing-details button{
+  .address-details button{
 
     margin-top: 40px;
   }
 
-  .billing-details,
+  .address-details,
   .product-list,
   .payment-section
   .coupon-section {
     margin-top: 20px;
     border: 1px solid #ddd;
     padding: 20px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Add box shadow */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Add box shadow */
     margin-bottom: 20px;
     background-color: #fff; /* Add background color */
     border-radius: 5px;
   }
 
-  .product-list table{
+  .product-list {
 
+    width: 600px ;
+  }
+  .product-list table{
     width: 100%;
   }
 
@@ -83,6 +86,7 @@ table {
   background-color: #fff;
   display: flex;
   flex-direction: column;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   
   }
 
@@ -109,4 +113,75 @@ table {
     border-radius: 5px;
     background-color: white;
     color: black;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   }
+
+  .form-check {
+
+    padding-left: 2.5rem;
+
+  }
+  .coupon-input{
+    padding-left: 1rem;
+   
+    display: flex;
+    flex-direction: column;
+   
+  }
+
+  .main-content{
+    display: flex;
+    align-items: center;
+   
+
+  }
+
+  .product-list {
+    width: 600px;
+    margin-bottom: 19px; /* Add margin at the bottom */
+  }
+  
+  .order-place {
+    margin-top: 20px; /* Add margin at the top */
+  }
+  
+  
+  /* Additional styling for better separation, you can adjust these values as needed */
+  .checkout-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .main-content {
+    margin-top: 20px; /* Add margin at the top of main-content */
+  }
+
+ .order-place{
+  padding-left: 50px;
+  margin-top: 10px;
+ }
+
+
+
+ 
+ .product-list-container {
+  max-height: 400px; /* Set the maximum height you desire for the scrollable area */
+  overflow: auto; /* Hide the scrollbar on the container unless necessary */
+}
+
+/* WebKit specific */
+.product-list-container::-webkit-scrollbar {
+  display: none; /* Hide the scrollbar */
+}
+
+
+.product-list {
+ 
+  padding-right: 17px; /* Add a little padding to prevent content from being partially hidden by the scrollbar */
+}
+
+
+
+
+  
