@@ -24,8 +24,7 @@ const orderSchema = mongoose.Schema({
     totalPrice: { type: Number,min: 0 },
     address: {
         name:{type:String},
-        address:{type:String},
-        street:{type:String},
+        address:{type:String},      
         locality:{type:String},
         pincode: {type:String},
         phone: {type:String},
@@ -33,7 +32,9 @@ const orderSchema = mongoose.Schema({
         
     },
     paymentMethod: { type: String},
-    orderDate: { type: Date, default: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),}
+    orderDate: { type: Date, default: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),},
+    createdAt: { type: Date, default: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }) ,} ,
+   
 });
 
 

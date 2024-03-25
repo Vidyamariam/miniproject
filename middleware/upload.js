@@ -28,5 +28,5 @@ const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
   limits: limits,
-}).array("productImages", 5);
+}).array("productImage", 5);
 module.exports = upload;

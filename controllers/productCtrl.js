@@ -8,44 +8,25 @@ const gm = require("gm").subClass({ imageMagick: true });
 
 
 
-
-
-// const getProductManage = async (req,res)=>{
-   
-//     try {
-//         const categories = await AddProduct.find();
-//         const product = await AddProduct.find();
-//         const productId = await AddProduct.findById();
-//     res.render("admin/productManage", {categories, product, productId});
-
-//     }catch(error){
-//     console.error(error);
-//       res.status(500).send("Internal Server Error");
-//     }
-// }
-
-const PRODUCTS_PER_PAGE = 5; // Adjust the number of products per page
+const ITEMS_PER_PAGE = 5; // Number of products to display per page
 
 const getProductManage = async (req, res) => {
   try {
-    const page = parseInt(req.params.page) || 1;
-    const skip = (page - 1) * PRODUCTS_PER_PAGE;
+    const page = parseInt(req.query.page) || 1; // Get the requested page number from the query parameters, default to 1 if not provided
 
     const totalProducts = await productsCollection.countDocuments();
-    const totalPages = Math.ceil(totalProducts / PRODUCTS_PER_PAGE);
+    const totalPages = Math.ceil(totalProducts / ITEMS_PER_PAGE);
+    const skip = (page - 1) * ITEMS_PER_PAGE;
 
     const products = await productsCollection.find()
       .skip(skip)
-      .limit(PRODUCTS_PER_PAGE);
+      .limit(ITEMS_PER_PAGE);
 
-    const categories = await productsCollection.find();
-
-    const productId = await productsCollection.findById(); // You may need to adjust this line based on your requirements
+    const categories = await productsCollection.distinct("category"); // Assuming "category" is a field in your products collection
 
     res.render("admin/productManageN", {
       categories,
       products,
-      productId,
       currentPage: page,
       totalPages,
     });
@@ -94,14 +75,62 @@ const postAddProduct = async (req, res) => {
 
         console.log("product details", req.body);
 
-      //    // Validate for negative values
-         if (price < 0 || discount < 0 || stock < 0) {
+        // Validation for product name
+        if (!name) {
           const categories = await categoryCollection.find();
           return res.render("admin/addProduct", {
               categories,
-              msg: 'Price, discount, and stock must not be negative!!.',
+              msgName: 'Please enter a product name.',
           });
-         }
+      }
+
+      // Validation for category selection
+      if (!category) {
+          const categories = await categoryCollection.find();
+          return res.render("admin/addProduct", {
+              categories,
+              msgCategory: 'Please select a category.',
+          });
+      }
+
+        // Validate for empty price
+        if (!price) {
+          const categories = await categoryCollection.find();
+          return res.render("admin/addProduct", {
+              categories,
+              msgPrice: 'Please enter a price.',
+          });
+      }
+
+      // Validate for empty stock
+      if (!stock) {
+          const categories = await categoryCollection.find();
+          return res.render("admin/addProduct", {
+              categories,
+              msgStock: 'Please enter the stock quantity.',
+          });
+      }
+
+
+      // Validate for negative values
+      if (price < 0 || discount < 0 || stock < 0) {
+          const categories = await categoryCollection.find();
+          return res.render("admin/addProduct", {
+              categories,
+              msgNegativeValues: 'Price, discount, and stock must not be negative.',
+          });
+      }
+
+      
+        // Validate for empty product images
+        if (!req.files || req.files.length === 0) {
+          const categories = await categoryCollection.find();
+          return res.render("admin/addProduct", {
+              categories,
+              msgImage: 'Please upload at least one product image.',
+          });
+      }
+
 
         let productImage = [];
 
@@ -144,46 +173,72 @@ const getProductEdit = async (req,res)=>{
         const category = await categoryCollection.find();
         const items = await productsCollection.findById(id);
         console.log("productsss", items, category);
-        res.render("admin/editProduct", {items,category});
+        res.render("admin/editProduct", {items:items,category:category});
     }catch(error){
         console.log("Error occur in getEditProduct",error);
     } 
  
 };  
 
-const postEditProduct = async (req,res)=>{
-    
-    try{
-         const productId = req.params.id;
-         console.log("EditProductId:", productId);
-         console.log("Request Body", req.body);
-      let productImage = [];
+const postEditProduct = async (req, res) => {
+  try {
+    const productId = req.params.id;
+    console.log("EditProductId:", productId);
+    console.log("Request Body", req.body);
 
-      if (req.files && req.files.length > 0) {
-        const fileUrls = req.files.map((file) => ` /uploads/${file.filename}`);
-        productImage = fileUrls;
-      }
-       
-        await productsCollection.findByIdAndUpdate(productId, {
-            name: req.body.name,
-            category: req.body.category,
-            description: req.body.description,
-            rating: req.body.rating,
-            price: req.body.price,
-            discount: req.body.discount,
-            stock: req.body.stock,
-            productImage: productImage,
-        }).then((pass)=>{
-             
-            console.log("updatedProduct", pass);
-            res.redirect("/admin/productManage");
-        });    
-        
-    }catch(error){       
-        console.log("error occured in editProduct", error);
-        res.status(500).send("Internal server error");
+      // Check if required fields are empty
+      if (!req.body.name || !req.body.category || !req.body.price || !req.body.stock) {
+        const product = await productsCollection.findById(productId);
+        const category = await categoryCollection.find();
+        return res.render("admin/editProduct", {
+            errorMsg: "Please fill in all required fields.",
+            items: product,
+            category: category
+        });
     }
+
+    // Check if price, discount, and stock are negative
+    if (parseFloat(req.body.price) < 0 || parseFloat(req.body.discount) < 0 || parseInt(req.body.stock) < 0) {
+        const product = await productsCollection.findById(productId);
+        const category = await categoryCollection.find();
+        return res.render("admin/editProduct", {
+            errorMsg: "Price, discount, and stock must not be negative.",
+            items: product,
+            category: category
+        });
+    }
+
+    let productImage = [];
+
+    if (req.files && req.files.length > 0) {
+      const fileUrls = req.files.map((file) => ` /uploads/${file.filename}`);
+      productImage = fileUrls;
+    }
+
+    
+    if (productImage.length === 0 || productImage.length === undefined) {
+      const product = await productsCollection.findOne({ _id: productId });
+      productImage = product.productImage;
+    }
+
+    await productsCollection.findByIdAndUpdate(productId, {
+      name: req.body.name,
+      category: req.body.category,
+      description: req.body.description,
+      rating: req.body.rating,
+      price: req.body.price,
+      discount: req.body.discount,
+      stock: req.body.stock,
+      productImage: productImage,
+    }).then((pass) => {
+      res.redirect("/admin/productManage");
+    });
+  } catch (error) {
+    console.log("error occurred in editProduct", error);
+    res.status(500).send("Internal server error");
+  }
 };
+
 
 // Product Visibility
 const productVisibility = async (req, res) => {

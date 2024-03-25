@@ -2,7 +2,10 @@
 
 <!--BANNER SECTION-->
 <div id="banner-section">
-  <img src="/img/carousel/carous1.jpg" />
+  <img
+    src="/img/home/b3.jpg"
+    style="width: 1500px; padding: 20px; height: 800px; border-radius: 30px"
+  />
 </div>
 
 <!--cards section-->
@@ -23,21 +26,19 @@
             />
           </a>
 
-          <div class="card-body">
+          <div class="card-body" id="pdt-cardbdy">
             <h6 class="card-text"><%= product.name %></h6>
             <h6 class="card-title"><%= product.price %></h6>
             <form action="/add-to-cart/<%= product._id %>" method="post">
               <% if (product.isListed && product.stock > 0) { %>
               <!-- Product is available, show Add to Cart button -->
-              <button type="submit" class="btn btn-lg btn-warning">
-                Add to Cart
-              </button>
+              <button type="submit" class="cartButton">Add to Cart</button>
               <% } else { %>
               <!-- Product is not available, show Out of Stock message -->
               <span class="text-danger">Out of Stock</span>
               <% } %>
             </form>
-            <button type="submit" class="btn btn-sm">
+            <button type="submit" class="wishlistbutton">
               <i class="fa fa-duotone fa-heart"></i> Add to wishlist
             </button>
           </div>
@@ -53,16 +54,15 @@
 <section class="container-fluid middle-content">
   <div class="row inner-content">
     <div class="col-lg-6">
-      <img src="/img/home/body1.jpg" />
+      <img src="/img/home/b1.jpg" style="height: 500px; width: 400px" />
 
       <p style="font-size: 30px">
-        Stride in Style: Elevate Your Journey with Chic Sneakers and Empowering
-        Running Shoes for Women!
+        Elevate Your Elegance: Adorn Yourself with Timeless Necklaces
       </p>
     </div>
 
     <div class="col-lg-6">
-      <img src="/img/home/body2.jpg" />
+      <img src="/img/home/b4.webp" />
     </div>
   </div>
 </section>

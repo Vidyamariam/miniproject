@@ -16,12 +16,16 @@
     font-family: 'Josefin Sans', sans-serif;
     color: white;
     font-size: 13px;
-    margin: 0; }
+    margin: 0; 
+    background-image: url('/public/img/');
+  }
   
   input, textarea, select, button {
     font-family: "Muli-Regular";
     color: #333;
-    font-size: 13px; }
+    font-size: 13px;
+    border-radius: 5px;
+   }
   
   p, h1, h2, h3, h4, h5, h6, ul {
     margin: 0; }
@@ -52,8 +56,10 @@
     margin: auto;
     padding-top: 68px;
     padding-bottom: 48px;
-    background: url("/img/user/signupbg.jpg");
-    background-size: contain; }
+    background: url("");
+    background-size: contain;
+    box-shadow: rgba(0, 0, 0, 0.3);
+   }
     
     .inner h3 {
       text-transform: uppercase;
@@ -61,12 +67,18 @@
       font-family: "Muli-Bold";
       text-align: center;
       margin-bottom: 32px;
-      color: white;
+      color:#000;
       letter-spacing: 2px; }
   
   form {
     width: 50%;
-    padding-left: 45px; }
+    padding-left: 45px; 
+    background-color: white;
+    color: #000;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
   
   .form-group {
     display: flex; }

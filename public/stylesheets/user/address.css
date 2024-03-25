@@ -70,18 +70,17 @@ select {
 font-family: 'Josefin Sans', sans-serif;*/
 
 #store-name {
-  font-family: "Kanit", sans-serif;
+  font-family: "Bacasime Antique", serif;
     text-align: center;
     margin: auto;
     padding-top: 5px;
-    padding-bottom: 5px;;
-    padding-left: 95px;
-    letter-spacing: 12px;
-    font-size: 50px;
+    padding-bottom: 5px;
+    padding-left: 95px;   
+    font-size: 30px;
 }
 
 #header-info {
-  font-family: "Kanit", sans-serif;
+  font-family: "Bacasime Antique", serif;
     text-transform: uppercase;
     display: flex;
     justify-content: space-around;
@@ -102,11 +101,11 @@ font-family: 'Josefin Sans', sans-serif;*/
     width: 100%;
     padding: 8px 0px;
     text-align: center;
-    font-family: "Kanit", sans-serif;
+    font-family: "Bacasime Antique", serif;
 }
 
 #nav-bar a {
-  font-family: "Kanit", sans-serif;
+  font-family: "Bacasime Antique", serif;
     overflow: hidden;
     font-size: 18px;
     text-decoration: none;
@@ -123,7 +122,7 @@ font-family: 'Josefin Sans', sans-serif;*/
 }
 
 #three-box-info {
-    font-family: "Kanit", sans-serif;
+  font-family: "Bacasime Antique", serif;
  
     display: flex;
     justify-content: center;
@@ -227,7 +226,7 @@ font-family: 'Josefin Sans', sans-serif;*/
 
 
 .card1 {
-  font-family: "Kanit", sans-serif;
+  font-family: "Bacasime Antique", serif;
   font-weight: 500;
   font-style: normal;
     position: relative;
@@ -245,7 +244,7 @@ font-family: 'Josefin Sans', sans-serif;*/
 }
 
 .card2{
-  font-family: "Kanit", sans-serif;
+  font-family: "Bacasime Antique", serif;
   font-weight: 500;
   font-style: normal;
     width: 250px;
@@ -255,7 +254,7 @@ font-family: 'Josefin Sans', sans-serif;*/
 }
 
 .card3{
-  font-family: "Kanit", sans-serif;
+  font-family: "Bacasime Antique", serif;
   font-weight: 500;
   font-style: normal;
   position: relative;
@@ -301,14 +300,14 @@ font-family: 'Josefin Sans', sans-serif;*/
 
 /*footer*/
 footer {
-  font-family: "Kanit", sans-serif;
+  font-family: "Bacasime Antique", serif;
     background-color: #333;
     color: #fff;
     padding: 20px 0;
     text-align: center;
     /* position: fixed; */
     bottom: 0;
-    width: 100%;
+    width: 1300px;
     height:auto;
     margin-top: 40px;
   }

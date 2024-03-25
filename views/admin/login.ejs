@@ -11,11 +11,13 @@
       <form action="#" method="post">
         <h2>
           Login <br />
-          <% if(locals.errorMessage) {%>
-          <small style="color: red"><%= locals.errorMessage %></small>
-          <%} %>
+          <% if (locals.errorMessage) { %>
+          <p class="error-message" style="color: red">
+            <%= locals.errorMessage %>
+          </p>
+          <% } %>
         </h2>
-        <label for="username">Username:</label>
+        <label for="username">Email:</label>
         <input type="text" id="username" name="username" required />
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required />

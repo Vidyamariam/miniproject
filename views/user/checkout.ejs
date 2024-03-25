@@ -56,7 +56,7 @@
   <header>
     <div id="header-info">
       <!-- <p id="contactus">Contact Us</p> -->
-      <img src="/img/siteLogo1.png" class="logo" />
+      <img src="/img/logo-witebg.png" class="logo"  style="width: 80px; height: 60px;" />
       <h1 id="store-name">STEPUP SHOES</h1>
       <div class="nav-icons">
         <div class="dropdown" id="my-account-dropdown">
@@ -80,7 +80,7 @@
       <a href="/home">Home</a>
       <a href="">About us</a>
       <a href="">Contact</a>
-      <a href="/athletic-shoes">Products</a>
+      <a href="/all-products">Products</a>
       <img src="" id="search-icon" />
     </nav>
   </header>
@@ -99,70 +99,147 @@
       <select id="address" name="shippingAddresss">
         <% if (userAddress) { %>
           <% userAddress.forEach(address => { %>
-            <option value="<%= address._id %>"><%= address.name %>: <%= address.address %>, <%= address.locality %>, <%= address.state %> - <%= address.pincode %></option>
+            <option value="<%= address._id %>">
+              <%= address.name %>: <%= address.address %>, <%= address.locality %>, <%= address.state %> - <%= address.pincode %>
+            </option>
           <% }); %>
+          
         <% } else { %>
           <option value="" disabled>No address available. Please add an address.</option>
         <% } %>
       </select>
+      
+      
       <br>
       <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#addAddressModal">Add Address</button>
     </div>
     
 
-     <!-- Modal- ADD ADDRESS -->
-  <div class="modal fade" id="addAddressModal" tabindex="-1" role="dialog" aria-labelledby="addAddressModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="addAddressModalLabel">Add Address</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <!-- Input boxes for name, address, phone, locality, pincode, state -->
-        <form id="addressForm" method="post" action="/add-address" >
-          <div class="form-group">
-            <label for="name">Name:</label>
-            <input type="text" class="form-control" id="name" name="name" required>
-          </div>
-    
-          <!-- Address -->
-          <div class="form-group">
-            <label for="address">Address:</label>
-            <input type="text" class="form-control" id="address" name="address" required>
-          </div>
-    
-          <!-- Phone -->
-          <div class="form-group">
-            <label for="phone">Phone:</label>
-            <input type="tel" class="form-control" id="phone" name="phone" pattern="[0-9]{10}" title="Phone number should be 10 digits" required>
-            <small class="text-warning" id="phoneWarning"></small>
-          </div>
-    
-          <div class="form-group">
-            <label for="locality">Locality:</label>
-            <input type="text" class="form-control" id="locality" name="locality" required>
-          </div>
-          <!-- Pincode -->
-    <div class="form-group">
-      <label for="pincode">Pincode:</label>
-      <input type="text" class="form-control" id="pincode" name="pincode" pattern="[0-9]{6}" title="Pincode should be 6 digits" required>
-      <small class="text-warning" id="pincodeWarning"></small>
+     
+ <!-- Modal- ADD ADDRESS -->
+<div class="modal fade" id="addAddressModal" tabindex="-1" role="dialog" aria-labelledby="addAddressModalLabel"
+aria-hidden="true">
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="addAddressModalLabel">Add Address</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
     </div>
-          <div class="form-group">
-            <label for="state">State:</label>
-            <input type="text" class="form-control" id="state" name="state" required>
-          </div>
-          <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-      </div>
+    <div class="modal-body">
+      <!-- Input boxes for name, address, phone, locality, pincode, state -->
+      <form id="addressForm" method="post" action="/add-address">
+        <div class="form-group">
+          <label for="name">Name:</label>
+          <input type="text" class="form-control" id="name" name="name">
+          <small class="text-danger" id="nameError"></small>
+        </div>
+
+        <!-- Address -->
+        <div class="form-group">
+          <label for="address">Address:</label>
+          <input type="text" class="form-control" id="address" name="address">
+          <small class="text-danger" id="addressError"></small>
+        </div>
+
+        <!-- Phone -->
+        <div class="form-group">
+          <label for="phone">Phone:</label>
+          <input type="tel" class="form-control" id="phone" name="phone" pattern="[0-9]{10}"
+            title="Phone number should be 10 digits">
+          <small class="text-danger" id="phoneError"></small>
+        </div>
+
+        <div class="form-group">
+          <label for="locality">Locality:</label>
+          <input type="text" class="form-control" id="locality" name="locality">
+          <small class="text-danger" id="localityError"></small>
+        </div>
+
+        <!-- Pincode -->
+        <div class="form-group">
+          <label for="pincode">Pincode:</label>
+          <input type="text" class="form-control" id="pincode" name="pincode" pattern="[0-9]{6}"
+            title="Pincode should be 6 digits">
+          <small class="text-danger" id="pincodeError"></small>
+        </div>
+
+        <div class="form-group">
+          <label for="state">State:</label>
+          <input type="text" class="form-control" id="state" name="state">
+          <small class="text-danger" id="stateError"></small>
+        </div>
+        <button type="button" onclick="validateForm()" class="btn btn-primary">Submit</button>
+      </form>
     </div>
   </div>
-</div>  
+</div>
+</div>
 
+<script>
+function validateForm() {
+  const name = document.getElementById('name').value.trim();
+  const address = document.getElementById('address').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const locality = document.getElementById('locality').value.trim();
+  const pincode = document.getElementById('pincode').value.trim();
+  const state = document.getElementById('state').value.trim();
+
+  // Reset error messages
+  document.getElementById('nameError').textContent = '';
+  document.getElementById('addressError').textContent = '';
+  document.getElementById('phoneError').textContent = '';
+  document.getElementById('localityError').textContent = '';
+  document.getElementById('pincodeError').textContent = '';
+  document.getElementById('stateError').textContent = '';
+
+  let isValid = true;
+
+  if (!name) {
+    document.getElementById('nameError').textContent = 'Name is required';
+    isValid = false;
+  }
+
+  // if (!address) {
+  //   document.getElementById('addressError').textContent = 'Address is required';
+  //   isValid = false;
+  // }
+
+  if (!phone) {
+    document.getElementById('phoneError').textContent = 'Phone is required';
+    isValid = false;
+  } else if (!/^\d{10}$/.test(phone)) {
+    document.getElementById('phoneError').textContent = 'Phone number should be 10 digits';
+    isValid = false;
+  }
+
+  if (!locality) {
+    document.getElementById('localityError').textContent = 'Locality is required';
+    isValid = false;
+  }
+
+  if (!pincode) {
+    document.getElementById('pincodeError').textContent = 'Pincode is required';
+    isValid = false;
+  } else if (!/^\d{6}$/.test(pincode)) {
+    document.getElementById('pincodeError').textContent = 'Pincode should be 6 digits';
+    isValid = false;
+  }
+
+  if (!state) {
+  document.getElementById('stateError').textContent = 'State is required';
+  isValid = false;
+} else if (!/^[A-Za-z]+$/.test(state)) {
+  document.getElementById('stateError').textContent = 'State should contain only alphabetic characters';
+  isValid = false;
+}
+
+  if (isValid) {
+    document.getElementById('addressForm').submit();
+  }
+}
+</script>
   
 
     <div class="main-content">
@@ -265,7 +342,7 @@
  <footer>
   <div class="footer-content">
     <div class="footer-logo">
-      <img src="/img/siteLogo2.jpeg" class="logo" />
+      <img src="/img/logo-blackbg.png" class="logo" style="width: 70px; height: 60px;"  />
     </div>
     <h2>FOLLOW US</h2>
     <div class="social-icons">
@@ -344,38 +421,37 @@
 <script>
 
 function placeOrder() {
-   // Get the selected address
-   const selectedAddressId = $("#address").val();
+    // Get the selected address
+    const selectedAddressId = $("#address").val();
 
-   // Get the selected payment option
-   const selectedPaymentOption = $("input[name='paymentOption']:checked").val();
+    // Get the selected payment option
+    const selectedPaymentOption = $("input[name='paymentOption']:checked").val();
 
-   // Get the total price
-   const totalPrice = $("#displayTotalPrice").text(); // Assuming the total price is displayed in a span with id "displayTotalPrice"
+    // Get the total price
+    const totalPrice = $("#displayTotalPrice").text(); // Assuming the total price is displayed in a span with id "displayTotalPrice"
 
-   // AJAX request
-   $.ajax({
+    // AJAX request
+    $.ajax({
       type: "POST",
       url: "/checkout",
       data: {
-         selectedAddressId: selectedAddressId,
-         selectedPaymentOption: selectedPaymentOption,
-         totalPrice: totalPrice
+        selectedAddressId: selectedAddressId,
+        selectedPaymentOption: selectedPaymentOption,
+        totalPrice: totalPrice
       },
       success: function (response) {
-         // Handle success response, if needed
-         console.log(response);
+        // Handle success response, if needed
+        console.log(response);
 
-          // Redirect to the order success page after placing the order
-          window.location.href = "/order-success";
+        // Redirect to the order success page after placing the order
+        window.location.href = "/order-success";
       },
       error: function (error) {
-         // Handle error, if needed
-         console.error(error);
+        // Handle error, if needed
+        console.error(error);
       }
-   });
-}
-
+    });
+  }
 
 
 

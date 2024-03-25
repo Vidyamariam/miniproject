@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="/stylesheets/admin/userManage.css">
     <link rel="stylesheet" href="/public/stylesheets/admin/editcategory.css">
 
-    <title>Bootstrap Dashboard</title>
+    <title>Amoli</title>
 
     <style>
         .form-control-primary {
@@ -65,7 +65,7 @@
 
 <body>
     <nav class="navbar navbar-dark fixed-top flex-md-nowrap p-0 shadow">
-        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Stepup Shoes</a>
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Amoli</a>
         <input type="text" class="form-control form-control-primary w-100" placeholder="Search...">
         <ul class="navbar-nav px-3">
             <li class="nav-item text-nowrap">
@@ -175,20 +175,20 @@
                       </div>
                       <% } %>
                     </div>
-                    <form action="/admin/editcategory/<%= id %>" method="post">
-                      <div class="form-group">
-                        <label for="category">Category:</label>
-            
-                        <input
-                          type="text"
-                          id="categoryName"
-                          name="categoryName"
-                          placeholder="Enter category name"
-                          value="<%= name %>"
-                        />
-                      </div>
-                      <button class="save-btn" type="submit">save</button>
-                    </form>
+                    <form id="editCategoryForm" action="/admin/editcategory/<%= id %>" method="post">
+                        <div class="form-group">
+                          <label for="category">Category:</label>
+                          <input
+                            type="text"
+                            id="categoryName"
+                            name="categoryName"
+                            placeholder="Enter category name"
+                            value="<%= name %>"
+                          />
+                          <small id="categoryError" style="color: red"></small>
+                        </div>
+                        <button class="save-btn" type="submit">Save</button>
+                      </form>
                   </article>
 
                 <!-- <h3>Invoice</h3>
@@ -247,6 +247,18 @@
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js" integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/" crossorigin="anonymous"></script></script>
+
+<script>
+     document.getElementById('editCategoryForm').addEventListener('submit', function(event) {
+    var categoryName = document.getElementById('categoryName').value.trim();
+    var categoryError = document.getElementById('categoryError');
+
+    if (!categoryName) {
+      categoryError.textContent = 'Category name is required.';
+      event.preventDefault(); // Prevent form submission
+    }
+ } )
+</script>
 
 <script>
     //block option

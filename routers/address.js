@@ -3,9 +3,9 @@ const router = express.Router();
 
 
 const addressController = require("../controllers/addressCtrl");
+const isBlock = require('../middleware/userAuth');
 
-
-
+router.get("/address",isBlock.isblocked, addressController.getAddressManage);
 router.get('/editAddress/:id', addressController.getEditAddress);
 
 router.post('/addAddress', addressController.addAddress);

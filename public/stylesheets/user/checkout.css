@@ -32,6 +32,7 @@ table {
   }
 
   .checkout-content {
+    font-family: "Bacasime Antique", serif;
     max-width: 100%;
     margin: 50px auto; /* Center the checkout-content */
     padding: 20px;
@@ -79,9 +80,9 @@ table {
   }
 
   .coupon-section{
-
+   padding: 15px;
   width: 300px;
-  height: 100px;
+  height: 140px;
   border-radius: 5px;
   background-color: #fff;
   display: flex;
@@ -97,7 +98,7 @@ table {
   .coupon-section button{
 
     width: 60px;
-    margin-top: 5px;
+    margin-top: 10px;
     border-radius: 5px;
   }
   .coupon-section label input button{
@@ -107,7 +108,7 @@ table {
   }
 
   .payment-section{
-
+    padding: 15px;
     width: 300px;
     height: 300px;
     border-radius: 5px;

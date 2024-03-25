@@ -17,11 +17,11 @@
     integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bacasime+Antique&family=Italiana&display=swap" rel="stylesheet">
+   
 
-  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
   
   <link rel="stylesheet" href="/stylesheets/user/profile.css" />
   <link rel="stylesheet" href="/stylesheets/user/address.css">
@@ -29,11 +29,12 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.2/js/toastr.min.js"></script>
 
-  <title>STEPUP SHOES</title>
+  <title>Amoli</title>
   <style>
     body {
-      font-family: 'Josefin Sans', sans-serif;
-    }
+      font-family: "Bacasime Antique", serif;
+}
+    
   </style>
 </head>
 
@@ -41,8 +42,8 @@
   <header>
     <div id="header-info">
       <!-- <p id="contactus">Contact Us</p> -->
-      <img src="/img/siteLogo1.png" class="logo" />
-      <h1 id="store-name">STEPUP SHOES</h1>
+      <img src="/img/amoli-jewels-high-resolution-logo-black.png" class="logo" />
+      <h1 id="store-name">Amoli Jewels</h1>
       <div class="nav-icons">
         <div class="dropdown" id="my-account-dropdown">
           <a id="my-account" onclick="toggleDropdown()"><i class="fa fa-regular fa-user fa-xl"></i> My Account</a>
@@ -64,8 +65,8 @@
     <nav id="nav-bar">
       <a href="/home">Home</a>
       <a href="">About us</a>
-      <a href="">Contact</a>
-      <a href="/athletic-shoes">Products</a>
+        <a href="">Contact</a>
+        <a href="/all-products">Products</a>
       <img src="" id="search-icon" />
     </nav>
   </header>
@@ -81,7 +82,7 @@
                 <img src="https://bootdey.com/img/Content/avatar/avatar6.png" alt="Admin"
                   class="rounded-circle p-1 bg-primary" width="110" />
                 <div class="mt-3">
-                  <h4>John Doe</h4>
+                  <h4><%= userdata.name %></h4>
                 </div>
               </div>
               <hr class="my-4" />
@@ -92,9 +93,9 @@
                 <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                   <a href="/address">Manage Addresses</a>
                 </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                <!-- <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                   <a href="#">Change Password</a>
-                </li>
+                </li> -->
                 <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                   <a href="/order-history">My Orders</a>
                 </li>
@@ -156,57 +157,148 @@
   </div>
 
   <!-- Modal- ADD ADDRESS -->
-  <div class="modal fade" id="addAddressModal" tabindex="-1" role="dialog" aria-labelledby="addAddressModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="addAddressModalLabel">Add Address</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+<div class="modal fade" id="addAddressModal" tabindex="-1" role="dialog" aria-labelledby="addAddressModalLabel"
+aria-hidden="true">
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="addAddressModalLabel">Add Address</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <!-- Input boxes for name, address, phone, locality, pincode, state -->
+      <form id="addressForm" method="post" action="/addAddress">
+        <div class="form-group">
+          <label for="name">Name:</label>
+          <input type="text" class="form-control" id="name" name="name">
+          <small class="text-danger" id="nameError"></small> 
         </div>
-        <div class="modal-body">
-          <!-- Input boxes for name, address, phone, locality, pincode, state -->
-          <form id="addressForm" method="post" action="/addAddress" >
-            <div class="form-group">
-              <label for="name">Name:</label>
-              <input type="text" class="form-control" id="name" name="name" required>
-            </div>
-      
-            <!-- Address -->
-            <div class="form-group">
-              <label for="address">Address:</label>
-              <input type="text" class="form-control" id="address" name="address" required>
-            </div>
-      
-            <!-- Phone -->
-            <div class="form-group">
-              <label for="phone">Phone:</label>
-              <input type="tel" class="form-control" id="phone" name="phone" pattern="[0-9]{10}" title="Phone number should be 10 digits" required>
-              <small class="text-warning" id="phoneWarning"></small>
-            </div>
-      
-            <div class="form-group">
-              <label for="locality">Locality:</label>
-              <input type="text" class="form-control" id="locality" name="locality" required>
-            </div>
-            <!-- Pincode -->
-      <div class="form-group">
-        <label for="pincode">Pincode:</label>
-        <input type="text" class="form-control" id="pincode" name="pincode" pattern="[0-9]{6}" title="Pincode should be 6 digits" required>
-        <small class="text-warning" id="pincodeWarning"></small>
-      </div>
-            <div class="form-group">
-              <label for="state">State:</label>
-              <input type="text" class="form-control" id="state" name="state" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </form>
+
+        <!-- Address -->
+        <div class="form-group">
+          <label for="address">Address:</label>
+          <input type="text" class="form-control" id="address" name="address">
+          <small class="text-danger" id="addressError"></small>
         </div>
-      </div>
+
+        <!-- Phone -->
+        <div class="form-group">
+          <label for="phone">Phone:</label>
+          <input type="tel" class="form-control" id="phone" name="phone" pattern="[0-9]{10}"
+            title="Phone number should be 10 digits">
+          <small class="text-danger" id="phoneError"></small> 
+        </div>
+
+        <div class="form-group">
+          <label for="locality">Locality:</label>
+          <input type="text" class="form-control" id="locality" name="locality">
+          <small class="text-danger" id="localityError"></small> 
+        </div>
+        <!-- Pincode -->
+        <div class="form-group">
+          <label for="pincode">Pincode:</label>
+          <input type="text" class="form-control" id="pincode" name="pincode" pattern="[0-9]{6}"
+            title="Pincode should be 6 digits">
+          <small class="text-danger" id="pincodeError"></small> 
+        </div>
+        <div class="form-group">
+          <label for="state">State:</label>
+          <input type="text" class="form-control" id="state" name="state">
+          <small class="text-danger" id="stateError"></small> 
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
     </div>
   </div>
+</div>
+</div>
+
+
+
+  <script>
+    jQuery(document).ready(function () {
+      $('#addressForm').submit(function (event) {
+        // Prevent form submission if validation fails
+        if (!validateForm()) {
+          event.preventDefault();
+        }
+      });
+  
+      // Function to validate the form
+      function validateForm() {
+        let isValid = true; // Track overall form validity
+        // Full name validation
+        const nameInput = document.getElementById('name');
+        const nameError = document.getElementById('nameError');
+        if (nameInput.value.trim() === '') {
+          nameError.innerText = 'Full name is required';
+          isValid = false;
+        } else {
+          nameError.innerText = ''; // Clear any previous error message
+        }
+  
+        // Address validation
+        const addressInput = document.getElementById('address');
+        const addressError = document.getElementById('addressError');
+        if (addressInput.value.trim() === '') {
+          addressError.innerText = 'Address is required';
+          isValid = false;
+        } else {
+          addressError.innerText = ''; 
+        }
+  
+        // Locality validation
+        const localityInput = document.getElementById('locality');
+        const localityError = document.getElementById('localityError');
+        if (localityInput.value.trim() === '') {
+          localityError.innerText = 'Locality is required';
+          isValid = false;
+        } else {
+          localityError.innerText = ''; 
+        }
+
+        //State validation
+        const  stateInput = document.getElementById('state');
+        const stateError = document.getElementById('stateError');
+        if(stateInput.value.trim() === ''){
+
+            stateError.innerText = 'State is required';
+            isValid = false;
+        }else if (/\d/.test(stateInput.value)) {
+              stateError.innerText = 'State should not contain numbers';
+              isValid = false;
+            } else {
+              stateError.innerText = ''; // Clear any previous error message
+      }
+      
+  
+        // Phone number validation
+        const phoneInput = document.getElementById('phone');
+        const phoneError = document.getElementById('phoneError');
+        if (!/^\d{10}$/.test(phoneInput.value)) {
+          phoneError.innerText = 'Phone number should be 10 digits';
+          isValid = false;
+        } else {
+          phoneError.innerText = ''; // Clear any previous error message
+        }
+  
+        // Pincode validation
+        const pincodeInput = document.getElementById('pincode');
+        const pincodeError = document.getElementById('pincodeError');
+        if (!/^\d{6}$/.test(pincodeInput.value)) {
+          pincodeError.innerText = 'Pincode should be 6 digits';
+          isValid = false;
+        } else {
+          pincodeError.innerText = ''; // Clear any previous error message
+        }
+  
+        return isValid; // Return overall form validity
+      }
+    });
+  </script>
+  
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
@@ -231,7 +323,8 @@
   <footer>
     <div class="footer-content">
       <div class="footer-logo">
-        <img src="/img/siteLogo2.jpeg" class="logo" />
+        <img src="/img/amoli-jewels-high-resolution-logo-white.png" class="logo" style="width: 70px; height: 60px;" />
+        
       </div>
       <h2>FOLLOW US</h2>
       <div class="social-icons">
@@ -300,72 +393,7 @@
 
   </script>
 
-<script>
-  jQuery(document).ready(function () {
-    $('#addressForm').submit(function (event) {
-      // Prevent form submission if validation fails
-      if (!validateForm()) {
-        event.preventDefault();
-      }
-    });
 
-    // Function to validate the form
-    function validateForm() {
-      // Phone number validation
-      const phoneInput = document.getElementById('phone');
-      const phoneWarning = document.getElementById('phoneWarning');
-
-      if (!/^\d{10}$/.test(phoneInput.value)) {
-        phoneWarning.innerText = 'Phone number should be 10 digits';
-        return false;
-      } else {
-        phoneWarning.innerText = ''; // Clear any previous warnings
-      }
-
-      // Pincode validation
-      const pincodeInput = document.getElementById('pincode');
-      const pincodeWarning = document.getElementById('pincodeWarning');
-
-      if (!/^\d{6}$/.test(pincodeInput.value)) {
-        pincodeWarning.innerText = 'Pincode should be 6 digits';
-        return false;
-      } else {
-        pincodeWarning.innerText = ''; // Clear any previous warnings
-      }
-
-      // Add similar validation for other fields if needed
-
-      return true; // If all validations pass
-    }
-  });
-
-
-// Handle delete button click
-// jQuery(document).ready(function ($) {
-//     // Event delegation for handling delete button click
-//     $(document).on('click', '.btn-danger', function (event) {
-//       event.preventDefault();
-//       const deleteForm = $(this).closest('form');
-
-//       // You can use AJAX to send a request to the server to delete the address
-//       $.ajax({
-//         url: deleteForm.attr('action'),
-//         method: 'POST',
-//         success: function (response) {
-//           // Show alert on success
-//           alert(response.message);
-//           // Optionally, you can also remove the deleted address from the DOM
-//           deleteForm.closest('.col-md-6').remove();
-//         },
-//         error: function (error) {
-//           // Handle error if needed
-//           console.error('Error deleting address:', error);
-//         }
-//       });
-//     });
-//   });
-
-</script>
 
 </body>
 

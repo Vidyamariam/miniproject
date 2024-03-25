@@ -24,32 +24,24 @@
               <% orders.forEach(order=> { %> <% order.products.forEach(product=>
               { %>
               <tr>
-                <td><%= order._id %></td>
+                <td><%= order.orderId %></td>
                 <td>
                   <%= order.orderDate.toLocaleString("en-US", { timeZone:
                   "Asia/Kolkata" }) %>
                 </td>
-                <td>Rs. <%= order.totalPrice %></td>
-                <td>
-                  <% if(product.status==='cancelled'){ %>
-
-                  <span style="color: red">Cancelled</span>
-
-                  <% } %> <% if (product.status==='pending' ) { %>
-                  <span style="color: rgb(189, 189, 37)">Pending</span>
-                  <% } %> <% if(product.status=== 'delivered') { %>
-                  <span style="color: green">Delivered</span>
-                  <% } %> <% if(product.status=== 'out_for_delivery') { %>
-                  <span style="color: rgb(235, 156, 11)">Out For Delivery</span>
-                  <% } %>
+                <td>Rs. <%= product.price %></td>
+                <td class="order-status">
+                  <% if (product.status === 'Cancelled') { %> <%= product.status
+                  %> <% } else { %> <%= product.status %> <% } %>
                 </td>
                 <td>
                   <div class="order-actions" style="display: flex; gap: 10px">
-                    <% if (product.status==='pending' ) { %>
+                    <% if (product.status==='Pending' ||
+                    product.status==='pending' ) { %>
                     <button
                       id="cancelButton_<%= order._id %>"
                       class="btn btn-sm btn-danger cancelbtn"
-                      onclick="showCancelConfirmation('<%= order._id %>')"
+                      onclick="showCancelConfirmation('<%= order._id %>', '<%= product.productId %>')"
                     >
                       Cancel Order
                     </button>
@@ -63,7 +55,7 @@
                     </button>
                     <% } %>
                     <a
-                      href="/order-details/<%= order._id %>"
+                      href="/order-details/<%= order._id %>/<%= product.productId %>"
                       class="btn btn-primary btn-sm"
                       style="padding: 5px 10px"
                     >
@@ -84,7 +76,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
 <script>
-  function showCancelConfirmation(orderId) {
+  function showCancelConfirmation(orderId, productId) {
     Swal.fire({
       title: "Cancel Order",
       input: "text",
@@ -100,30 +92,45 @@
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        // Submit fetch request to cancel the order
+        // Submit fetch request to cancel the product within the order
         fetch(`/cancelOrder`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ orderId: orderId, reason: result.value }), // Include orderId in the request body
+          body: JSON.stringify({
+            orderId: orderId,
+            productId: productId,
+            reason: result.value,
+          }), // Include orderId and productId in the request body
         })
           .then((response) => {
             if (response.ok) {
-              const cancelButton = document.getElementById(
-                `cancelButton_${orderId}`
-              );
-              if (cancelButton) {
-                cancelButton.innerText = "Order Cancelled";
-                cancelButton.classList.remove("btn-danger");
-                cancelButton.classList.add("btn-secondary");
-                cancelButton.disabled = true;
-                Swal.fire("Order Cancelled", "", "success");
-              } else {
-                console.error("Button not found");
-              }
+              return response.json(); // Parse response body as JSON
             } else {
-              Swal.fire("Error", "Failed to cancel the order", "error");
+              throw new Error("Failed to cancel the order");
+            }
+          })
+          .then((data) => {
+            // Update UI with the new order status
+            const cancelButton = document.getElementById(
+              `cancelButton_${orderId}`
+            );
+            if (cancelButton) {
+              cancelButton.innerText = "Order Cancelled";
+              cancelButton.classList.remove("btn-danger");
+              cancelButton.classList.add("btn-secondary");
+              cancelButton.disabled = true;
+              // Update status in the order table if needed
+              const orderStatusCell = cancelButton
+                .closest("tr")
+                .querySelector(".order-status");
+              if (orderStatusCell) {
+                orderStatusCell.innerText = "Cancelled";
+              }
+              Swal.fire("Order Cancelled", "", "success");
+            } else {
+              console.error("Button not found");
             }
           })
           .catch((error) => {

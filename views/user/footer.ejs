@@ -1,39 +1,103 @@
- <!--FOOTER SECTION-->
- <footer>
-    <div class="footer-content">
-      <div class="footer-logo">
-        <img src="/img/siteLogo2.jpeg" class="logo" />
-      </div>
-      <h2>FOLLOW US</h2>
-      <div class="social-icons">
-        <div class="icon-div">
-          <a href="#" class="icon"><i class="fa-brands fa-facebook fa-xl" style="color: #f1f3f3;"></i></a>
-        </div>
-        <div class="icon-div">
-          <a href="#" class="icon"><i class="fa-brands fa-twitter fa-xl" style="color: #f1f3f3;"></i></a>
-        </div>
-         <div class="icon-div">
-        <a href="#" class="icon"><i class="fa-brands fa-instagram fa-xl" style="color: #f1f3f3;"></i></i></a>
-         </div>
-         <div class="icon-div">
-          <a href="#" class="icon"><i class="fa-brands fa-youtube fa-xl" style="color: #f1f3f3;"></i></a>
-         </div>         
-      </div>
-      <ul class="footer-links">
-        <li><a href="#">FAQS</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Shippping and Delivery</a></li>
-        <li><a href="#">Payments</a></li>
-      </ul>
+<!--FOOTER SECTION-->
+<footer>
+  <div class="footer-content">
+    <div class="footer-logo">
+      <img src="/img/amoli-jewels-high-resolution-logo-white.png" class="logo" style="width: 70px; height: 60px;" />       
     </div>
-    <p>&copy; 2024 Your Company. All rights reserved.</p>
-  </footer>
+    <h2>FOLLOW US</h2>
+    <div class="social-icons">
+      <div class="icon-div">
+        <a href="#" class="icon"><i class="fa-brands fa-facebook fa-xl" style="color: #f1f3f3;"></i></a>
+      </div>
+      <div class="icon-div">
+        <a href="#" class="icon"><i class="fa-brands fa-twitter fa-xl" style="color: #f1f3f3;"></i></a>
+      </div>
+       <div class="icon-div">
+      <a href="#" class="icon"><i class="fa-brands fa-instagram fa-xl" style="color: #f1f3f3;"></i></i></a>
+       </div>
+       <div class="icon-div">
+        <a href="#" class="icon"><i class="fa-brands fa-youtube fa-xl" style="color: #f1f3f3;"></i></a>
+       </div>         
+    </div>
+    <ul class="footer-links">
+      <li><a href="#">FAQS</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Shippping and Delivery</a></li>
+      <li><a href="#">Payments</a></li>
+    </ul>
+  </div>
+  <p>&copy; 2024 Your Company. All rights reserved.</p>
+</footer>
+
+<!-- Bootstrap JS dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
 
-  <!-- Bootstrap JS dependencies -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-  
-  <script>
+<!-- <script>
+  function searchProduct() {
+    // Get the search query from the input field
+    var searchTerm = document.getElementById("search-bar").value;
+
+    // Send a fetch request to the backend controller
+    fetch('/search-results?query=' + encodeURIComponent(searchTerm))
+      .then(response => response.json())
+      .then(data => {
+        // Handle the response data
+        displaySearchResults(data);
+      })
+      .catch(error => {
+        // Handle any errors that occur during the fetch request
+        console.error('Error searching for products:', error);
+      });
+  }
+
+
+ // Function to display search results
+function displaySearchResults(results) {
+  // Clear previous search results if any
+  var productListContainer = document.getElementById("product-list-container");
+  productListContainer.innerHTML = '';
+
+  // Check if there are any search results
+  if (results.length > 0) {
+    // Loop through each product in the search results
+    results.forEach(product => {
+      // Create a new product card element
+      var productCard = document.createElement("div");
+      productCard.classList.add("col-md-3");
+      productCard.innerHTML = `
+        <div class="card" id="product">
+          <a href="/productDetails/${product._id}">
+            <img src="${product.productImage[0]}" class="card-img-top" alt="...">
+          </a>
+          <div class="card-body">
+            <h6 class="card-text">${product.name}</h6>
+            <h6 class="card-title">${product.price}</h6>
+            ${product.stock > 0 ? 
+              `<form action="/add-to-cart/${product._id}" method="post">
+                <button type="submit" class="btn btn-lg btn-warning">Add to Cart</button>
+              </form>` : 
+              `<p class="text-danger">Out of Stock</p>`}
+            <button type="button" class="btn btn-sm">
+              <i class="fa fa-duotone fa-heart"></i> Add to wishlist
+            </button>
+          </div>
+        </div>
+      `;
+
+      // Append the product card to the product list container
+      productListContainer.appendChild(productCard);
+    });
+  } else {
+    // No search results found
+    productListContainer.innerHTML = '<p>No products found.</p>';
+  }
+}
+
+</script> -->
+
+
+<script>
 
 function toggleDropdown() {
 var dropdown = document.getElementById("account-options");
@@ -43,13 +107,14 @@ dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
 // Close the dropdown if the user clicks outside of it
 window.onclick = function (event) {
 if (!event.target.matches('#my-account')) {
-  var dropdown = document.getElementById("account-options");
-  if (dropdown.style.display === "block") {
-    dropdown.style.display = "none";
-  }
+var dropdown = document.getElementById("account-options");
+if (dropdown.style.display === "block") {
+  dropdown.style.display = "none";
+}
 }
 };
 
-  </script>
+</script>
 </body>
 </html>
+

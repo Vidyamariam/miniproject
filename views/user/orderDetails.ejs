@@ -5,72 +5,168 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
 
-    <style>
-      .order-main,
-      .address,
-      .product-details {
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Add box shadow */
-        padding: 20px; /* Add some padding for better visual */
-        margin-bottom: 20px; /* Add margin bottom for separation */
-      }
-      .order-main {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 200px;
-        margin: 300px;
-      }
-      .address .product-details {
-        margin: 20px;
-      }
-      .address {
-        width: 300px;
-        height: 300px;
-      }
-      .product-details {
-        width: 800px;
-        height: 300px;
-      }
-      .product {
-        display: flex;
-        align-items: center;
-        margin-bottom: 10px;
-      }
+    <link rel="stylesheet" href="/stylesheets/user/orderdetails.css" />
 
-      .product img {
-        width: 60px;
-        height: 60px;
-        margin-right: 10px;
-      }
-      .pd-text {
-        display: flex;
-        flex-direction: column;
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bacasime+Antique&family=Italiana&display=swap" rel="stylesheet">
+   
+
+    <style>
+      .order-details{
+        width: 200px;
+        height: 200px;
       }
     </style>
   </head>
   <body>
-    <div class="order-main">
-      <div class="address">
-        <h5>Delivery Address</h5>
-        <p>Name: <%= orders.shippingAddress.name %></p>
-        <p>Address: <%= orders.shippingAddress.address %></p>
-        <p>Phone: <%= orders.shippingAddress.phone %></p>
-      </div>
-      <div class="product-details">
-        <h5>Product Details</h5>
-
-        <div class="product">
-          <img src="<%= orders.productId.productImage %>" alt="" />
-          <br />
-          <br />
-
-          <div class="pd-text">
-            <p>Product Name: <%= orders.productName %></p>
-            <p>Quantity: <%= orders.quantity %></p>
-            <p>Price: <%= orders.price %></p>
-            <p>Total Price: <%= orders.totalPrice %></p>
+    <header>
+      <div id="header-info">
+        <!-- <p id="contactus">Contact Us</p> -->
+        <img src="/img/amoli-jewels-high-resolution-logo-black.png" class="logo" />
+        <h1 id="store-name">Amoli Jewels</h1>
+        <div class="nav-icons">
+          <div class="dropdown" id="my-account-dropdown">
+            <a id="my-account" onclick="toggleDropdown()"><i class="fa fa-regular fa-user fa-xl"></i> My Account</a>
+            <div class="dropdown-content" id="account-options">
+              <a href="/profile"><i class="fa fa-regular fa-user fa-sm"></i> My Profile</a>
+              <a href="#"><i class="fa fa-regular fa-receipt fa-sm"></i> Orders</a>
+              <a href="#"><i class="fa fa-regular fa-heart fa-sm"></i> Wishlist</a>
+              <a href="#"><i class="fa fa-regular fa-ticket fa-sm"></i> Coupons</a>
+              <a href="/logout"><i class="fa fa-regular fa-sign-out-alt fa-sm"></i> Logout</a>
+            </div>
           </div>
+          
+          <a id="addtocart" href="/cart" style="color: black; text-decoration: none;">My Cart 
+            <i
+            class="fa fa-duotone fa-cart-shopping fa-xl"></i>
+
+
+            <!-- (
+              <% if (typeof quantityInCart !== "undefined") { %>
+                <%= quantityInCart %>
+              <% } else { %>
+                0
+              <% } %>) -->
+
+          
+          </a>
+        </div>
         </div>
       </div>
+
+      <nav id="nav-bar">
+        <a href="/home">Home</a>
+        <a href="">About us</a>
+        <a href="">Contact</a>
+        <a href="/all-products">Products</a>
+        <img src="" id="search-icon" />
+      </nav>
+    </header>
+    <div class="order-main">
+    
+      <div class="address">
+          <h5>Delivery Address</h5>
+          <p>Name: <%= order.address.name %></p>
+          <p>Address: <%= order.address.address %>, <%= order.address.locality %>,
+              <%= order.address.phone %>, <%= order.address.state %> - <%= order.address.pincode %>
+          </p>
+          <p>Phone: <%= order.address.phone %></p>
+      </div>
+      <div class="product-details">
+          <h5>Product Details</h5>
+          <div class="product">
+              <img src="<%= product.productImage[0] %>" alt="Product Image" />
+              <div class="pd-text">
+                  <p>Product Name: <%= product.productName %></p>
+                  <p>Quantity: <%= product.quantity %></p>
+                  <p>Price: <%= product.price %></p>
+                  <!-- Add more product details here -->
+              </div>
+          </div>
+          <% if (product.status === 'cancelled') { %>
+            <div class="cancelled-message" style="color: red;">
+                <p>Order Cancelled</p>
+            </div>
+        <% } %>
+        <% if (product.status === 'Returned') { %>
+          <div class="cancelled-message" style="color: blue;">
+              <p>Order Returned</p>
+          </div>
+      <% } %>
+          <div class="tp">
+              <p>Total Price: <%= order.totalPrice %></p>
+          </div>
+      </div>  
     </div>
-  </body>
+
+
+  <a  href="/order-history">
+    <button class="btn btn-primary backtooder" style="margin-left: 10px;"> Back to orders</button>
+
+  </a>
+  
+ <!--FOOTER SECTION-->
+ <footer>
+  <div class="footer-content">
+    <div class="footer-logo">
+      <img src="/img/amoli-jewels-high-resolution-logo-white.png" class="logo" style="width: 70px; height: 60px;" />
+    </div>
+    <h2>FOLLOW US</h2>
+    <div class="social-icons">
+      <div class="icon-div">
+        <a href="#" class="icon"><i class="fa-brands fa-facebook fa-xl" style="color: #f1f3f3;"></i></a>
+      </div>
+      <div class="icon-div">
+        <a href="#" class="icon"><i class="fa-brands fa-twitter fa-xl" style="color: #f1f3f3;"></i></a>
+      </div>
+       <div class="icon-div">
+      <a href="#" class="icon"><i class="fa-brands fa-instagram fa-xl" style="color: #f1f3f3;"></i></i></a>
+       </div>
+       <div class="icon-div">
+        <a href="#" class="icon"><i class="fa-brands fa-youtube fa-xl" style="color: #f1f3f3;"></i></a>
+       </div>         
+    </div>
+    <ul class="footer-links">
+      <li><a href="#">FAQS</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Shippping and Delivery</a></li>
+      <li><a href="#">Payments</a></li>
+    </ul>
+  </div>
+  <p>&copy; 2024 Your Company. All rights reserved.</p>
+</footer>
+
+
+<!-- Bootstrap JS dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+<script>
+
+function toggleDropdown() {
+var dropdown = document.getElementById("account-options");
+dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+}
+
+// Close the dropdown if the user clicks outside of it
+window.onclick = function (event) {
+if (!event.target.matches('#my-account')) {
+var dropdown = document.getElementById("account-options");
+if (dropdown.style.display === "block") {
+  dropdown.style.display = "none";
+}
+}
+};
+
+</script>
+</body>
 </html>
+

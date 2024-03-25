@@ -3,6 +3,29 @@ const userCollection = require("../model/userSignupSchema");
 const Address = require('../model/addressSchema');
 const toastr= require('express-toastr')
 
+
+
+exports.getAddressManage = async (req, res) => {
+  try {
+      // Get the email of the currently logged-in user
+      const userEmail = req.session.user;
+       //console.log("userEmail",userEmail);
+       const userdata = await userCollection.findOne(userEmail);
+       const userId = userdata._id;
+       console.log("userdata",userdata);
+      // Find addresses associated with the user's email
+      const addresses = await Address.find({userId: userId});
+      console.log("addresses",addresses);
+
+      const successMessage = req.query.success;
+      res.render("user/addressManage", { addresses, successMessage ,userdata});
+  } catch (error) {
+      console.error('Error fetching addresses:', error);
+      res.status(500).send('Internal Server Error');
+  }
+}
+
+
 exports.addAddress = async (req,res)=> {
 
     try{
@@ -10,7 +33,7 @@ exports.addAddress = async (req,res)=> {
      const userData = await userCollection.findOne(userIds);
   
      const userId  = userData._id;
-   
+     console.log("userId",userId);
     const data = { 
       userId:userId,  
       name: req.body.name,

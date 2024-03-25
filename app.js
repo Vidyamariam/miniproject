@@ -45,7 +45,7 @@ app.use(
 
 //requiring routes
 const userRouter = require("./routers/user");
-const adminRouter = require('./routers/admin');
+const adminRouter = require("./routers/admin")
 const addressRouter = require('./routers/address');
 
 //

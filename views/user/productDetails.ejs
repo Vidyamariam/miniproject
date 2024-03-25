@@ -10,10 +10,10 @@
   <!-- <link
     href="https://fonts.googleapis.com/css?family=Barlow+Semi+Condensed|Josefin+Sans&display=swap|Permanent+Marker&display&display=swap"
     rel="stylesheet" /> -->
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bacasime+Antique&family=Italiana&display=swap" rel="stylesheet">
+   
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
@@ -35,27 +35,54 @@
   <!--FONT AWESOME-->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+<style>
+   #mainContainer{
+    box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.3);
+    width: 400px;
+    height: 400px;
+    overflow: hidden;
+  }
+  #mainContainer img{
+    object-fit: cover;
+    transform-origin: center;
+    width: 100%;
+    height: 100%;
+  }
 
+
+  
+</style>
 
 </head>
 
 <body>
   <header>
     <div id="header-info">
-      <img src="/img/siteLogo1.png" class="logo" />
-      <h1 id="store-name">STEPUP SHOES</h1>
+      <img src="/img/logo-witebg.png" class="logo"  style="width: 80px; height: 60px;" />
+      <h1 id="store-name">Amoli Jewels</h1>
       <div class="nav-icons">
-        <a id="favourite"><i class="fa fa-regular fa-heart fa-xl"></i></a>
-        <a id="addtocart"><i class="fa fa-duotone fa-cart-shopping fa-xl"></i></a>
-        <a id="user"><i class="fa-solid fa-user fa-xl"></i></a>
+        <div class="dropdown" id="my-account-dropdown">
+          <a id="my-account" onclick="toggleDropdown()"><i class="fa fa-regular fa-user fa-xl"></i> My Account</a>
+          <div class="dropdown-content" id="account-options">
+            <a href="/profile"><i class="fa fa-regular fa-user fa-sm"></i> My Profile</a>
+            <a href="#"><i class="fa fa-regular fa-receipt fa-sm"></i> Orders</a>
+            <a href="#"><i class="fa fa-regular fa-heart fa-sm"></i> Wishlist</a>
+            <a href="#"><i class="fa fa-regular fa-ticket fa-sm"></i> Coupons</a>
+            <a href="/logout"><i class="fa fa-regular fa-sign-out-alt fa-sm"></i> Logout</a>
+          </div>
+        </div>
+
+        <a id="addtocart" href="/cart" style="color: black; text-decoration: none;">My Cart<i
+            class="fa fa-duotone fa-cart-shopping fa-xl"></i></a>
       </div>
     </div>
-    </div>
+  </div>
 
     <nav id="nav-bar">
       <a href="/home">Home</a>
-      <a href="">Boots</a>
-      <a href="">Sneakers</a>
+      <a href="">About us</a>
+      <a href="">Contact</a>
+      <a href="/all-products">Products</a>
       <img src="" id="search-icon" />
     </nav>
   </header>
@@ -83,11 +110,29 @@
     </div>
   </div>
 
-  <!-- Main Image -->
-  <div id="container" class="MasterImg">
-    <img style="width: 300px; height: 300px;" src="<%= productdetails.productImage[0] %>" alt="Main Product Image"
-         class="lightbox-image" data-lightbox="product-gallery" data-title="<%= productdetails.name %>" id="mainImage"/>
-  </div>
+ <!-- Main Image -->
+<div id="mainContainer">
+  <img id="mainImage" src="<%= productdetails.productImage[0] %>" alt=""/>
+</div>
+
+<script>
+  const mainContainer = document.getElementById("mainContainer");
+  const img = document.getElementById("mainImage");
+  
+  mainContainer.addEventListener("mousemove", (e) => {
+    const rect = mainContainer.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    img.style.transformOrigin = `${x}px ${y}px`;
+    img.style.transform = "scale(2)";
+  });
+
+  mainContainer.addEventListener("mouseleave", () => {
+    img.style.transform = "scale(1)";
+  });
+</script>
+
 
   <!-- Details Section -->
   <div class="details-section">
@@ -109,7 +154,7 @@
         <tr>
           <td> 
             <form action="/add-to-cart/<%= productdetails._id %>" method="post">
-              <button type="submit" class="btn btn-lg btn-warning">
+              <button type="submit" class="btn btn-lg btn-dark">
                 Add to Cart
               </button>
             </form>
@@ -138,7 +183,7 @@
   <footer>
     <div class="footer-content">
       <div class="footer-logo">
-        <img src="/img/siteLogo2.jpeg" class="logo" />
+        <img src="/img/logo-blackbg.png" class="logo" style="width: 70px; height: 60px;" />
       </div>
       <h2>FOLLOW US</h2>
       <div class="social-icons">
@@ -172,35 +217,26 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
 
+
+
+
+
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const container = document.querySelector(".MasterImg");
-    const img = container.querySelector("img");
-
-    container.addEventListener("mousemove", (e) => {
-      const rect = container.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-
-      const xOffset = (x / container.offsetWidth - 0.5) * 100;
-      const yOffset = (y / container.offsetHeight - 0.5) * 100;
-      const zOffset = 10;
-
-      img.style.transformOrigin = `${xOffset + 50}% ${yOffset + 50}%`;
-      img.style.transform = `scale(2) translateZ(${zOffset}px)`;
-    });
-
-    container.addEventListener("mouseleave", () => {
-      img.style.transformOrigin = 'center center';
-      img.style.transform = 'scale(1)';
-    });
-  });
-
-  function changeMainImage(imageSrc) {
-    console.log('Changing main image to:', imageSrc);
-    // Replace 'mainImage' with the actual ID of the image element you want to change
-    document.getElementById('mainImage').src = imageSrc;
+  function toggleDropdown() {
+    var dropdown = document.getElementById("account-options");
+    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
   }
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches('#my-account')) {
+      var dropdown = document.getElementById("account-options");
+      if (dropdown.style.display === "block") {
+        dropdown.style.display = "none";
+      }
+    }
+  };
+
 </script>
 
 </body>

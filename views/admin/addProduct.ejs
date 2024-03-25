@@ -4,12 +4,98 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Add Product</title>
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/cropperjs/dist/cropper.min.css"
-    />
 
     <link rel="stylesheet" href="/stylesheets/admin/addProduct.css" />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
+      integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I"
+      crossorigin="anonymous"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css"
+    />
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/2.8.0/cropper.min.css"
+    />
+
+    <style>
+      #imagePreview img {
+        height: 60px;
+        max-width: 90px;
+        margin: 5px;
+      }
+      /* Style for the modal */
+      #imagePreview img {
+        height: 60px;
+        max-width: 90px;
+        margin: 5px;
+      }
+
+      #cropper110Modal {
+        position: absolute;
+        width: 68vw;
+        height: 79vh;
+        background-color: rgba(53, 52, 52, 0.532);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        display: none;
+        margin-top: 10px;
+      }
+
+      #cropper110Modal img {
+        max-width: 100%;
+      }
+
+      .cropper110-page {
+        margin: 1em auto;
+        max-width: 646px;
+        height: 100%;
+      }
+
+      .cropper110-box {
+        padding: 0.5em;
+        width: calc(100% / 2 - 1em);
+        max-height: 56vh;
+      }
+
+      .cropper110-crop,
+      .cropper110-close {
+        padding: 0.5rem 1rem;
+        background-color: rgb(0, 0, 0);
+        color: #fff;
+        font-weight: bold;
+      }
+
+      .cropper110-close {
+        background-color: red;
+      }
+      .cropper110-crop {
+        background-color: green;
+        margin-top: 200px;
+      }
+
+      .cropper-container {
+        width: 300px;
+        height: 300px;
+      }
+    </style>
   </head>
 
   <body>
@@ -21,122 +107,269 @@
         action="/admin/addproduct"
         method="POST"
         enctype="multipart/form-data"
+        onsubmit="return validateForm()"
       >
-        <label for="productName">Product Name:</label>
-        <input type="text" id="productName" name="name" required />
-
-        <label for="Category">Category:</label>
-        <select id="Category" name="category">
-          <option value="" disabled selected>Select Category</option>
-          <% categories.forEach((category) => { %> <% if (category.isListed) {
-          %>
-          <option value="<%= category.categoryName %>">
-            <%= category.categoryName %>
-          </option>
-          <% } %> <% }); %>
-        </select>
-
-        <label for="images">Images:</label>
-        <input
-          class="form-control"
-          type="file"
-          id="productImage"
-          name="productImages"
-          accept="image/*"
-          multiple
-          required
-          onchange="previewImage(this)"
-        />
-
-        <!-- Image preview container -->
-        <div id="imagePreviewContainer">
-          <img id="imagePreview" src="#" alt="Image Preview" />
+        <div class="mb-3">
+          <label for="productName">Product Name:</label>
+          <input type="text" id="productName" name="name" />
+          <small style="color: red"><%= locals.msgName %></small>
+          <br />
+        </div>
+        <div class="mb-3">
+          <label for="Category">Category:</label>
+          <select id="Category" name="category">
+            <option value="" disabled selected>Select Category</option>
+            <% categories.forEach((category) => { %> <% if (category.isListed) {
+            %>
+            <option value="<%= category.categoryName %>">
+              <%= category.categoryName %>
+            </option>
+            <% } %> <% }); %>
+          </select>
+          <small style="color: red"><%= locals.msgCategory %></small>
         </div>
 
-        <!-- Cropper container -->
-        <!-- <div>
-          <label for="cropperContainer">Crop Image:</label>
-          <div id="cropperContainer"></div> -->
-        <!-- Button to trigger cropping -->
-        <!-- <button type="button" onclick="cropImage()"></button>
-        </div> -->
+        <div class="mb-3">
+          <label for="fileUploader">Product Images:</label>
+          <input
+            type="file"
+            id="fileUploader"
+            data-image-preview="#imagePreview"
+            name="productImage"
+            accept=".jpg,.png,.jpeg,.webp"
+            multiple
+          />
 
-        <label for="description">Description:</label>
-        <textarea id="description" name="description"></textarea>
+          <div id="imagePreview"></div>
+          <small id="msgImage" style="color: red"><%= locals.msgImage %></small>
+        </div>
 
-        <label for="sizes">Sizes:</label>
-        <select id="sizes" name="sizes" multiple>
-          <option value="" disabled selected>Select the size</option>
-          <option value="S">S</option>
-          <option value="M">M</option>
-          <option value="L">L</option>
-        </select>
+        <div class="mb-3">
+          <label for="description">Description:</label>
+          <textarea id="description" name="description"></textarea>
+          <br />
+        </div>
 
-        <label for="price">Price:</label>
+        <div class="mb-3">
+          <label for="price">Price:</label>
+          <input type="number" id="price" name="price" />
+          <small style="color: red"><%= locals.msgNegativeValues %></small>
+          <small style="color: red"><%= locals.msgPrice %></small>
+          <br />
+        </div>
 
-        <input type="number" id="price" name="price" />
+        <div class="mb-3">
+          <label for="discount">Discount:</label>
+          <input type="number" id="discount" name="discount" step="0.01" />
+          <small style="color: red"><%= locals.msgNegativeValues %></small>
+          <small style="color: red"><%= locals.msgDiscount %></small>
+          <br />
+        </div>
 
-        <label for="discount">Discount:</label>
-        <input type="number" id="discount" name="discount" step="0.01" />
-
-        <label for="stock">Stock:</label>
-        <input type="number" id="stock" name="stock" step="1" />
-        <br />
-
-        <small style="color: orange"><%= locals.msg %></small>
+        <div class="mb-3">
+          <label for="stock">Stock:</label>
+          <input type="number" id="stock" name="stock" step="1" />
+          <small style="color: red"><%= locals.msgNegativeValues %></small>
+          <small style="color: red"><%= locals.msgStock %></small>
+          <br />
+        </div>
 
         <div>
-          <button type="submit">Submit</button>
-          <button type="button" onclick="cancelForm()">Cancel</button>
+          <button type="submit" class="btn btn-sm btn-success">Submit</button>
+          <button
+            type="button"
+            onclick="cancelForm()"
+            class="btn btn-sm btn-primary"
+          >
+            Cancel
+          </button>
         </div>
       </form>
+
+      <!-- Cropper Modal -->
+      <div id="cropper110Modal">
+        <div id="imageCropBox">
+          <div style="text-align: end">
+            <button class="cropper110-close">Close</button>
+          </div>
+          <section class="cropper110-page">
+            <div class="cropper110-box">
+              <div class="cropper110-cropping-box"></div>
+            </div>
+            <div>
+              <button class="cropper110-crop mx-3">Crop</button>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/2.8.0/cropper.min.js"></script>
+      <!-- /cropper modal/ -->
     </div>
 
-    <!--JS-->
-    <!-- ... (your existing HTML) -->
-
-    <script src="https://unpkg.com/cropperjs/dist/cropper.min.js"></script>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"
+      integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/"
+      crossorigin="anonymous"
+    ></script>
 
     <script>
-      function previewImage(input) {
-        var previewContainer = document.getElementById("imagePreviewContainer");
+      function validateForm() {
+        let isValid = true;
 
-        // Clear previous previews
-        previewContainer.innerHTML = "";
-
-        // Check if files are selected
-        if (input.files && input.files.length > 0) {
-          for (let i = 0; i < input.files.length; i++) {
-            // Create an image element for each file
-            var reader = new FileReader();
-            reader.onload = function (e) {
-              var img = document.createElement("img");
-              img.className = "preview-image";
-              img.src = e.target.result;
-              previewContainer.appendChild(img);
-            };
-            reader.readAsDataURL(input.files[i]);
-          }
-
-          // Display the preview container
-          previewContainer.style.display = "block";
+        // Product Name validation
+        const productNameInput = document.getElementById("productName");
+        const msgName = document.getElementById("msgName");
+        if (productNameInput.value.trim() === "") {
+          msgName.innerText = "Product Name is required";
+          isValid = false;
         } else {
-          // Hide the preview container if no files are selected
-          previewContainer.style.display = "none";
+          msgName.innerText = "";
         }
+
+        // Category validation
+        const categoryInput = document.getElementById("Category");
+        const msgCategory = document.getElementById("msgCategory");
+        if (categoryInput.value.trim() === "") {
+          msgCategory.innerText = "Category is required";
+          isValid = false;
+        } else {
+          msgCategory.innerText = "";
+        }
+
+        // Product Images validation
+        const fileUploaderInput = document.getElementById("fileUploader");
+        const msgImage = document.getElementById("msgImage");
+        if (fileUploaderInput.files.length === 0) {
+          msgImage.innerText = "Please select at least one product image";
+          isValid = false;
+        } else {
+          msgImage.innerText = "";
+        }
+
+        // Prevent form submission if validation fails
+        if (!isValid) {
+          return false;
+        }
+
+        // Description validation
+        // Add validation for other fields similarly if needed
+
+        return isValid;
       }
 
       function cancelForm() {
-        // Add logic to handle cancel action
+        // Handle cancel action
         alert("Form canceled");
       }
+    </script>
 
-      // // Attach the previewImage function to the change event of the file input
-      document
-        .getElementById("productImage")
-        .addEventListener("change", function () {
-          previewImage(this);
+    <script>
+      let fileInputs = document.querySelectorAll("[data-image-preview]");
+      let croppingBox = document.querySelector(".cropper110-cropping-box");
+      let cropButton = document.querySelector(".cropper110-crop");
+      let closeButton = document.querySelector(".cropper110-close");
+      let cropper = null;
+      let currentInput = null;
+      let imgNames = null;
+
+      fileInputs.forEach((fileInput) => {
+        fileInput.addEventListener("change", () => {
+          let previewDiv = document.querySelector(
+            fileInput.dataset.imagePreview
+          );
+          previewDiv.innerHTML = "";
+          for (let each of fileInput.files) {
+            let imgSrc = URL.createObjectURL(each);
+            let img = document.createElement("img");
+            img.src = imgSrc;
+            img.dataset.fileName = each.name;
+            img.dataset.input = fileInput.id;
+            img.addEventListener("click", cropImage);
+            previewDiv.append(img);
+          }
         });
+      });
+
+      function cropImage(e) {
+        document.getElementById("cropper110Modal").style.display = "flex";
+        let img = document.createElement("img");
+        img.src = e.target.src;
+        img.id = "image";
+        croppingBox.innerHTML = "";
+        croppingBox.appendChild(img);
+        cropper = new Cropper(img, {
+          aspectRatio: 4 / 4,
+          viewMode: 1,
+          autoCropArea: 1,
+        });
+        imgNames = e.target.dataset.fileName;
+        currentInput = e.target.dataset.input;
+
+        if (currentInput !== "fileUploader") {
+          cropper.destroy();
+          document.getElementById("cropper110Modal").style.display = "none";
+          return;
+        }
+      }
+
+      cropButton.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        if (!cropper || !cropper.getCroppedCanvas()) {
+          alert("Please make a selection first!");
+          return;
+        }
+        let imgSrc = cropper
+          .getCroppedCanvas({
+            width: 300, // input value
+          })
+          .toDataURL();
+        if (imgSrc && imgNames !== null) {
+          let fileUploader = document.getElementById(currentInput);
+          fetch(imgSrc)
+            .then((res) => res.blob())
+            .then((blob) => {
+              let file = new File(
+                [blob],
+                `${imgNames}-${Date.now()}.png, { type: "image/png" }`
+              ); // Fix the concatenation syntax here
+              const dt = new DataTransfer();
+              for (let each of fileUploader.files) {
+                if (each.name !== imgNames) {
+                  dt.items.add(each);
+                } else {
+                  dt.items.add(file);
+                }
+              }
+              fileUploader.files = dt.files;
+              let previewDiv = document.querySelector(
+                fileUploader.dataset.imagePreview
+              );
+              previewDiv.innerHTML = "";
+              let res = "";
+              for (let each of fileUploader.files) {
+                let src = URL.createObjectURL(each);
+                res += `<img src="${src}" data-file-name="${each.name}" data-input="${fileUploader.id}" onclick="cropImage(event)" class="previewImages">`;
+              }
+              previewDiv.innerHTML = res;
+            });
+        }
+        closeButton.click();
+      });
+      closeButton.addEventListener("click", () => {
+        document.getElementById("cropper110Modal").style.display = "none";
+        if (cropper) {
+          cropper.destroy();
+        }
+      });
     </script>
   </body>
 </html>

@@ -14,7 +14,7 @@
                 width="110"
               />
               <div class="mt-3">
-                <h4>John Doe</h4>
+                <h4><%= userdata.name %></h4>
               </div>
             </div>
             <hr class="my-4" />
@@ -24,11 +24,11 @@
               >
                 <a href="/address">Manage Addresses</a>
               </li>
-              <li
+              <!-- <li
                 class="list-group-item d-flex justify-content-between align-items-center flex-wrap"
               >
                 <a href="#">Change Password</a>
-              </li>
+              </li> -->
               <li
                 class="list-group-item d-flex justify-content-between align-items-center flex-wrap"
               >
@@ -65,6 +65,7 @@
                   name="name"
                   value="<%= userdata.name %>"
                 />
+                <small style="color: red"><%= nameError %></small>
               </div>
               <div class="mb-3">
                 <label for="editEmail" class="form-label">Email:</label>
@@ -76,6 +77,7 @@
                   name="email"
                   value="<%= userdata.email %>"
                 />
+                <small style="color: red"><%= emailError %></small>
               </div>
 
               <button type="submit" class="btn btn-primary">

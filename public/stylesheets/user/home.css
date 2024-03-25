@@ -69,18 +69,18 @@ select {
 font-family: 'Josefin Sans', sans-serif;*/
 
 #store-name {
-  font-family: "Kanit", sans-serif;
+  font-family: "Bacasime Antique", serif;
     text-align: center;
     margin: auto;
     padding-top: 5px;
     padding-bottom: 5px;;
-    padding-left: 95px;
-    letter-spacing: 12px;
-    font-size: 50px;
+    padding-left: 5px;
+    letter-spacing: 5px;
+    font-size: 30px;
 }
 
 #header-info {
-  font-family: "Kanit", sans-serif;
+  font-family: "Bacasime Antique", serif;
     text-transform: uppercase;
     display: flex;
     justify-content: space-around;
@@ -101,11 +101,11 @@ font-family: 'Josefin Sans', sans-serif;*/
     width: 100%;
     padding: 8px 0px;
     text-align: center;
-    font-family: "Kanit", sans-serif;
+    font-family: "Bacasime Antique", serif;
 }
 
 #nav-bar a {
-  font-family: "Kanit", sans-serif;
+  font-family: "Bacasime Antique", serif;
     overflow: hidden;
     font-size: 18px;
     text-decoration: none;
@@ -122,7 +122,7 @@ font-family: 'Josefin Sans', sans-serif;*/
 }
 
 #three-box-info {
-  font-family: "Kanit", sans-serif;
+  font-family: "Bacasime Antique", serif;
     display: flex;
     justify-content: center;
 }
@@ -187,9 +187,9 @@ font-family: 'Josefin Sans', sans-serif;*/
 }
 
 .nav-icons button{
-  width: 60px;
-  height: 30px;
-  border-radius: 10px;
+  width: 50px;
+  height: 20px;
+ 
 }
 
 .nav-icons a{
@@ -226,10 +226,8 @@ font-family: 'Josefin Sans', sans-serif;*/
 
 
 
-
-
 body {
-  font-family: "Kanit", sans-serif;
+  font-family: "Bacasime Antique", serif;
   font-weight: 500;
   font-style: normal;
   color: rgba(0, 0, 0, 0.87);
@@ -252,88 +250,65 @@ body {
  }
   
 
-  /* Add this CSS for the category sections */
+ 
+ #product {
+  font-family: "Bacasime Antique", serif;
+  width: 250px;
+  height: 450px;
+  border-radius: 10px;
+}
 
-  .category-title{
+.card {
+  font-family: "Bacasime Antique", serif;
+  margin: 10px; /* Adjust this value to increase/decrease space between cards */
+}
 
-     text-align: center;
-     margin-top: 20px;
-  }
+.card-img-top {
+  border-radius: 22px;
+  padding: 10px;
+  width: 249px;
+  height: 250px;
+}
 
-#categories-section {
+.row {
   display: flex;
-  justify-content: space-evenly;
-  margin-top: 50px;
-  margin-bottom: 50px;
-  
+  flex-wrap: wrap; /* Ensure cards wrap to the next line when screen size is smaller */
+  justify-content: center; /* Align cards in the center horizontally */
 }
 
-
-
-
-
-.category {
-  position: relative;
-  
-  overflow: hidden;
-  padding: 30px;
+.col-md-3 {
+  flex: 0 0 calc(25% - 20px); /* Ensure cards take up 25% of the row width with 20px margin */
+  margin: 38px; /* Adjust this value to increase/decrease space between columns */
 }
-
-.category h1 {
-  text-align: center;
-  font-size: 24px;
-  margin-bottom: 10px;
-}
-
-.category img {
-  width: 300px;
-  height: 300px;
-  border-radius: 20px;
-}
-
-.category a{
-
-  margin-bottom: 20px;
-}
-
-.buy-now-btn {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 10px 20px;
-  background-color: #000;
-  color: #fff;
-  text-decoration: none;
+#pdt-cardbdy button{
+  background-color: black;
+  color: white;
+  width: 200px;
   border-radius: 5px;
-  transition: background-color 0.3s ease;
+  border: none;
+  height: 40px;
+  margin-bottom: 5px;
 }
 
-.buy-now-btn:hover {
+#pdt-cardbdy button:hover{
   background-color: #333;
 }
 
+#pdt-cardbdy .wishlistbutton{
+  background-color: white;
+  color: black;
 
+}
+#pdt-cardbdy .wishlistbutton:hover{
+  background-color: bisque;
+}
 
-
-  .middle-content{
-    margin-top: 40px;
-  }
- .inner-content img{
-
-  width: 2400px;
-  height: auto;
- }
-
- .card-icons{
-  display: flex;
- }
 
 
 
  /*footer*/
  footer {
-  font-family: "Kanit", sans-serif;
+  font-family: "Italiana", sans-serif;
   background-color: #333;
   color: #fff;
   padding: 20px 0;

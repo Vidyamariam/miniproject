@@ -1,0 +1,365 @@
+/* Box sizing rules */
+* {
+    box-sizing: border-box;
+  }
+  
+  /* Remove default padding */
+  ul[class],
+  ol[class] {
+    padding: 0;
+  }
+  
+  /* Remove default margin */
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  p,
+  ul[class],
+  ol[class],
+  li,
+  figure,
+  figcaption,
+  blockquote,
+  dl,
+  dd {
+    margin: 0;
+  }
+  
+  /* Set core body defaults 
+  body {
+    min-height: 100vh;
+    scroll-behavior: smooth;
+    text-rendering: optimizeSpeed;
+    line-height: 1.5;
+  } */
+  
+  /* Remove list styles on ul, ol elements with a class attribute */
+  ul[class],
+  ol[class] {
+    list-style: none;
+  }
+  
+  /* A elements that don't have a class get default styles */
+  a:not([class]) {
+    text-decoration-skip-ink: auto;
+  }
+  
+  /* Make images easier to work with */
+  img {
+    max-width: 100%;
+    display: block;
+  }
+  
+  
+  /* Inherit fonts for inputs and buttons */
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+  }
+  
+  /*END OF CSS RESET*/
+  
+  /*font-family: 'Barlow Semi Condensed', sans-serif;
+  font-family: 'Josefin Sans', sans-serif;*/
+  
+  #store-name {
+    font-family: "Bacasime Antique", serif;
+      text-align: center;
+      margin: auto;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      padding-left: 95px;
+     
+      font-size: 30px;
+  }
+  
+  #header-info {
+    font-family: "Bacasime Antique", serif;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 10px 0px;
+      margin: 0 40px;
+  }
+  
+  #header-info p {
+      letter-spacing: 2px;
+      margin: 0px 15px;
+      font-size: 15px;
+  }
+  
+  #nav-bar {
+      background-color: black;
+      overflow: hidden;
+      width: 100%;
+      padding: 8px 0px;
+      text-align: center;
+      font-family: "Bacasime Antique", serif;
+  }
+  
+  #nav-bar a {
+    font-family: "Bacasime Antique", serif;
+      overflow: hidden;
+      font-size: 18px;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: white;
+      padding: 5px 50px;
+      border-left: 5px solid white;
+  }
+  
+  #nav-bar a:hover {
+      background-color: white;
+      color: black;
+  }
+  
+  #three-box-info {
+    font-family: "Bacasime Antique", serif;
+      display: flex;
+      justify-content: center;
+  }
+  
+  #box-one {
+      background-color: #A0EBFB;
+      width: 200px;
+      height: 100px;
+      margin: 5px 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+  
+  #sale {
+      width: 50px;
+      margin: 0 5px;
+  }
+  
+  #box-two {
+      background-color: #A0EBFB;
+      width: 200px;
+      height: 100px;
+      margin: 5px 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+  
+  #delivery {
+      width: 50px;
+      margin: 0px 15px;
+  }
+  
+  #box-three {
+      background-color: #A0EBFB;
+      width: 200px;
+      height: 100px;
+      margin: 5px 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+  
+  #box-three p {
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 3px;
+      padding: 15px 15px;
+      border: 5px dashed white;
+  }
+  
+  .logo{
+  
+    width: 80px;
+    height: 80px;
+  }
+  
+  .nav-icons{
+    display: flex;
+    align-items: center;
+  }
+  
+  .nav-icons button{
+    width: 60px;
+    height: 30px;
+    border-radius: 10px;
+  }
+  
+  .nav-icons a{
+   margin: 10px;
+    
+  }
+  
+  #my-account-dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  #account-options {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+  }
+  
+  #account-options a {
+    color: #333;
+    padding: 12px;
+    text-decoration: none;
+    display: block;
+  }
+  
+  #account-options a:hover {
+    background-color: #f5f5f5;
+  }
+
+  #pdt-cardbdy button{
+    background-color: black;
+    color: white;
+    width: 200px;
+    border-radius: 5px;
+    border: none;
+    height: 40px;
+    margin-bottom: 5px;
+  }
+  
+  #pdt-cardbdy button:hover{
+    background-color: #333;
+  }
+  
+  #pdt-cardbdy .wishlistbutton{
+    background-color: white;
+    color: black;
+  
+  }
+  #pdt-cardbdy .wishlistbutton:hover{
+    background-color: bisque;
+  }
+
+  
+  
+  body {
+    font-family: "Bacasime Antique", serif;
+    font-weight: 500;
+    font-style: normal;
+    color: rgba(0, 0, 0, 0.87);
+  }
+  
+
+
+.order-main {
+  font-family: "Bacasime Antique", serif;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 60px;
+    padding: 20px;
+  }
+  .address,
+  .product-details {
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Add box shadow */
+    padding: 20px; /* Add some padding for better visual */
+    margin-bottom: 20px; /* Add margin bottom for separation */
+  }
+  .address {
+    width: 300px;
+    margin-right: 20px; /* Add margin to create space between address and product details */
+  }
+  .product-details {
+    width: calc(
+      100% - 350px
+    ); /* Adjust width to accommodate the address section and some margin */
+    height: 300px; /* Set the fixed height for the product details */
+    overflow-y: auto; /* Hide vertical scrolling */
+  }
+  .product-details::-webkit-scrollbar {
+    /* Hide the scrollbar for WebKit browsers */
+    display: none;
+  }
+  .product-details h5 {
+    margin-top: 0; /* Remove default margin */
+  }
+  .product {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .product img {
+    width: 60px;
+    height: 60px;
+    margin-right: 10px;
+  }
+  .pd-text {
+    display: flex;
+    flex-direction: column;
+  }
+  .product img {
+    width: 80px;
+    height: 80px;
+  }
+
+
+   /*footer*/
+ footer {
+  font-family: "Bacasime Antique", serif;
+    background-color: #333;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+    /* position: fixed; */
+    bottom: 0;
+    width: 100%;
+    height:auto;
+    margin-top: 40px;
+  }
+  
+  .footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .footer-logo {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .footer-links { 
+    margin: 0;
+    padding: 0;
+  }
+  
+  .footer-links li {
+    margin-right: 20px;
+    margin-top: 20px;
+  }
+  
+  .footer-links a {
+    text-decoration: none;
+    color: #fff;
+    transition: color 0.3s ease;
+  }
+  
+  .footer-links a:hover {
+    color: #ffd700; /* Change color on hover, you can use your preferred color */
+  }
+  
+  .social-icons{
+    width: 200px;
+    height: 50px;
+    display: flex;
+    margin-top: 20px;
+  }
+  
+  .icon-div{
+    margin-right: 20px;
+  }
+   
+  

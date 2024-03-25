@@ -1,6 +1,6 @@
 .shopping-cart{
 	padding-bottom: 50px;
-	font-family: "Kanit", sans-serif;
+	font-family: "Bacasime Antique", serif;
 }
 
 .shopping-cart.dark{
@@ -129,6 +129,13 @@
 .quantityUpdate{
 
 	display: flex;
+}
+
+.items{
+	padding: 20px;
+}
+.row .price{
+	padding: 0;
 }
 
 @media (min-width: 768px) {

@@ -69,18 +69,18 @@
   font-family: 'Josefin Sans', sans-serif;*/
   
   #store-name {
-      font-family: 'Josefin Sans', sans-serif;
+    font-family: "Bacasime Antique", serif;
       text-align: center;
       margin: auto;
       padding-top: 5px;
       padding-bottom: 5px;;
       padding-left: 95px;
-      letter-spacing: 12px;
-      font-size: 50px;
+      letter-spacing: 5px;
+      font-size: 30px;
   }
   
   #header-info {
-      font-family: 'Barlow Semi Condensed', sans-serif;
+    font-family: "Bacasime Antique", serif;
       text-transform: uppercase;
       display: flex;
       justify-content: space-around;
@@ -101,11 +101,11 @@
       width: 100%;
       padding: 8px 0px;
       text-align: center;
-      font-family: 'Barlow Semi Condensed', sans-serif
+      font-family: "Bacasime Antique", serif;
   }
   
   #nav-bar a {
-      font-family: 'Barlow Semi Condensed', sans-serif;
+    font-family: "Bacasime Antique", serif;
       overflow: hidden;
       font-size: 18px;
       text-decoration: none;
@@ -122,7 +122,7 @@
   }
   
   #three-box-info {
-      font-family: 'Barlow Semi Condensed', sans-serif;
+    font-family: "Bacasime Antique", serif;
       display: flex;
       justify-content: center;
   }
@@ -194,7 +194,7 @@
   @import url('https://fonts.googleapis.com/css?family=Roboto');
   
   body {
-    font-family: 'Roboto', sans-serif;
+    font-family: "Bacasime Antique", serif;
     font-size: 14px;
     color: rgba(0, 0, 0, 0.87);
 
@@ -257,6 +257,7 @@ form button:hover {
 } */
 
 .title{
+  font-family: "Bacasime Antique", serif;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -280,6 +281,7 @@ form button:hover {
 
   /*footer*/
   footer {
+    font-family: "Bacasime Antique", serif;
     background-color: #333;
     color: #fff;
     padding: 20px 0;

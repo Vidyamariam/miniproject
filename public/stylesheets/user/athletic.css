@@ -1,18 +1,18 @@
 
  
 #store-name {
-    font-family: "Kanit", sans-serif;
+  font-family: "Bacasime Antique", serif;
     text-align: center;
     margin: auto;
     padding-top: 5px;
     padding-bottom: 5px;;
     padding-left: 95px;
-    letter-spacing: 12px;
-    font-size: 50px;
+    letter-spacing: 5px;
+    font-size: 30px;
 }
 
 #header-info {
-    font-family:  "Kanit", sans-serif;
+  font-family: "Bacasime Antique", serif;
     text-transform: uppercase;
     display: flex;
     justify-content: space-around;
@@ -41,11 +41,11 @@
     width: 100%;
     padding: 8px 0px;
     text-align: center;
-    font-family:  "Kanit", sans-serif;
+    font-family: "Bacasime Antique", serif;
 }
 
 #nav-bar a {
-    font-family: "Kanit", sans-serif;
+  font-family: "Bacasime Antique", serif;
     overflow: hidden;
     font-size: 18px;
     text-decoration: none;
@@ -62,7 +62,7 @@
 }
 
 #three-box-info {
-    font-family: "Kanit", sans-serif;
+  font-family: "Bacasime Antique", serif;
     display: flex;
     justify-content: center;
 }
@@ -137,21 +137,58 @@
   
 }
 
-#product{
-  width: 200px;
-  height: 350px;
-  margin: 10px;
-}
-
-.card-img-top{
-
+#product {
   width: 250px;
-  height: 200px;
+  height: 450px;
+  border-radius: 10px;
 }
 
-.row{
-  display: flex;
+.card {
+  margin: 10px; /* Adjust this value to increase/decrease space between cards */
 }
+
+.card-img-top {
+  border-radius: 22px;
+  padding: 10px;
+  width: 249px;
+  height: 250px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap; /* Ensure cards wrap to the next line when screen size is smaller */
+  justify-content: center; /* Align cards in the center horizontally */
+}
+
+.col-md-3 {
+  flex: 0 0 calc(25% - 20px); /* Ensure cards take up 25% of the row width with 20px margin */
+  margin: 38px; /* Adjust this value to increase/decrease space between columns */
+}
+#pdt-cardbdy button{
+  background-color: black;
+  color: white;
+  width: 200px;
+  border-radius: 5px;
+  border: none;
+  height: 40px;
+  margin-bottom: 5px;
+}
+
+#pdt-cardbdy button:hover{
+  background-color: #333;
+}
+
+#pdt-cardbdy .wishlistbutton{
+  background-color: white;
+  color: black;
+
+}
+#pdt-cardbdy .wishlistbutton:hover{
+  background-color: bisque;
+}
+
+
+
 
 #categories-sidebar table tr{
    
@@ -167,6 +204,7 @@
 
 /*footer*/
 footer {
+  font-family: "Bacasime Antique", serif;
     background-color: #333;
     color: #fff;
     padding: 20px 0;

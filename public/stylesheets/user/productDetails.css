@@ -53,7 +53,7 @@
   
   /* Make images easier to work with */
   img {
-    max-width: 100%;
+    max-width: 400px;
     display: block;
   }
   
@@ -72,18 +72,18 @@
   font-family: 'Josefin Sans', sans-serif;*/
   
   #store-name {
-    font-family: "Kanit", sans-serif;
+    font-family: "Bacasime Antique", serif;
       text-align: center;
       margin: auto;
       padding-top: 5px;
       padding-bottom: 5px;;
       padding-left: 95px;
-      letter-spacing: 12px;
-      font-size: 50px;
+     
+      font-size: 30px;
   }
   
   #header-info {
-    font-family: "Kanit", sans-serif;
+    font-family: "Bacasime Antique", serif;
       text-transform: uppercase;
       display: flex;
       justify-content: space-around;
@@ -104,11 +104,11 @@
       width: 100%;
       padding: 8px 0px;
       text-align: center;
-      font-family:  "Kanit", sans-serif;
+      font-family: "Bacasime Antique", serif;
   }
   
   #nav-bar a {
-      font-family: "Kanit", sans-serif;
+    font-family: "Bacasime Antique", serif;
       overflow: hidden;
       font-size: 18px;
       text-decoration: none;
@@ -125,7 +125,7 @@
   }
   
   #three-box-info {
-      font-family: 'Barlow Semi Condensed', sans-serif;
+    font-family: "Bacasime Antique", serif;
       display: flex;
       justify-content: center;
   }
@@ -193,11 +193,35 @@
     width: 30px;
     height: 20px;
   }
+
+  #my-account-dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  #account-options {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+  }
+  
+  #account-options a {
+    color: #333;
+    padding: 12px;
+    text-decoration: none;
+    display: block;
+  }
+  
+  #account-options a:hover {
+    background-color: #f5f5f5;
+  }
   
   
   
   body {
-    font-family:  "Kanit", sans-serif;
+    font-family: "Bacasime Antique", serif;
     font-size: 14px;
     color: rgba(0, 0, 0, 0.87);
   }
@@ -211,7 +235,7 @@
   }
 
   body {
-    font-family: 'Roboto', sans-serif;
+    font-family: "Bacasime Antique", serif;
     font-size: 14px;
     color: rgba(0, 0, 0, 0.87);
     background-color: #f4f4f4;
@@ -225,7 +249,7 @@
   }
   
   .images-section {
-    width: 30%; /* Adjust as needed */
+    width: 20%; /* Adjust as needed */
   }
   
   .images-section img {
@@ -244,20 +268,20 @@
   }
   
   .small-images-column img {
-    width: 70px;
+    width: 80px;
     height: auto;
     cursor: pointer;
     
   }
-  
-  .MasterImg {
-    width: 30%; /* Adjust as needed */
-    display: flex;
-    justify-content: center;
-    align-items: center;
+
+  .container img{
+    width: 600px;
   }
   
+
+  
   .details-section {
+    font-family: "Bacasime Antique", serif;
     width: 30%; /* Adjust as needed */
     display: flex;
     flex-direction: column;
@@ -313,7 +337,7 @@ a{
   }
   .title{
   font-size:1.5em;
-  font-family: 'Archivo Black', sans-serif;
+  font-family: "Bacasime Antique", serif;
   }
   .sub-title{
   display:block;

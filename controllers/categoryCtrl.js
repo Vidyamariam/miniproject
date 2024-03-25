@@ -6,16 +6,27 @@ const categoryCollection = require("../model/category");
 
 //get methods
 
-const getCategoryManage = async(req,res)=>{
+const getCategoryManage = async (req, res) => {
+  try {
+      const page = parseInt(req.query.page) || 1; // Get the requested page number from the query parameters, default to 1 if not provided
+      const limit = 5;
+      const totalCategories = await categoryCollection.countDocuments(); // Get the total number of categories
 
-    try{
-        const categories = await categoryCollection.find();
-        res.render("admin/categoryManageN", { categories});
-    }catch(error){
-        console.error(error);
-        res.status(500).send("Internal server error");
-    }
-}
+      const totalPages = Math.ceil(totalCategories / limit); // Calculate the total number of pages
+      const skip = (page - 1) * limit; // Calculate the number of documents to skip
+
+      const categories = await categoryCollection.find().skip(skip).limit(limit); // Fetch categories for the current page
+
+      res.render("admin/categoryManageN", { 
+          categories,
+          totalPages,
+          currentPage: page
+      });
+  } catch (error) {
+      console.error(error);
+      res.status(500).send("Internal server error");
+  }
+};
 
 
 const getaddcategory = (req,res)=>{
@@ -25,33 +36,32 @@ const getaddcategory = (req,res)=>{
 
 
 const postAddCategory = async (req, res) => {
-    const categoryName = req.body.categoryName;
+  const categoryName = req.body.categoryName;
 
-    // Validate if categoryName is provided
-    if (!categoryName) {
-        return res.status(400).render("admin/addCategoryN", { error: 'Category name is required' });
-    }
+  // Validate if categoryName is provided
+  if (!categoryName) {
+      return res.status(400).render("admin/addCategoryN", { error: 'Category name is required' });
+  }
 
-    
+  try {
+      // Check if the category already exists (case-insensitive)
+      const existingCategory = await categoryCollection.findOne({ categoryName: { $regex: new RegExp('^' + categoryName + '$', 'i') } });
 
-    try {
-        // Check if the category already exists
-        const existingCategory = await categoryCollection.findOne({ categoryName });
-
-        if (existingCategory) {
-            // If the category already exists, handle the error
-            res.status(400).render("admin/addCategoryN", { error: 'Category with this name already exists' });
-        } else {
-            // Add the category to your data storage
-            const newCategory = await categoryCollection.create({ categoryName });
-            console.log("Category added:", newCategory);
-            res.redirect("/admin/category");
-        }
-    } catch (error) {
-        console.error('Error adding category to the database:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
+      if (existingCategory) {
+          // If the category already exists, handle the error
+          return res.status(400).render("admin/addCategoryN", { error: 'Category with this name already exists' });
+      } else {
+          // Add the category to your data storage
+          const newCategory = await categoryCollection.create({ categoryName });
+          console.log("Category added:", newCategory);
+          return res.redirect("/admin/category");
+      }
+  } catch (error) {
+      console.error('Error adding category to the database:', error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+  }
 };
+
 
 
 const getEditCategory = async(req,res)=>{

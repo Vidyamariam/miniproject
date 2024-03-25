@@ -28,9 +28,7 @@ const productSchema = new mongoose.Schema({
         type: Boolean,
         default: true,
     },
-    sizes: {
-        type: [String],
-    }
+   
 });
 
 const productsCollection = mongoose.model('products', productSchema);

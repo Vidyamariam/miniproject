@@ -1,0 +1,105 @@
+<%- include('header')%>
+
+<div class="container-fluid">
+  <div class="row">
+    <!-- Categories Section -->
+    <aside id="categories-sidebar" class="col-md-2">
+      <table>
+        <thead class="category-title">
+          <tr>
+            <th>CATEGORIES</th>
+          </tr>
+        </thead>
+        <tr>
+          <td>
+            <a href="/ethnic"
+              >ethnic <i class="fa fa-duotone fa-caret-right"></i
+            ></a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="/contemporary"
+              >contemporary <i class="fa fa-duotone fa-caret-right"></i
+            ></a>
+          </td>
+        </tr>
+      </table>
+    </aside>
+
+    <!-- Product Cards Section -->
+    <div class="col-md-10">
+      <div class="container-fluid">
+        <br />
+        <h1>Contemporary Collections</h1>
+        <div class="row gy-3">
+          <% productList.forEach((product)=> { %> <% if (product.isListed) { %>
+          <div class="col-md-3">
+            <div class="card" id="product">
+              <a href="/productDetails/<%= product._id %>">
+                <img
+                  src="<%= product.productImage[0] %>"
+                  class="card-img-top"
+                  alt="..."
+                />
+              </a>
+
+              <div class="card-body">
+                <h6 class="card-text"><%= product.name %></h6>
+                <h6 class="card-title"><%= product.price %></h6>
+                <form action="/add-to-cart/<%= product._id %>" method="post">
+                  <% if (product.isListed && product.stock > 0) { %>
+                  <!-- Product is available, show Add to Cart button -->
+                  <button type="submit" class="btn btn-lg btn-dark">
+                    Add to Cart
+                  </button>
+                  <% } else { %>
+                  <!-- Product is not available, show Out of Stock message -->
+                  <span class="text-danger">Out of Stock</span>
+                  <% } %>
+                </form>
+                <button type="submit" class="btn btn-lg">
+                  <i class="fa fa-duotone fa-heart"></i> Add to wishlist
+                </button>
+              </div>
+            </div>
+          </div>
+          <% } %> <% }) %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  async function addToCart(productId) {
+    try {
+      const quantity = 1; // You can customize this based on your requirements
+      const response = await fetch(
+        `/api/add-to-cart?productId=${productId}&quantity=${quantity}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          // Include credentials if needed
+          credentials: "include",
+        }
+      );
+
+      const responseData = await response.json();
+
+      if (responseData.success) {
+        alert("Product added to cart successfully!");
+        // You can also update the UI to reflect the changes, e.g., update cart icon
+      } else {
+        alert("Failed to add product to cart. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
+      alert("An error occurred. Please try again later.");
+    }
+  }
+</script>
+
+<%- include('footer') %>

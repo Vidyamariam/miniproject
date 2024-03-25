@@ -13,16 +13,33 @@
 
     <!-- STYLE CSS -->
     <link rel="stylesheet" href="/stylesheets/user/signupNew.css" />
+
+    <style>
+      .signup-image {
+        width: 500px;
+        height: 500px;
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      }
+      .inner {
+        display: flex;
+      }
+      .form-wrapper input {
+        width: 200px;
+        height: 40px;
+        border: none;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      }
+    </style>
   </head>
 
   <body>
     <div class="wrapper">
       <div class="inner">
         <form action="/signup" method="post" onsubmit="return validateForm()">
-          <h3>
-            Registration Form <br />
-            <small style="color: rgb(255, 0, 0)"> <%=locals.message%> </small>
-          </h3>
+          <h3>Registration Form <br /></h3>
+          <h4 style="color: rgb(255, 0, 0)"><%=locals.message%></h4>
           <div class="form-group">
             <div class="form-wrapper">
               <label for="name">Name</label>
@@ -78,6 +95,8 @@
             <p>Already have an account? <a href="/userlogin">Login</a></p>
           </div>
         </form>
+
+        <img src="/img/user/L2.jpg" alt="Image" class="signup-image" />
       </div>
     </div>
 
