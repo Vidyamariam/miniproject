@@ -57,9 +57,7 @@ exports.postEditProfile = async (req, res) => {
        // Check if name is empty
        if (!req.body.name.trim()) {
         nameError = "Name is required";
-    } else if (req.body.name.trim().split(' ').length < 2) {
-        nameError = "Please enter your full name";
-    }
+    } 
     
         // Check if email is empty or not in a valid format
         if (!req.body.email.trim() || !/^\S+@\S+\.\S+$/.test(req.body.email)) {

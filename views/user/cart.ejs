@@ -60,8 +60,8 @@
           <div class="dropdown-content" id="account-options">
             <a href="/profile"><i class="fa fa-regular fa-user fa-sm"></i> My Profile</a>
             <a href="/order-history"><i class="fa fa-regular fa-receipt fa-sm"></i> Orders</a>
-            <a href="#"><i class="fa fa-regular fa-heart fa-sm"></i> Wishlist</a>
-            <a href="#"><i class="fa fa-regular fa-ticket fa-sm"></i> Coupons</a>
+            <a href="/wishlist"><i class="fa fa-regular fa-heart fa-sm"></i> Wishlist</a>
+            <a href="/coupons"><i class="fa fa-regular fa-ticket fa-sm"></i> Coupons</a>
             <a href="/logout"><i class="fa fa-regular fa-sign-out-alt fa-sm"></i> Logout</a>
           </div>
         </div>
@@ -103,14 +103,14 @@
                     <div class="product">
                       <div class="row">
                         <div class="col-md-2">
-                          <img class="img-fluid mx-auto d-block image" src="<%= item.productId.productImage[0] %>" />
+                          <img class="img-fluid mx-auto d-block image" style="border-radius: 10px;"  src="<%= item.productId.productImage[0] %>" />
                         </div>
                         <div class="col-md-10">
                           <div class="info">
                             <div class="row">
                               <div class="col-md-5 product-name">
                                 <div class="product-name">
-                                  <a href="#">
+                                  <a href="/productDetails/<%= item.productId._id %>">
                                     <%= item.productId.name %>
                                   </a>
                                   <div id="id" hidden>
@@ -135,17 +135,17 @@
                               <div class="col-md-4 quantity">
                                 <label for="quantity">Update Quantity:</label>
                                 <div class="quantityUpdate">
-                                  <button class="quantity-button"
+                                  <button class="quantity-button" style="border-radius: 50%;height: 25px; width: 25px; background-color: black;color: white; border: none;"
                                     onclick="decreaseQuantity('<%= item._id %>')">-</button>
                                   <input data-item-id="<%= item._id %>" id="quantity_<%= item._id %>" type="number"
                                     value="<%= item.quantity %>" min="1" max="<%= item.productId.stock %>"
                                     class="form-control quantity-input" onchange="updateQuantity('<%= item._id %>')" />
-                                  <button class="quantity-button"
+                                  <button class="quantity-button" style="border-radius: 50%;height: 25px; width: 25px; background-color: black;color: white; border: none;"
                                     onclick="increaseQuantity('<%= item._id %>')">+</button>
                                 </div>
                                 <br>
                                 <form action="/remove/<%= item._id %>" method="get">
-                                  <button type="button" class="btn btn-primary"
+                                  <button type="button" style="width: 100px; height: 40px;border-radius: 5px;border: none; background-color: black; color: white;"
                                     onclick="confirmRemove('<%= item._id %>')">Remove</button>
                                 </form>
                               </div>
@@ -167,6 +167,7 @@
                   <% } %>
             </div>
             <div class="col-md-12 col-lg-3">
+              <% if (cart && cart.items && cart.items.length> 0) { %>
               <div class="summary">
                 <h3>Summary</h3>
                 <!-- <div class="summary-item">
@@ -181,11 +182,19 @@
                 <div class="summary-item">
                   <span class="text" id="total-price">Total Price: Rs. <%= totalPrice %> </span>
                 </div>
-                <a href="javascript:void(0);" onclick="validateCheckout()">
-                  <button type="button" class="btn btn-primary btn-lg btn-block">
-                    Checkout
-                  </button>
-                </a>
+                <a>     
+                  <a href="/checkout" >
+                    <button type="button" style="width: 150px; height: 40px;border-radius: 5px;border: none; background-color: black; color: white;" id="checkoutButton" >
+                      Checkout
+                    </button>
+                  </a>        
+                    
+                  <% } else{%>
+                   <a href="/home" style="position: absolute; top: 23rem; padding: 10px 30px; border-radius: 14px; background-color: black; color: white; text-decoration: none;">Shop Now</a>
+                    <%}%>
+                </a> 
+                 <!-- Placeholder for error message -->
+            <p id="checkoutErrorMessage" style="color: red; display: none;"></p>                     
 
               </div>
             </div>
@@ -232,39 +241,9 @@
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
     crossorigin="anonymous"></script>
 
-  <script>
-    function validateCheckout() {
-      var quantityInputs = document.querySelectorAll('.quantity-input');
-      var isValid = true;
-
-      quantityInputs.forEach(function (input) {
-        var itemId = input.getAttribute('data-item-id');
-        var currentQuantity = parseInt(input.value, 10);
-        var maxStock = parseInt(input.getAttribute('max'), 10);
-
-        if (isNaN(currentQuantity) || currentQuantity < 1 || currentQuantity > maxStock) {
-          isValid = false;
-          return;
-        }
-      });
-
-      if (!isValid) {
-        // Display SweetAlert2 popup for invalid quantity
-        showInvalidQuantityPopup();
-      } else {
-        window.location.href = '/checkout';
-      }
-    }
-
-    function showInvalidQuantityPopup() {
-      Swal.fire({
-        icon: 'error',
-        title: 'Invalid Quantity',
-        text: 'Please enter a valid quantity between 1 and the available stock limit.',
-        confirmButtonColor: '#007bff',
-      });
-    }
-  </script>
+ 
+    
+    
 
   <script>
     function confirmRemove(itemId) {

@@ -9,6 +9,7 @@ const otpCollection = require("../model/otpSchema");
 const bcrypt = require('bcrypt');
 
 
+
 const signupGet = (req, res) => { //user signUp cheyunnathu
     res.render("user/signup");
 
@@ -253,7 +254,7 @@ const getHome = async (req, res) => {
     try{
         const productList = await productsCollection.find();
 
-        res.render('user/home', { productList });
+        res.render('user/home', { productList: productList });
 
     }
     catch (error) {
@@ -323,7 +324,6 @@ const allProducts = async (req, res) => {
     // Get the page number from the query parameters, default to 1 if not provided
     const page = parseInt(req.query.page) || 1;
 
-
     try {
         // Fetch the total count of products
         const totalCount = await productsCollection.countDocuments();
@@ -334,12 +334,16 @@ const allProducts = async (req, res) => {
             .skip((page - 1) * PRODUCTS_PER_PAGE)
             .limit(PRODUCTS_PER_PAGE);
 
+        // Fetch all unique categories from the products collection
+        const categories = await productsCollection.distinct('category');
+
         // Calculate the total number of pages based on the total count and products per page
         const totalPages = Math.ceil(totalCount / PRODUCTS_PER_PAGE);
 
-        // Render the EJS template with the product list and pagination attributes
+        // Render the EJS template with the product list, categories, and pagination attributes
         res.render('user/allProducts', {
             products,
+            categories,
             currentPage: page,
             totalPages
         });
@@ -349,6 +353,7 @@ const allProducts = async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 };
+
 
 const sortProduct = async (req, res) => {
 
@@ -387,6 +392,9 @@ const sortProduct = async (req, res) => {
                 // Handle invalid sortBy parameter
                 return res.status(400).json({ error: 'Invalid sortBy parameter' });
         }
+
+        const categories = await productsCollection.distinct("category");
+
         // Fetch the total count of products (for pagination)
         const totalCount = await productsCollection.countDocuments();
 
@@ -396,6 +404,7 @@ const sortProduct = async (req, res) => {
         // Render the EJS template with the sorted items, pagination attributes, and other necessary data
         res.render('user/allProducts', {
             products,
+            categories,
             currentPage: 1, // Assuming the current page is 1 after sorting
             totalPages
         });
@@ -415,6 +424,9 @@ const searchItems = async (req, res) => {
         const searchTerm = req.query.q;
         const page = parseInt(req.query.page) || 1; // Get the page number from query parameters
 
+        // Fetch all unique categories
+        const categories = await productsCollection.distinct('category');
+
         // Calculate the skip count based on the current page and number of items per page
         const skipCount = (page - 1) * PRODUCTS_PER_PAGE;
 
@@ -430,9 +442,10 @@ const searchItems = async (req, res) => {
         // Calculate the total number of pages based on the total count and products per page
         const totalPages = Math.ceil(totalCount / PRODUCTS_PER_PAGE);
 
-        // Render the EJS template with the search results and pagination attributes
+        // Render the EJS template with the search results, categories, and pagination attributes
         res.render('user/allProducts', {
             products,
+            categories,
             currentPage: page,
             totalPages
         });
@@ -447,39 +460,69 @@ const searchItems = async (req, res) => {
 
 
 
-const filterProducts = async (req, res) => {
-    try {
-        console.log("fetch has hit line 342");
-        const sortBy = req.query.sortBy; // Retrieve sortBy from query parameters
 
-        console.log("sortBy", sortBy);
+ 
 
-        let sortCriteria = {};
-        if (sortBy === "priceLowToHigh") {
-            sortCriteria = { price: 1 }; // Ascending order
-        } else if (sortBy === "priceHighToLow") {
-            sortCriteria = { price: -1 }; // Descending order
-        }
+const userFilterByCategory = async ( req,res)=> {
 
-        // Fetch and sort products from the database
-        const products = await productsCollection.find().sort(sortCriteria); // Convert cursor to array
+    try{
 
-        console.log("products", products);
+    
+    const category = req.query.category;
+    console.log("category",category);
+    
+    let filter = {}; // Initialize an empty filter object
+      if (category) {
+          filter.category = category; // If a category is selected, add it to the filter
+      }
 
-        res.json(products);
+      // Apply the filter to fetch products
+      const products = await productsCollection.find(filter);
+
+      // Fetch categories again to pass them to the frontend for rendering the filter dropdown
+      const categories = await productsCollection.distinct("category");
+
+      res.render("user/allProducts", {
+          categories,
+          products,
+          currentPage: 1, // Reset the page to 1 after applying filter
+          totalPages: 1, // In case pagination needs to be updated after applying filter
+      });
     } catch (error) {
-        console.error('Error filtering products:', error);
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+
+}
+
+
+const getWallet = async (req,res)=> {
+
+    try{
+
+        const userEmail = req.session.user;
+        const userdata = await signupCollection.findOne(userEmail);
+        const userId = userdata._id;
+        console.log("userid in wallet get",userId);
+       
+
+        const userDetails = await signupCollection.findById({_id: userId});
+         console.log("userdetails in wallet get",userDetails);
+        res.render("user/wallet",{userDetails});
+
+    }catch (error) {
+        // Handle any errors that occur during database query or rendering
+        console.error('Error getting wallet:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
-};
-
+}
 
 
 
 
 module.exports = {
     login, loginpost, signupGet, signupPost, landing, getVerifyEmail, verifyEmailPost, getLogout, postLogout,  getHome, resendOTP,
-    searchItems, allProducts, filterProducts, sortProduct,Ethnics,Contemporary
+    searchItems, allProducts, sortProduct,Ethnics,Contemporary,userFilterByCategory,getWallet
 }
 
 

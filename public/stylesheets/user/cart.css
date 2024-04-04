@@ -33,7 +33,7 @@
 .shopping-cart .block-heading h2,
 .shopping-cart .block-heading h3 {
 	margin-bottom:1.2rem;
-	color: #3b99e0;
+	color: black;
 }
 
 .shopping-cart .items{
@@ -76,7 +76,7 @@
  }
 
 .shopping-cart .summary{
-	border-top: 2px solid #5ea4f3;
+	border-top: 2px solid black;
     background-color: #f7fbff;
     height: 100%;
     padding: 30px;

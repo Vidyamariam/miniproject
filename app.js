@@ -6,6 +6,7 @@ const nocache = require('nocache');
 const {name}=require("ejs")
 const cookieParser= require('cookie-parser')
 const session = require('express-session');
+const bodyparser = require('body-parser');
 
 
 require('dotenv').config();
@@ -47,11 +48,16 @@ app.use(
 const userRouter = require("./routers/user");
 const adminRouter = require("./routers/admin")
 const addressRouter = require('./routers/address');
+const profileRouter = require('./routers/profile');
+const couponRouter = require('./routers/coupon');
+
 
 //
 app.use('/',userRouter);
 app.use('/admin',adminRouter);
 app.use('/', addressRouter);
+app.use('/',profileRouter);
+app.use('/',couponRouter);
 
 const port = process.env.PORT || 2001;
 app.listen(port, ()=>{

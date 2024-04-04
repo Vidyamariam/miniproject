@@ -82,7 +82,7 @@ table {
   .coupon-section{
    padding: 15px;
   width: 300px;
-  height: 140px;
+  height: 170px;
   border-radius: 5px;
   background-color: #fff;
   display: flex;
@@ -124,17 +124,13 @@ table {
   }
   .coupon-input{
     padding-left: 1rem;
-   
     display: flex;
     flex-direction: column;
-   
   }
 
   .main-content{
     display: flex;
-    align-items: center;
-   
-
+    align-items: center; 
   }
 
   .product-list {

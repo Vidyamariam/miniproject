@@ -22,6 +22,14 @@ let userSignupSchema = new mongoose.Schema({
         type: Boolean, 
         default: false,
     },
+    Wallet:{
+        balance: {type:Number, default:0},
+        transactions:[{
+            amount: {type: Number},
+            description:{type:String},
+            date: {type: Date, default: Date.now},
+        }],
+    }
 });
 
 module.exports = mongoose.model("newusers",userSignupSchema);

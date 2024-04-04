@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Coupon</title>
+    <link rel="stylesheet" href="/stylesheets/admin/addcoupon.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+  </head>
+
+  <body>
+    <main role="main" class="addcouponform">
+      <h3>Edit Coupon</h3>
+
+      <form
+        action="/editcoupon/<%= coupon._id %>"
+        method="POST"
+        onsubmit="return validateForm()"
+      >
+        <!-- Assuming route for editing coupons is '/editcoupon/:id' -->
+
+        <div class="form-group">
+          <label for="couponCode">Coupon Code</label>
+          <input
+            type="text"
+            class="form-control"
+            id="couponCode"
+            name="couponCode"
+            value="<%= coupon.couponCode %>"
+          />
+          <div id="couponCodeError" class="text-danger"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="discount">Discount (%)</label>
+          <input
+            type="number"
+            class="form-control"
+            id="discount"
+            name="discount"
+            value="<%= coupon.discount %>"
+          />
+          <div id="discountError" class="text-danger"></div>
+          <small style="color: red"><%= locals.discountError %></small>
+        </div>
+
+        <div class="form-group">
+          <label for="expiryDate">Expiry Date</label>
+          <input
+            type="date"
+            class="form-control"
+            id="expiryDate"
+            name="expiryDate"
+            value="<%= coupon.expiryDate.toISOString().split('T')[0] %>"
+          />
+          <div id="expiryDateError" class="text-danger"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="minAmount">Min Amount</label>
+          <input
+            type="number"
+            class="form-control"
+            id="minAmount"
+            name="minAmount"
+            value="<%= coupon.minAmount %>"
+          />
+          <div id="minAmountError" class="text-danger"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="maxAmount">Max Amount</label>
+          <input
+            type="number"
+            class="form-control"
+            id="maxAmount"
+            name="maxAmount"
+            value="<%= coupon.maxAmount %>"
+          />
+          <div id="maxAmountError" class="text-danger"></div>
+        </div>
+
+        <button type="submit" class="btn btn-dark">Submit</button>
+      </form>
+    </main>
+
+    <script>
+      function validateForm() {
+        let isValid = true;
+
+        // Coupon Code validation
+        const couponCode = document.getElementById("couponCode").value.trim();
+        if (couponCode === "") {
+          document.getElementById("couponCodeError").innerText =
+            "Coupon Code is required";
+          isValid = false;
+        } else {
+          document.getElementById("couponCodeError").innerText = "";
+        }
+
+        // Discount validation
+        const discount = document.getElementById("discount").value.trim();
+        if (discount === "") {
+          document.getElementById("discountError").innerText =
+            "Discount is required";
+          isValid = false;
+        } else if (parseFloat(discount) < 0) {
+          document.getElementById("discountError").innerText =
+            "Discount should not be negative";
+          isValid = false;
+        } else {
+          document.getElementById("discountError").innerText = "";
+        }
+
+        // Expiry Date validation
+        const expiryDate = document.getElementById("expiryDate").value;
+        const currentDate = new Date().toISOString().split("T")[0];
+        if (expiryDate < currentDate) {
+          document.getElementById("expiryDateError").innerText =
+            "Expiry Date should not be before the current date";
+          isValid = false;
+        } else {
+          document.getElementById("expiryDateError").innerText = "";
+        }
+
+        // Min Amount validation
+        const minAmount = document.getElementById("minAmount").value.trim();
+        if (minAmount === "") {
+          document.getElementById("minAmountError").innerText =
+            "Min Amount is required";
+          isValid = false;
+        } else if (parseFloat(minAmount) < 0) {
+          document.getElementById("minAmountError").innerText =
+            "Min Amount should not be negative";
+          isValid = false;
+        } else {
+          document.getElementById("minAmountError").innerText = "";
+        }
+
+        // Max Amount validation
+        const maxAmount = document.getElementById("maxAmount").value.trim();
+        if (maxAmount === "") {
+          document.getElementById("maxAmountError").innerText =
+            "Max Amount is required";
+          isValid = false;
+        } else if (parseFloat(maxAmount) < 0) {
+          document.getElementById("maxAmountError").innerText =
+            "Max Amount should not be negative";
+          isValid = false;
+        } else {
+          document.getElementById("maxAmountError").innerText = "";
+        }
+
+        return isValid;
+      }
+    </script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

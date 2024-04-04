@@ -1,0 +1,101 @@
+<%- include('header')%>
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+  <h3>Coupon Management</h3>
+  <hr />
+
+  <div class="btn-toolbar mb-2 mb-md-0">
+    <div class="btn-group mr-2">
+      <a href="/addcoupon">
+        <button class="btn btn-sm btn-dark" id="addCouponBtn">
+          Add Coupon
+        </button>
+      </a>
+    </div>
+  </div>
+  <br />
+
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Coupon Code</th>
+          <th>Discount (%)</th>
+          <th>Expiry Date</th>
+
+          <th>Min Amount</th>
+          <th>Max Amount</th>
+          <th>Created At</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% coupons.forEach(function(coupon) { %>
+        <tr>
+          <td><%= coupon.couponCode %></td>
+          <td><%= coupon.discount %></td>
+          <td><%= coupon.expiryDate %></td>
+          <td><%= coupon.minAmount %></td>
+          <td><%= coupon.maxAmount %></td>
+          <td><%= coupon.createdAt %></td>
+          <td>
+            <div class="couponactions" style="display: flex; margin: 10px">
+              <form action="/editcoupon/<%= coupon._id %>" method="get">
+                <button
+                  class="btn btn-sm btn-dark editCouponBtn"
+                  style="margin-right: 10px"
+                >
+                  Edit
+                </button>
+              </form>
+
+              <form action="/deletecoupon/<%= coupon._id  %>" method="post">
+                <button class="btn btn-sm btn-dark">Delete</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <% if (totalPages > 1) { %>
+  <nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+      <% if (currentPage > 1) { %>
+      <li class="page-item">
+        <a
+          class="page-link"
+          href="?page=<%= currentPage - 1 %>"
+          aria-label="Previous"
+        >
+          <span aria-hidden="true">Previous</span>
+          <span class="sr-only">Previous</span>
+        </a>
+      </li>
+      <% } else { %>
+      <li class="page-item disabled">
+        <span class="page-link" aria-hidden="true">&laquo;</span>
+      </li>
+      <% } %> <% if (currentPage < totalPages) { %>
+      <li class="page-item">
+        <a
+          class="page-link"
+          href="?page=<%= currentPage + 1 %>"
+          aria-label="Next"
+        >
+          <span aria-hidden="true">Next</span>
+          <span class="sr-only">Next</span>
+        </a>
+      </li>
+      <% } else { %>
+      <li class="page-item disabled">
+        <span class="page-link" aria-hidden="true">&raquo;</span>
+      </li>
+      <% } %>
+    </ul>
+  </nav>
+  <% } %>
+</main>
+<%- include('footer')%>

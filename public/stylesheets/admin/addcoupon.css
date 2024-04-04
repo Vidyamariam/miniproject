@@ -1,0 +1,52 @@
+/* Center the form */
+.addcouponform {
+    max-width: 400px; /* Adjust the width as needed */
+    max-height: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    
+  }
+  
+  /* Style for form headings */
+  .addcouponform h3 {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  /* Style for form groups */
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  /* Style for labels */
+  label {
+    font-weight: bold;
+  }
+  
+  /* Style for input fields */
+  .form-control {
+    width: 400px;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+  }
+  
+  /* Style for submit button */
+  .btn-primary {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    width: 400px;
+  }
+  
+  /* Hover effect for submit button */
+  .btn-primary:hover {
+    background-color: #0056b3;
+  }
+  

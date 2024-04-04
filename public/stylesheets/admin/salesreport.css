@@ -1,0 +1,13 @@
+.salesReport thead tr th{
+  
+    padding: 20px;
+
+}
+
+.salesReport tbody tr td{
+
+    width: 200px;
+    text-align: center;
+    padding: 20px;
+    font-size: 15px;
+}

@@ -26,6 +26,10 @@ router.get("/adminlogout",AdminAuthentcation ,adminController.getAdminLogout);
 router.get("/order-list",AdminAuthentcation ,adminController.getOrders);
 router.get("/filterproducts",AdminAuthentcation ,adminController.filterByCategory);
 router.get("/adminOrderDetails/:orderId/:productId",AdminAuthentcation ,adminController.adminOrderDetails);
+router.get("/sales-report", adminController.getSalesReport);
+router.get("/download/pdf", adminController.downloadPdf);
+router.get("/download/excel", adminController.downloadExcel);
+
 
 
 //POST METHODS

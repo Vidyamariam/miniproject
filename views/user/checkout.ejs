@@ -30,7 +30,7 @@
   
   <link rel="stylesheet" href="/stylesheets/user/checkout.css">
 
-  <title>STEPUP SHOES</title>
+  <title>Amoli</title>
   <style>
     body {
       font-family: "Kanit", sans-serif;
@@ -57,15 +57,15 @@
     <div id="header-info">
       <!-- <p id="contactus">Contact Us</p> -->
       <img src="/img/logo-witebg.png" class="logo"  style="width: 80px; height: 60px;" />
-      <h1 id="store-name">STEPUP SHOES</h1>
+      <h1 id="store-name">AMoli Jewels</h1>
       <div class="nav-icons">
         <div class="dropdown" id="my-account-dropdown">
           <a id="my-account" onclick="toggleDropdown()"><i class="fa fa-regular fa-user fa-xl"></i> My Account</a>
           <div class="dropdown-content" id="account-options">
             <a href="/profile"><i class="fa fa-regular fa-user fa-sm"></i> My Profile</a>
-            <a href="#"><i class="fa fa-regular fa-receipt fa-sm"></i> Orders</a>
-            <a href="#"><i class="fa fa-regular fa-heart fa-sm"></i> Wishlist</a>
-            <a href="#"><i class="fa fa-regular fa-ticket fa-sm"></i> Coupons</a>
+            <a href="/order-history"><i class="fa fa-regular fa-receipt fa-sm"></i> Orders</a>
+            <a href="/wishlist"><i class="fa fa-regular fa-heart fa-sm"></i> Wishlist</a>
+            <a href="/coupons"><i class="fa fa-regular fa-ticket fa-sm"></i> Coupons</a>
             <a href="/logout"><i class="fa fa-regular fa-sign-out-alt fa-sm"></i> Logout</a>
           </div>
         </div>
@@ -108,12 +108,10 @@
           <option value="" disabled>No address available. Please add an address.</option>
         <% } %>
       </select>
-      
-      
+
       <br>
       <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#addAddressModal">Add Address</button>
     </div>
-    
 
      
  <!-- Modal- ADD ADDRESS -->
@@ -273,10 +271,19 @@ function validateForm() {
           </tbody>
         </table>
     
-        <div class="total-price">
-          <p>Total Price: Rs. <span id="displayTotalPrice"><%= totalPrice %></span></p>
-        </div>
+        <div class="totalprice">
+          <% if (discountedPrice) { %>
+            <del><h4>Total Price: ₹<%= totalPrice %></h4></del>
+            <h4>Discounted price: ₹<%= discountedPrice %> </h4>
+            <span id="price" data-totalprice="<%= discountedPrice %>" data-discountprice="<%= discountedPrice %>"></span>
+          <% } else { %>
+            <h4>Total Price: ₹<%= totalPrice %></h4>
+            <span id="price" data-totalprice="<%= totalPrice %>"></span>
+          <% } %>
+        </div>        
         
+
+
         <% } else { %>
           <p>No items in the cart.</p>
         <% } %>
@@ -285,25 +292,44 @@ function validateForm() {
    
       <div class="order-place">
          
-        <div class="coupon-section">
-  
-          <h6 for="coupon">Coupons</h6>
-          <div class="coupon-input">
-            <input name="coupon" type="text" placeholder="enter coupon code">
-            <button class="btn btn-sm btn-primary" type="submit">save</button>
-          </div>
-    
-        </div>
+        <div class="coupon-section" style="display: flex; padding: 10px;">
+          <h6 for="couponCode">Coupons</h6>
+          
+          <form action="/apply-coupon" method="POST" style="margin-right: 10px;">
+              <div class="coupon-input">
+                  <input name="couponCode" type="text" placeholder="enter coupon code">
+                  <button class="btn btn-sm btn-primary" type="submit">Apply</button>
+              </div>
+          </form>
+      
+          <form action="/remove-coupon" method="POST">
+              <button style="width: 80px; border: none; background-color: rgb(229, 90, 90); color: white;margin-left: 15px;" type="submit">Remove</button>
+          </form>
+          <small style="color: red;"><%= locals.error %></small>
+      </div>
+      
+        
        <br>
+
+
+       <!-- <div class="payment_type payment_type--paypal">
+        <input type="radio" id="RazorPay" name="payment_type" value="RazorPay">
+        <button id="razorpayBtn">Pay with Razorpay <i class="fa-brands fa-paypal"></i></button>
+      </div>   -->
+       
+
         <div class="payment-section">
           <!-- Use radio buttons for payment options -->
           <h6>Payment Options</h6>
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="paymentOption" id="razorpayOption" value="razorpay" onclick="selectPaymentOption('razorpay')">
-            <label class="form-check-label" for="razorpayOption">
-              Pay with Razorpay <img src="/img/user/razorpay-icon.png" style="width: 100px; height: 30px;">
+            <input class="form-check-input" type="radio" name="paymentOption" id="RazorPay" value="razorpay">
+            <label class="form-check-label" for="RazorPay" style="display: flex; align-items: center;"> 
+                <button id="razorpayBtn" style="border: none; border-radius: 15px; background-color:white; color: black; display: hidden;">Pay with Razorpay <i class="fab fa-paypal"></i></button>
+               
             </label>
-          </div>
+        </div>
+        
+         <br>
         
           <div class="form-check">
             <input class="form-check-input" type="radio" name="paymentOption" id="cashOption" value="cash" onclick="selectPaymentOption('cash')">
@@ -311,6 +337,14 @@ function validateForm() {
               Cash on Delivery 
               <i class="fa fa-duotone fa-money-bill-wave fa-lg"></i>
             </label>
+          </div>
+          <br>
+
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="paymentOption" id="wallPayment" value="walletpayment" onclick="selectedPaymentOption('walletpayment')">
+            <label class="form-check-label" for="wallPayment">
+              Pay with wallet 
+              <i class="fa-solid fa-wallet fa-lg"></i>
           </div>
         
           <!-- Add more payment options as needed -->
@@ -375,6 +409,112 @@ function validateForm() {
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 
+<!-- Razor Pay -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <!-- Razor Pay -->
+
+
+
+
+
+<script>
+  let orderId;
+  let price = document.getElementById('price')
+  let orderprice = price.getAttribute('data-totalprice')
+  // let orderprice = 700
+
+  $(document).ready(function () {
+    console.log('here ajx');
+    var settings = {
+      "url": "/create/orderId",
+      "method": "POST",
+      "timeout": 0,
+      "headers": {
+      "Content-Type": "application/json"
+      },
+      "data": JSON.stringify({
+        "amount": orderprice
+      }),
+    };
+
+    //creates new orderId everytime
+    $.ajax(settings).done(function (response) {
+      orderId = response.orderId;
+      orderprice = response.orderprice; 
+      ordresignature = response.signature;
+      $("#razorpayBtn").show();
+
+     
+    });
+  });
+
+  document.getElementById('razorpayBtn').onclick = function (e) {
+
+    let totalPriceElement = document.getElementById('price');
+    let orderprice = totalPriceElement.getAttribute('data-totalprice');
+    
+
+    var options = {
+        "key": "rzp_test_zuuyQNQOwzCbtw",
+        "amount": orderprice,
+        "currency": "INR",
+        "name": "Amoli Jewels",
+        "description": "Online Payment",
+        "image": "",
+        "order_id": orderId,
+        "handler": function (response) {
+        var form = document.createElement('form');
+        form.method = 'post';
+        form.action = '/order2ForRazorPay';  
+       
+
+        var orderPriceInput = document.createElement('input');
+        orderPriceInput.type = 'hidden';
+        orderPriceInput.name = 'orderprice';
+        orderPriceInput.value = orderprice; 
+        form.appendChild(orderPriceInput);       
+    
+        
+
+        var paymentIdInput = document.createElement('input');
+        paymentIdInput.type = 'hidden';
+        paymentIdInput.name = 'razorpay_payment_id';
+        paymentIdInput.value = response.razorpay_payment_id;
+        form.appendChild(paymentIdInput);
+       
+
+        var paymentModeInput = document.createElement('input');
+        paymentModeInput.type = 'hidden';
+        paymentModeInput.name = 'paymentMethod';
+       
+
+        var addressSelector = document.getElementById('address')
+        var selectedAddressValue = addressSelector.value;
+        var addressIdInput = document.createElement('input');
+        addressIdInput.type = 'hidden';
+        addressIdInput.name = 'address';
+        addressIdInput.value = selectedAddressValue; 
+        form.appendChild(addressIdInput);
+
+       
+        document.body.appendChild(form);      
+        form.submit();
+      }
+    };
+        var rzp1 = new Razorpay(options);
+        rzp1.on('payment.failed', function (response) {
+        alert(response.error.code);
+        alert(response.error.reason);
+        alert(response.error.metadata.order_id);
+        alert(response.error.metadata.payment_id);
+    });
+    rzp1.open();
+    e.preventDefault();
+  }
+
+</script>
+
+
 
 
 
@@ -421,38 +561,37 @@ function validateForm() {
 <script>
 
 function placeOrder() {
-    // Get the selected address
-    const selectedAddressId = $("#address").val();
+  // Get the selected address
+  const selectedAddressId = $("#address").val();
 
-    // Get the selected payment option
-    const selectedPaymentOption = $("input[name='paymentOption']:checked").val();
+  // Get the selected payment option
+  const selectedPaymentOption = $("input[name='paymentOption']:checked").val();
 
-    // Get the total price
-    const totalPrice = $("#displayTotalPrice").text(); // Assuming the total price is displayed in a span with id "displayTotalPrice"
+  // Get the total price
+  const totalPrice = $("#price").attr("data-totalprice");
 
-    // AJAX request
-    $.ajax({
-      type: "POST",
-      url: "/checkout",
-      data: {
-        selectedAddressId: selectedAddressId,
-        selectedPaymentOption: selectedPaymentOption,
-        totalPrice: totalPrice
-      },
-      success: function (response) {
-        // Handle success response, if needed
-        console.log(response);
+  // AJAX request
+  $.ajax({
+    type: "POST",
+    url: "/checkout",
+    data: {
+      selectedAddressId: selectedAddressId,
+      selectedPaymentOption: selectedPaymentOption,
+      totalPrice: totalPrice
+    },
+    success: function (response) {
+      // Handle success response, if needed
+      console.log(response);
 
-        // Redirect to the order success page after placing the order
-        window.location.href = "/order-success";
-      },
-      error: function (error) {
-        // Handle error, if needed
-        console.error(error);
-      }
-    });
-  }
-
+      // Redirect to the order success page after placing the order
+      window.location.href = "/order-success";
+    },
+    error: function (error) {
+      // Handle error, if needed
+      console.error(error);
+    }
+  });
+}
 
 
 function toggleDropdown() {

@@ -12,8 +12,7 @@ const ITEMS_PER_PAGE = 5; // Number of products to display per page
 
 const getProductManage = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1; // Get the requested page number from the query parameters, default to 1 if not provided
-
+    const page = parseInt(req.query.page) || 1; 
     const totalProducts = await productsCollection.countDocuments();
     const totalPages = Math.ceil(totalProducts / ITEMS_PER_PAGE);
     const skip = (page - 1) * ITEMS_PER_PAGE;
@@ -22,7 +21,7 @@ const getProductManage = async (req, res) => {
       .skip(skip)
       .limit(ITEMS_PER_PAGE);
 
-    const categories = await productsCollection.distinct("category"); // Assuming "category" is a field in your products collection
+    const categories = await productsCollection.distinct("category"); 
 
     res.render("admin/productManageN", {
       categories,
@@ -75,51 +74,6 @@ const postAddProduct = async (req, res) => {
 
         console.log("product details", req.body);
 
-        // Validation for product name
-        if (!name) {
-          const categories = await categoryCollection.find();
-          return res.render("admin/addProduct", {
-              categories,
-              msgName: 'Please enter a product name.',
-          });
-      }
-
-      // Validation for category selection
-      if (!category) {
-          const categories = await categoryCollection.find();
-          return res.render("admin/addProduct", {
-              categories,
-              msgCategory: 'Please select a category.',
-          });
-      }
-
-        // Validate for empty price
-        if (!price) {
-          const categories = await categoryCollection.find();
-          return res.render("admin/addProduct", {
-              categories,
-              msgPrice: 'Please enter a price.',
-          });
-      }
-
-      // Validate for empty stock
-      if (!stock) {
-          const categories = await categoryCollection.find();
-          return res.render("admin/addProduct", {
-              categories,
-              msgStock: 'Please enter the stock quantity.',
-          });
-      }
-
-
-      // Validate for negative values
-      if (price < 0 || discount < 0 || stock < 0) {
-          const categories = await categoryCollection.find();
-          return res.render("admin/addProduct", {
-              categories,
-              msgNegativeValues: 'Price, discount, and stock must not be negative.',
-          });
-      }
 
       
         // Validate for empty product images

@@ -67,7 +67,7 @@
             <a href="/profile"><i class="fa fa-regular fa-user fa-sm"></i> My Profile</a>
             <a href="#"><i class="fa fa-regular fa-receipt fa-sm"></i> Orders</a>
             <a href="#"><i class="fa fa-regular fa-heart fa-sm"></i> Wishlist</a>
-            <a href="#"><i class="fa fa-regular fa-ticket fa-sm"></i> Coupons</a>
+            <a href="/coupons"><i class="fa fa-regular fa-ticket fa-sm"></i> Coupons</a>
             <a href="/logout"><i class="fa fa-regular fa-sign-out-alt fa-sm"></i> Logout</a>
           </div>
         </div>
@@ -90,9 +90,9 @@
   <!-- Breadcrumbs -->
   <div class="breadcrumbs">
     <a href="/home">Home</a> &gt;
-    <% if (productdetails.category) { %>
+    <!-- <% if (productdetails.category) { %>
       <a href="/<%= productdetails.category.toLowerCase().replace(/\s+/g, '-') %>"><%= productdetails.category %></a> &gt;
-    <% } %>
+    <% } %> -->
     <a href="/productDetails/<%= productdetails.name %>">
       <%= productdetails.name %>
     </a> &gt;

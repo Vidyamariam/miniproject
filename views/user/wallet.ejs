@@ -1,0 +1,40 @@
+<%- include('header') %>
+<div class="container">
+  <div class="main-body">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="wallet-main">
+          <div class="wallet-balance">
+            <h3>Wallet Balance</h3>
+            <h4>Rs.<%= userDetails.Wallet.balance %></h4>
+          </div>
+
+          <div class="wallet-history">
+            <h3>Transaction History</h3>
+            <ul>
+              <!-- Add padding-right to adjust for scrollbar width -->
+              <% userDetails.Wallet.transactions.forEach(transaction => { %>
+              <li>
+                <p>
+                  Amount: <% if (transaction.amount > 0) { %>
+                  <span style="color: green">+ <%= transaction.amount %> </span>
+                  <% } else { %>
+                  <span style="color: red"
+                    >- <%= Math.abs(transaction.amount) %>
+                  </span>
+                  <% } %>
+                </p>
+                <p>Description: <%= transaction.description %></p>
+                <p>Date: <%= transaction.date.toLocaleString() %></p>
+                <!-- Format the date as needed -->
+              </li>
+              <% }); %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('footer') %>

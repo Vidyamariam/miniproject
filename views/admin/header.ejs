@@ -18,8 +18,9 @@
 
     <link rel="stylesheet" href="/stylesheets/admin/userManage.css" />
     <link rel="stylesheet" href="/stylesheets/admin/paginationStyle.css" />
+    <link rel="stylesheet" href="/stylesheets/admin/salesreport.css" />
 
-    <title>Dashboard</title>
+    <title>Admin panel</title>
 
     <style>
       .form-control-primary {
@@ -67,14 +68,30 @@
         margin: 10px;
       }
 
-      .table {
-        background-color: #d3d3d3;
-      }
       .category-actions {
         display: flex;
       }
       .category-actions button {
         margin: 10px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      th,
+      td {
+        padding: 8px;
+        text-align: left;
+      }
+      thead {
+        background-color: rgb(44, 42, 42);
+        color: white;
+      }
+      tbody {
+        background-color: white;
       }
     </style>
   </head>
@@ -196,7 +213,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="/admin/sales-report">
                   <svg
                     class="bi bi-chevron-right"
                     width="16"
@@ -215,7 +232,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="/manage-coupon">
                   <svg
                     class="bi bi-chevron-right"
                     width="16"

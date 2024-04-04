@@ -243,6 +243,12 @@ font-family: 'Josefin Sans', sans-serif;*/
     margin: 20px;
 }
 
+.card1 .card1-body ul li a{
+
+  text-decoration: none;
+  color: black;
+}
+
 .card2{
   font-family: "Bacasime Antique", serif;
   font-weight: 500;

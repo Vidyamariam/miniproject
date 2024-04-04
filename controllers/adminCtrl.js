@@ -8,6 +8,10 @@ const ordersCollection = require("../model/orderSchema");
 const productsCollection = require("../model/productSchema");
 const mongoose = require("mongoose");
 const adminCollection =  require("../model/adminModel");
+const PDFDocument = require('pdfkit');
+const ExcelJS = require('exceljs');
+const fs = require('fs');
+
 
 
 
@@ -16,11 +20,7 @@ const login = (req,res)=>{
     res.redirect("/admin/dashboard");
     else
     res.render("admin/login");
-    // if(!req.session.admin){
-    //     res.render("admin/login")
-    // }else{
-    //     res.redirect('admin/productManagement');
-    // }  
+   
 }
 
 const loginpost = async (req, res) => {
@@ -295,10 +295,260 @@ const adminOrderDetails = async (req,res)=> {
 
 
 
+const getSalesReport = async (req, res) => {
+  try {
+    // Pagination parameters
+    const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+    const limit = parseInt(req.query.limit) || 5; // Default limit to 5 if not provided
+
+    // Calculate skip value for pagination
+    const skip = (page - 1) * limit;
+
+    
+    const filterOption = req.query.filterOption;  
+    const startDate = req.query.startDate;
+    const endDate = req.query.endDate;
+     
+    // console.log("start date in sales report",startDate);
+    // console.log("end date in sales report",endDate);
+
+
+    // Define query object to filter orders based on the filter option
+    const dateQuery = {};
+
+    switch (filterOption) {
+      case "daily":
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Start of the current day
+        dateQuery.createdAt = { $gte: today, $lte: new Date() }; // Today's date
+        break;
+      case "weekly":
+        const startDateOfWeek = new Date();
+        startDateOfWeek.setDate(startDateOfWeek.getDate() - 7); // Go back 7 days
+        startDateOfWeek.setHours(0, 0, 0, 0); // Start of the day
+        const endDateOfWeek = new Date();
+        endDateOfWeek.setHours(23, 59, 59, 999); // End of the day
+        dateQuery.createdAt = { $gte: startDateOfWeek, $lte: endDateOfWeek };
+        break;
+      case "monthly":
+        const startDateOfMonth = new Date();
+        startDateOfMonth.setMonth(startDateOfMonth.getMonth() - 1); // Go back 1 month
+        startDateOfMonth.setHours(0, 0, 0, 0); // Start of the day
+        const endDateOfMonth = new Date();
+        endDateOfMonth.setHours(23, 59, 59, 999); // End of the day
+        dateQuery.createdAt = { $gte: startDateOfMonth, $lte: endDateOfMonth };
+        break;
+      case "yearly":
+        const startOfYear = new Date(new Date().getFullYear(), 0, 1); // Start of the current year
+        startOfYear.setHours(0, 0, 0, 0); // Start of the day
+        const endOfYear = new Date(new Date().getFullYear(), 11, 31, 23, 59, 59, 999); // End of the current year
+        dateQuery.createdAt = { $gte: startOfYear, $lte: endOfYear };
+        break;
+      default:
+        // Apply date range filter if start and end dates are provided
+        if (startDate && endDate) {
+          dateQuery.createdAt = { $gte: new Date(startDate), $lte: new Date(endDate) };
+        }
+       
+        break;
+    }
+
+    // Fetch orders from the database with pagination and date range filtering
+    const orders = await ordersCollection
+      .find(dateQuery) // Apply date range filtering
+      .populate({
+        path: "userId",
+        model: "newusers",
+      })
+      .populate({
+        path: "products.productId",
+        model: "products",
+      })
+      .sort({ createdAt: -1 }) // Sort by creation timestamp in descending order
+      .skip(skip)
+      .limit(limit);
+
+    // Count total number of orders for pagination
+    const totalCount = await ordersCollection.countDocuments(dateQuery);
+
+    // Calculate total pages based on total count and limit
+    const totalPages = Math.ceil(totalCount / limit);
+
+    // Calculate total order count, order amount, and overall discount
+    const totalOrders = await ordersCollection.countDocuments(dateQuery);
+    const totalOrderAmount = await ordersCollection.aggregate([
+      {
+        $match: dateQuery,
+      },
+      {
+        $group: {
+          _id: null,
+          totalAmount: { $sum: "$totalPrice" },
+        },
+      },
+    ]);
+    const totalUsers = await ordersCollection.aggregate([
+      {
+        $match: dateQuery,
+      },
+      {
+        $group: {
+          _id: "$userId", // Group by user ID
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          count: { $sum: 1 }, // Count the distinct user IDs
+        },
+      },
+    ]);
+
+    // Render the sales report template with data
+    res.render("admin/salesReport", {
+      orders,
+      currentPage: page,
+      totalPages,
+      totalOrders,
+      totalOrderAmount: totalOrderAmount.length > 0 ? totalOrderAmount[0].totalAmount : 0,
+      totalUsers: totalUsers.length > 0 ? totalUsers[0].count : 0,
+      
+    });
+  } catch (error) {
+    console.error("Error fetching sales report details:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
+
+
+
+
+
+const downloadPdf = async (req, res) => {
+  try {
+    // Fetch orders from the database
+    const orders = await ordersCollection.find() .populate({
+      path: "userId",
+      model: "newusers",
+    });
+
+    // Create a new PDF document
+    const doc = new PDFDocument();
+
+    // Set response headers to indicate a PDF file download
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename="orders.pdf"');
+
+    // Pipe the PDF document directly to the response stream
+    doc.pipe(res);
+
+    // Add content to the PDF
+    doc.fontSize(12);
+    doc.text('Order Details\n\n');
+
+    // Loop through each order and add details to the PDF
+    orders.forEach((order, index) => {
+      doc.text(`Order ID: ${order.orderId}`);
+      doc.text(`User Name: ${order.userId.name}`);
+      doc.text('Products:');
+      order.products.forEach((product) => {
+        doc.text(`- ${product.productName} - ${product.quantity}`);
+      });
+      doc.text(`Total Quantity: ${order.totalQuantity}`);
+      doc.text(`Total Price: $${order.totalPrice.toFixed(2)}`);
+      doc.text(`Address: ${order.address.address}, ${order.address.locality}, ${order.address.state}, ${order.address.pincode}`);
+      doc.text(`Payment Method: ${order.paymentMethod}`);
+      doc.text(`Order Date: ${order.orderDate}`);
+      if (index < orders.length - 1) {
+        doc.text('\n'); // Add spacing between orders
+      }
+    });
+
+    // Finalize the PDF
+    doc.end();
+  } catch (error) {
+    console.error("Error generating PDF:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
+
+
+const downloadExcel = async (req, res) => {
+  try {
+    // Fetch orders from the database
+    const orders = await ordersCollection.find() .populate({
+      path: "userId",
+      model: "newusers",
+    });
+    const userEmail = req.session.user;
+    const userdata = await userCollection.findOne(userEmail);
+    const userid = userdata._id;
+    console.log("userid in excel function",userid);
+
+    // Create a new Excel workbook
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Orders');
+
+    // Define headers for the Excel sheet
+    worksheet.columns = [
+      { header: 'Order ID', key: 'orderId', width: 15 },
+      { header: 'User Name', key: 'userName', width: 20 },
+      { header: 'Products', key: 'products', width: 40 },
+      { header: 'Total Quantity', key: 'totalQuantity', width: 15 },
+      { header: 'Total Price', key: 'totalPrice', width: 15 },
+      { header: 'Address', key: 'address', width: 40 },
+      { header: 'Payment Method', key: 'paymentMethod', width: 20 },
+      { header: 'Order Date', key: 'orderDate', width: 20 }
+    ];
+
+    // Add rows for each order
+    orders.forEach(order => {
+      worksheet.addRow({
+        orderId: order.orderId,
+        userName: order.userId.name,
+        products: order.products.map(product => `${product.productName} - ${product.quantity}`).join('\n'),
+        totalQuantity: order.totalQuantity,
+        totalPrice: order.totalPrice.toFixed(2),
+        address: `${order.address.address}, ${order.address.locality}, ${order.address.state}, ${order.address.pincode}`,
+        paymentMethod: order.paymentMethod,
+        orderDate: order.orderDate.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' })
+      });
+    });
+
+    // Set response headers to indicate an Excel file download
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', 'attachment; filename="orders.xlsx"');
+
+    // Write workbook to response stream
+    await workbook.xlsx.write(res);
+
+    // End the response
+    res.end();
+  } catch (error) {
+    console.error("Error generating Excel:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 module.exports = {
-    dashboard, login,loginpost,getUserManage,blockUser,getAdminLogout,postAdminLogout,getOrders,postOrders,filterByCategory,adminOrderDetails
+    dashboard, login,loginpost,getUserManage,blockUser,getAdminLogout,postAdminLogout,getOrders,postOrders,filterByCategory,adminOrderDetails,getSalesReport,downloadPdf,downloadExcel
 }
 
 

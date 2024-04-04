@@ -80,6 +80,7 @@
               <%= order.address.phone %>, <%= order.address.state %> - <%= order.address.pincode %>
           </p>
           <p>Phone: <%= order.address.phone %></p>
+          <p>Payment Method: <%= order.paymentMethod %> </p>
       </div>
       <div class="product-details">
           <h5>Product Details</h5>
@@ -110,8 +111,7 @@
 
 
   <a  href="/order-history">
-    <button class="btn btn-primary backtooder" style="margin-left: 10px;"> Back to orders</button>
-
+    <button class="btn btn-dark backtooder" style="margin-left: 10px;"> Back to orders</button>
   </a>
   
  <!--FOOTER SECTION-->

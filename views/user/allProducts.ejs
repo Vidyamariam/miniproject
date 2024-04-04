@@ -249,30 +249,19 @@
       </ul>
     </div>
 
-     <!-- Categories Section -->
-     <aside id="categories-sidebar" class="col-md-2">
-      <table>
-        <thead class="category-title">
-          <tr>
-            <th>CATEGORIES</th>
-          </tr>
-        </thead>
-        <tr>
-          <td>
-            <a href="/ethnic"
-              >ethnic <i class="fa fa-duotone fa-caret-right"></i
-            ></a>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <a href="/contemporary"
-              >contemporary <i class="fa fa-duotone fa-caret-right"></i
-            ></a>
-          </td>
-        </tr>
-      </table>
-    </aside>
+     <!-- Filter Dropdown -->
+     <div class="filter-dropdown">
+      <form action="/userFilterproducts" method="get"> <!-- Form for submitting filter -->
+          <label for="categoryFilter">Filter by Category:</label>
+          <select id="categoryFilter" name="category" class="categoryForm">
+              <option value="">All Categories</option>
+              <% categories.forEach(category => { %>
+                  <option value="<%= category %>"><%= category %></option>
+              <% }); %>
+          </select>
+          <button type="submit" style="width: 100px;height: 40px; background-color: black; color: white;border: none; border-radius: 10px;">Apply Filter</button>
+      </form>
+  </div>
   
 
     <h1>ALL PRODUCTS</h1>

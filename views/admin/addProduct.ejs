@@ -40,6 +40,7 @@
         max-width: 90px;
         margin: 5px;
       }
+
       /* Style for the modal */
       #imagePreview img {
         height: 60px;
@@ -86,6 +87,7 @@
       .cropper110-close {
         background-color: red;
       }
+
       .cropper110-crop {
         background-color: green;
         margin-top: 200px;
@@ -107,26 +109,25 @@
         action="/admin/addproduct"
         method="POST"
         enctype="multipart/form-data"
-        onsubmit="return validateForm()"
       >
         <div class="mb-3">
           <label for="productName">Product Name:</label>
           <input type="text" id="productName" name="name" />
-          <small style="color: red"><%= locals.msgName %></small>
+          <span id="productNameError" class="text-danger"></span>
           <br />
         </div>
         <div class="mb-3">
           <label for="Category">Category:</label>
           <select id="Category" name="category">
             <option value="" disabled selected>Select Category</option>
-            <% categories.forEach((category) => { %> <% if (category.isListed) {
+            <% categories.forEach((category)=> { %> <% if (category.isListed) {
             %>
             <option value="<%= category.categoryName %>">
               <%= category.categoryName %>
             </option>
             <% } %> <% }); %>
           </select>
-          <small style="color: red"><%= locals.msgCategory %></small>
+          <span class="text-danger" id="categoryError"></span>
         </div>
 
         <div class="mb-3">
@@ -141,37 +142,37 @@
           />
 
           <div id="imagePreview"></div>
-          <small id="msgImage" style="color: red"><%= locals.msgImage %></small>
+          <span id="imagesError" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
           <label for="description">Description:</label>
           <textarea id="description" name="description"></textarea>
           <br />
+          <span id="descriptionError" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
           <label for="price">Price:</label>
           <input type="number" id="price" name="price" />
-          <small style="color: red"><%= locals.msgNegativeValues %></small>
-          <small style="color: red"><%= locals.msgPrice %></small>
           <br />
+          <span id="priceError" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
           <label for="discount">Discount:</label>
           <input type="number" id="discount" name="discount" step="0.01" />
-          <small style="color: red"><%= locals.msgNegativeValues %></small>
-          <small style="color: red"><%= locals.msgDiscount %></small>
+
           <br />
+          <span id="discountError" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
           <label for="stock">Stock:</label>
           <input type="number" id="stock" name="stock" step="1" />
-          <small style="color: red"><%= locals.msgNegativeValues %></small>
-          <small style="color: red"><%= locals.msgStock %></small>
+
           <br />
+          <span id="stockError" class="text-danger"></span>
         </div>
 
         <div>
@@ -221,54 +222,91 @@
     ></script>
 
     <script>
-      function validateForm() {
-        let isValid = true;
+      const form = document.querySelector("form");
+      form.addEventListener("submit", function (event) {
+        let errors = false;
 
         // Product Name validation
-        const productNameInput = document.getElementById("productName");
-        const msgName = document.getElementById("msgName");
-        if (productNameInput.value.trim() === "") {
-          msgName.innerText = "Product Name is required";
-          isValid = false;
+        const productName = document.getElementById("productName").value.trim();
+        const productNameError = document.getElementById("productNameError");
+        if (productName === "") {
+          productNameError.textContent = "Product Name is required";
+          errors = true;
         } else {
-          msgName.innerText = "";
+          productNameError.textContent = "";
         }
 
-        // Category validation
-        const categoryInput = document.getElementById("Category");
-        const msgCategory = document.getElementById("msgCategory");
-        if (categoryInput.value.trim() === "") {
-          msgCategory.innerText = "Category is required";
-          isValid = false;
+        //category validation
+        const category = document.getElementById("Category").value.trim();
+        const categoryError = document.getElementById("categoryError");
+        if (category === "") {
+          categoryError.textContent = "Category is required";
+          errors = true;
         } else {
-          msgCategory.innerText = "";
+          categoryError.textContent = "";
         }
 
-        // Product Images validation
-        const fileUploaderInput = document.getElementById("fileUploader");
-        const msgImage = document.getElementById("msgImage");
-        if (fileUploaderInput.files.length === 0) {
-          msgImage.innerText = "Please select at least one product image";
-          isValid = false;
+        // Product Images validation (You may want to validate if any image is uploaded)
+        const fileUploader = document.getElementById("fileUploader");
+        const imagesError = document.getElementById("imagesError");
+        if (fileUploader.files.length === 0) {
+          imagesError.textContent = "Please upload at least one image";
+          errors = true;
         } else {
-          msgImage.innerText = "";
-        }
-
-        // Prevent form submission if validation fails
-        if (!isValid) {
-          return false;
+          imagesError.textContent = "";
         }
 
         // Description validation
-        // Add validation for other fields similarly if needed
+        const description = document.getElementById("description").value.trim();
+        const descriptionError = document.getElementById("descriptionError");
+        if (description === "") {
+          descriptionError.textContent = "Description is required";
+          errors = true;
+        } else {
+          descriptionError.textContent = "";
+        }
 
-        return isValid;
-      }
+        // Price validation
+        const price = parseFloat(document.getElementById("price").value);
+        const priceError = document.getElementById("priceError");
+        if (isNaN(price) || price === "") {
+          priceError.textContent = "Price is required";
+        } else if (isNaN(price) || price <= 0) {
+          priceError.textContent = "Price must be a positive number";
+          errors = true;
+        } else {
+          priceError.textContent = "";
+        }
 
-      function cancelForm() {
-        // Handle cancel action
-        alert("Form canceled");
-      }
+        // Discount validation
+        const discount = parseFloat(document.getElementById("discount").value);
+        const discountError = document.getElementById("discountError");
+
+        if (discount < 0) {
+          discountError.textContent = "Discount cannot be negative";
+        } else if (discount > 50) {
+          discountError.textContent =
+            "Discount percent cannot be greater than 50";
+        } else {
+          discountError.textContent = "";
+        }
+
+        // Stock validation
+        const stock = parseInt(document.getElementById("stock").value);
+        const stockError = document.getElementById("stockError");
+        if (stock === "") {
+          stockError.textContent = "Stock is required";
+        } else if (isNaN(stock) || stock < 0) {
+          stockError.textContent = "Stock must be a non-negative integer";
+          errors = true;
+        } else {
+          stockError.textContent = "";
+        }
+
+        if (errors) {
+          event.preventDefault(); // Prevent form submission if there are errors
+        }
+      });
     </script>
 
     <script>

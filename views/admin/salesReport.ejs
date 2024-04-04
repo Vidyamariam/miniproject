@@ -1,0 +1,233 @@
+<%- include('header') %>
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+  <h3>Sales Report</h3>
+
+  <div
+    class="sales-overview"
+    style="display: flex; justify-content: space-evenly"
+  >
+    <div
+      class="overview-item overall-sales"
+      style="
+        width: 200px;
+        height: 100px;
+        background-color: rgb(96, 181, 221);
+        border-radius: 10px;
+        padding: 10px;
+      "
+    >
+      <h5>Overall Sales count</h5>
+      <p><%= totalOrders %></p>
+    </div>
+
+    <div
+      class="overview-item overall-order-amount"
+      style="
+        width: 200px;
+        height: 100px;
+        background-color: rgb(96, 181, 221);
+        border-radius: 10px;
+        padding: 10px;
+      "
+    >
+      <h5>Total Order amount</h5>
+      <p>₹<%= totalOrderAmount.toFixed(2) %></p>
+    </div>
+
+    <!-- Overall Discount -->
+    <div
+      class="overview-item overall-discount"
+      style="
+        width: 200px;
+        height: 100px;
+        background-color: rgb(96, 181, 221);
+        border-radius: 10px;
+        padding: 10px;
+      "
+    >
+      <h5>Total users</h5>
+      <p><%= totalUsers %></p>
+    </div>
+  </div>
+
+  <br />
+  <br />
+  <div class="order-nav" style="display: flex">
+    <a href="/admin/download/pdf" class="add-link" id="download-pdf"
+      ><button class="btn btn-sm btn-primary" style="margin-right: 10px">
+        Download pdf
+      </button></a
+    >
+
+    <a href="/admin/download/excel" class="add-link" id="download-excel"
+      ><button class="btn btn-sm btn-primary" style="margin-right: 50px">
+        Download excel
+      </button></a
+    >
+    <br />
+    <br />
+    <form action="/admin/sales-report" method="GET">
+      <label for="start-date">Start Date:</label>
+      <input type="date" id="start-date" name="startDate" />
+      <label for="end-date">End Date:</label>
+      <input type="date" id="end-date" name="endDate" />
+      <button
+        type="submit"
+        class="btn btn-sm btn-primary"
+        style="margin-right: 40px"
+      >
+        Filter
+      </button>
+    </form>
+
+    <form id="filterForm" action="/admin/sales-report" method="GET">
+      <select id="filterOption" name="filterOption">
+        <option value="daily">Daily</option>
+        <option value="weekly">weekly</option>
+        <option value="monthly">monthly</option>
+      </select>
+      <button
+        type="submit"
+        id="apply-duration-filter"
+        class="btn btn-sm btn-primary"
+      >
+        Filter
+      </button>
+    </form>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table salesReport">
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>User Name</th>
+          <th>Products</th>
+          <th>Total Quantity</th>
+          <th>Total Price</th>
+          <th>Address</th>
+          <th>Payment Method</th>
+          <th>Order Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% orders.forEach(( order)=> { %>
+        <tr>
+          <td><%= order.orderId %></td>
+          <td><%= order.userId.name %></td>
+          <td>
+            <ul>
+              <% order.products.forEach(product=> { %>
+              <li><%= product.productName %> - <%= product.quantity %></li>
+              <% }); %>
+            </ul>
+          </td>
+          <td><%= order.totalQuantity %></td>
+          <td>
+            <% if (order.totalPrice !== null && order.totalPrice !== undefined)
+            { %> $<%= order.totalPrice.toFixed(2) %> <% } else { %> N/A <% } %>
+          </td>
+          <td>
+            <%= order.address.address %>, <%= order.address.locality %>, <%=
+            order.address.state %>, <%= order.address.pincode %>
+          </td>
+          <td><%= order.paymentMethod %></td>
+          <td><%= order.orderDate %></td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <% if (totalPages> 1) { %>
+  <nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+      <% if (currentPage> 1) { %>
+      <li class="page-item">
+        <a
+          class="page-link"
+          href="?page=<%= currentPage - 1 %>"
+          aria-label="Previous"
+        >
+          <span aria-hidden="true">Previous</span>
+          <span class="sr-only">Previous</span>
+        </a>
+      </li>
+      <% } else { %>
+      <li class="page-item disabled">
+        <span class="page-link" aria-hidden="true">&laquo;</span>
+      </li>
+      <% } %> <% if (currentPage < totalPages) { %>
+      <li class="page-item">
+        <a
+          class="page-link"
+          href="?page=<%= currentPage + 1 %>"
+          aria-label="Next"
+        >
+          <span aria-hidden="true">Next</span>
+          <span class="sr-only">Next</span>
+        </a>
+      </li>
+      <% } else { %>
+      <li class="page-item disabled">
+        <span class="page-link" aria-hidden="true">&raquo;</span>
+      </li>
+      <% } %>
+    </ul>
+  </nav>
+  <% } %>
+</main>
+<%- include('footer') %>
+
+<script>
+  function toggleDropdown() {
+    var dropdownMenu = document.getElementById("dropdownMenu");
+    dropdownMenu.style.display =
+      dropdownMenu.style.display === "block" ? "none" : "block";
+  }
+</script>
+
+<!-- <script>
+  document
+    .getElementById("downloadPdfBtn")
+    .addEventListener("click", async () => {
+      try {
+        const response = await fetch("/downloadSalesReport/pdf");
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.style.display = "none";
+        a.href = url;
+        a.download = "sales_report.pdf";
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error("Error downloading sales report PDF:", error);
+        // Handle error as needed
+      }
+    });
+</script> -->
+
+<!-- <script>
+  document
+    .getElementById("downloadExcelBtn")
+    .addEventListener("click", async () => {
+      try {
+        const response = await fetch("/downloadSalesReport/excel");
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.style.display = "none";
+        a.href = url;
+        a.download = "sales_report.xlsx";
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error("Error downloading sales report Excel:", error);
+        // Handle error as needed
+      }
+    });
+</script> -->

@@ -88,35 +88,42 @@
                 </thead>
                 <tbody>
                   <% if (wishlistItems.length > 0) { %>
-                    <% wishlistItems.forEach(item => { %>
+                    <% wishlistItems.forEach(product => { %>
                   <tr>
                     <td width="45%">
                       <div class="display-flex align-center">
                         <div class="img-product">
                           <img
-                            src="<%= item.productImage[0] %>"
+                            src="<%= product.productImage[0] %>"
                             alt=""
                             class="mCS_img_loaded"
                           />
                         </div>
-                        <div class="name-product"><%= item.productName %></div>
+                        <div class="name-product"><%= product.productName %></div>
                       </div>
                     </td>
-                    <td width="15%" class="price"><%= item.price %></td>
+                    <td width="15%" class="price"><%= product.price %></td>
                     <td width="15%">
-                      <% if (item.stock > 0) { %>
+
+                      <% if (product.stock > 0) { %>
                         <span class="in-stock-box">In stock</span>
                     <% } else { %>
                         <span class="out-of-stock-box">Out of stock</span>
                     <% } %>
+                        <span class="item-quantity">1</span>
                     </td>
                     <td width="15%">
-                      <button class="round-black-btn small-btn">
-                        Add to Cart
-                      </button>
+
+                      <form action="/add-to-cart/<%= product.productId %>" method="post">
+                       
+                        <button type="submit" class="round-black-btn small-btn">
+                          Add to Cart
+                        </button>
+                      </form>
+                     
                     </td>
                     <td width="10%" class="text-center">
-                      <a href="/remove-wishlist/<%= item._id %>" class="trash-icon">
+                      <a href="/remove-wishlist/<%= product._id %>" class="trash-icon">
                           <i class="far fa-trash-alt"></i>
                       </a>
                   </td>
@@ -128,9 +135,7 @@
                 <% } else { %>
                     <p>Your wishlist is empty.</p>
                 <% } %>
-              </table>
-
-            
+              </table>          
             </div>
           </div>
         </div>
