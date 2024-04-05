@@ -160,7 +160,7 @@
         </div>
 
         <div class="mb-3">
-          <label for="discount">Discount:</label>
+          <label for="discount">Discount%:</label>
           <input type="number" id="discount" name="discount" step="0.01" />
 
           <br />
@@ -271,6 +271,7 @@
         const priceError = document.getElementById("priceError");
         if (isNaN(price) || price === "") {
           priceError.textContent = "Price is required";
+          errors = true;
         } else if (isNaN(price) || price <= 0) {
           priceError.textContent = "Price must be a positive number";
           errors = true;
@@ -278,15 +279,20 @@
           priceError.textContent = "";
         }
 
-        // Discount validation
+        //Discount% validation
         const discount = parseFloat(document.getElementById("discount").value);
         const discountError = document.getElementById("discountError");
 
-        if (discount < 0) {
-          discountError.textContent = "Discount cannot be negative";
+        if (isNaN(discount) || discount === "") {
+          discountError.textContent = "Discount percent is required";
+          errors = true;
+        } else if (discount < 0) {
+          discountError.textContent = "Discount percent cannot be negative";
+          errors = true;
         } else if (discount > 50) {
           discountError.textContent =
             "Discount percent cannot be greater than 50";
+          errors = true;
         } else {
           discountError.textContent = "";
         }
@@ -294,8 +300,9 @@
         // Stock validation
         const stock = parseInt(document.getElementById("stock").value);
         const stockError = document.getElementById("stockError");
-        if (stock === "") {
+        if (isNaN(stock) || stock === "") {
           stockError.textContent = "Stock is required";
+          errors = true;
         } else if (isNaN(stock) || stock < 0) {
           stockError.textContent = "Stock must be a non-negative integer";
           errors = true;

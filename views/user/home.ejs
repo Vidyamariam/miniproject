@@ -1,4 +1,9 @@
 <%- include('header')%>
+<style>
+  .middle-content {
+    margin-top: 100px;
+  }
+</style>
 
 <!--BANNER SECTION-->
 <div id="banner-section">
@@ -8,61 +13,27 @@
   />
 </div>
 
-<!--cards section-->
-
-<div class="col-md-10">
-  <div class="container-fluid">
-    <br />
-    <h1>ALL PRODUCTS</h1>
-    <div class="row gy-3">
-      <% productList.forEach((product)=> { %> <% if (product.isListed) { %>
-      <div class="col-md-3">
-        <div class="card" id="product">
-          <a href="/productDetails/<%= product._id %>">
-            <img
-              src="<%= product.productImage[0] %>"
-              class="card-img-top"
-              alt="..."
-            />
-          </a>
-
-          <div class="card-body" id="pdt-cardbdy">
-            <h6 class="card-text"><%= product.name %></h6>
-            <h6 class="card-title"><%= product.price %></h6>
-            <form action="/add-to-cart/<%= product._id %>" method="post">
-              <% if (product.isListed && product.stock > 0) { %>
-              <!-- Product is available, show Add to Cart button -->
-              <button type="submit" class="cartButton">Add to Cart</button>
-              <% } else { %>
-              <!-- Product is not available, show Out of Stock message -->
-              <span class="text-danger">Out of Stock</span>
-              <% } %>
-            </form>
-            <button type="submit" class="wishlistbutton">
-              <i class="fa fa-duotone fa-heart"></i> Add to wishlist
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <% } %> <% }) %>
-    </div>
-  </div>
-</div>
-
 <!--MIDDLE CONTENT-->
-<section class="container-fluid middle-content">
+<section class="middle-content">
   <div class="row inner-content">
     <div class="col-lg-6">
-      <img src="/img/home/b1.jpg" style="height: 500px; width: 400px" />
+      <img
+        src="/img/home/b1.jpg"
+        style="
+          height: 500px;
+          width: 400px;
+          margin-left: 50px;
+          border-radius: 10px;
+        "
+      />
 
-      <p style="font-size: 30px">
+      <p style="font-size: 30px; margin-left: 50px">
         Elevate Your Elegance: Adorn Yourself with Timeless Necklaces
       </p>
     </div>
 
     <div class="col-lg-6">
-      <img src="/img/home/b4.webp" />
+      <img src="/img/home/b4.webp" style="border-radius: 10px" />
     </div>
   </div>
 </section>

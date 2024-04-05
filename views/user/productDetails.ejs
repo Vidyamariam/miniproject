@@ -140,9 +140,15 @@
       <%= productdetails.name %>
     </h1>
      <h6><%= productdetails.category %></h6>
-    <span class="price">
-     Rs <%= productdetails.price %>
-    </span>
+
+     <% if (productdetails.discount > 0) { %>
+      <span class="price">   
+        <s>Rs <%= productdetails.price %></s>
+        Rs <%= productdetails.price - (productdetails.price * productdetails.discount / 100) %>
+      </span>
+    <% } else { %>
+      <span class="price">Rs <%= productdetails.price %></span>
+    <% } %>   
   
     <p>
       <%= productdetails.description %>
@@ -172,7 +178,6 @@
     <% } %>
   </div>
 
- 
 
 </div>
 

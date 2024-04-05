@@ -1,280 +1,297 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Edit Product</title>
-    <link rel="stylesheet" href="/stylesheets/admin/editProduct.css" />
-    
 
-    <style>
-      #existingImagesPreview img,
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edit Product</title>
+  <link rel="stylesheet" href="/stylesheets/admin/editProduct.css" />
+
+
+  <style>
+    #existingImagesPreview img,
     #newImagesPreview img {
       width: 60px;
       height: 60px;
       margin-right: 5px;
-    } 
+    }
 
-    
-    .image-preview img{
+
+    .image-preview img {
 
       width: 50px;
       height: 50px;
     }
 
     .deselect-btn {
-    background-color: red;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-   
-}
+      background-color: red;
+      color: white;
+      border: none;
+      padding: 5px 10px;
 
-    </style>
-  </head>
-  <body>
-    <div class="title">
-      <h2>Edit Product Form</h2>
-    </div>
-    <div class="main">
-      <form action="/admin/editproduct/<%= items._id %>" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
-          <div class="mb-3">
-              <label for="productName">Product Name:</label>
-              <input type="text" id="editProductName" name="name" value="<%= items.name %>">
-              <small class="text-danger" style="color:red" id="editProductNameError"></small> <!-- Error message for product name -->
-          </div>
-          <div class="mb-3">
-              <label for="Category">Category:</label>
-              <select id="editCategory" name="category">
-                  <% category.forEach((cat) => { %>
-                  <option <%= cat.categoryName === items.category ? 'selected' : '' %>><%= cat.categoryName %></option>
-                  <% }); %>
-              </select>
-              <small class="text-danger" style="color:red" id="editCategoryError"></small> <!-- Error message for category -->
-          </div>
+    }
+  </style>
+</head>
 
-          <div class="PrImageUplode">
-              <label for="productImage" id="productImagesLabel">Product Images:</label>
-              <input type="file" id="productImage" name="productImage" accept="image/*" multiple onchange="previewImages()">
-              <div class="image-preview">
-                  <label id="PreviewOfImage">Image Preview:</label>
-                  <!-- Display existing images -->
-                  <% items.productImage.forEach((imageUrl, index) => { %>
-                  <div class="preview-item">
-                      <img src="<%= imageUrl %>" alt="Product Image" />
-                      <button class="delete-btn" type="button" onclick="deleteImage('<%= index %>')">Delete</button>
-                  </div>
-                  <% }); %>
-                  <!-- Display preview of newly selected images -->
-                  <img id="selectedImagePreview" src="">
-              </div>
-          </div>
+<body>
+  <div class="title">
+    <h2>Edit Product Form</h2>
+  </div>
+  <div class="main">
+    <form action="/admin/editproduct/<%= items._id %>" method="post" enctype="multipart/form-data"
+      onsubmit="return validateForm()">
+      <div class="mb-3">
+        <label for="productName">Product Name:</label>
+        <input type="text" id="editProductName" name="name" value="<%= items.name %>">
+        <small class="text-danger" style="color:red" id="editProductNameError"></small>
+        <!-- Error message for product name -->
+      </div>
+      <div class="mb-3">
+        <label for="Category">Category:</label>
+        <select id="editCategory" name="category">
+          <% category.forEach((cat)=> { %>
+            <option <%=cat.categoryName===items.category ? 'selected' : '' %>><%= cat.categoryName %>
+            </option>
+            <% }); %>
+        </select>
+        <small class="text-danger" style="color:red" id="editCategoryError"></small> <!-- Error message for category -->
+      </div>
 
-          <div class="mb-3">
-              <label for="description">Description:</label>
-              <textarea id="editDescription" name="description"><%= items.description %></textarea>
-              <small class="text-danger" style="color:red" id="editDescriptionError"></small> <!-- Error message for description -->
-          </div>
+      <div class="PrImageUplode">
+        <label for="productImage" id="productImagesLabel">Product Images:</label>
+        <input type="file" id="productImage" name="productImage" accept="image/*" multiple onchange="previewImages()">
+        <div class="image-preview">
+          <label id="PreviewOfImage">Image Preview:</label>
+          <!-- Display existing images -->
+          <% items.productImage.forEach((imageUrl, index)=> { %>
+            <div class="preview-item">
+              <img src="<%= imageUrl %>" alt="Product Image" />
+              <button class="delete-btn" type="button" onclick="deleteImage('<%= index %>')">Delete</button>
+            </div>
+            <% }); %>
+              <!-- Display preview of newly selected images -->
+              <img id="selectedImagePreview" src="">
+        </div>
+      </div>
 
-          <div class="mb-3">
-              <label for="price">Price:</label>
-              <input type="number" id="editPrice" name="price" value="<%= items.price %>">
-              <small class="text-danger" style="color:red" id="editPriceError"></small> <!-- Error message for price -->
-          </div>
+      <div class="mb-3">
+        <label for="description">Description:</label>
+        <textarea id="editDescription" name="description"><%= items.description %></textarea>
+        <small class="text-danger" style="color:red" id="editDescriptionError"></small>
+        <!-- Error message for description -->
+      </div>
 
-          <div class="mb-3">
-              <label for="discount">Discount:</label>
-              <input type="number" id="editDiscount" name="discount" step="0.01" value="<%= items.discount %>">
-              <small class="text-danger" style="color:red" id="editDiscountError"></small> <!-- Error message for discount -->
-          </div>
+      <div class="mb-3">
+        <label for="price">Price:</label>
+        <input type="number" id="editPrice" name="price" value="<%= items.price %>">
+        <small class="text-danger" style="color:red" id="editPriceError"></small> <!-- Error message for price -->
+      </div>
 
-          <div class="mb-3">
-              <label for="stock">Stock:</label>
-              <input type="number" id="editStock" name="stock" step="1" value="<%= items.stock %>">
-              <small class="text-danger" style="color:red" id="editStockError"></small> <!-- Error message for stock -->
-          </div>
+      <div class="mb-3">
+        <label for="discount">Discount%:</label>
+        <input type="number" id="editDiscount" name="discount" value="<%= items.discount %>">
+        <small class="text-danger" style="color:red" id="editDiscountError"></small> <!-- Error message for discount -->
+      </div>
+
+      <div class="mb-3">
+        <label for="stock">Stock:</label>
+        <input type="number" id="editStock" name="stock" step="1" value="<%= items.stock %>">
+        <small class="text-danger" style="color:red" id="editStockError"></small> <!-- Error message for stock -->
+      </div>
 
 
-          <div>
-              <button type="submit">Submit</button>
-              <button type="button" onclick="cancelForm()">Cancel</button>
-          </div>
-      </form>
+      <div>
+        <button type="submit">Submit</button>
+        <button type="button" onclick="cancelForm()">Cancel</button>
+      </div>
+    </form>
   </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    
-    <!--JS-->
-    <script>
-      function previewImages() {
-        var input = document.getElementById('productImage');
-        var previewContainer = document.querySelector('.image-preview');
-        previewContainer.innerHTML = '';
-    
-        var filesToUpload = []; // Array to store only the selected files
-    
-        for (var i = 0; i < input.files.length; i++) {
-          var file = input.files[i];
-          var reader = new FileReader();
-    
-          reader.onload = (function (file) {
-            return function (e) {
-              var imgContainer = document.createElement('div');
-              imgContainer.classList.add('preview-item');
-    
-              var img = document.createElement('img');
-              img.src = e.target.result;
-              img.alt = 'Selected Image';
-              imgContainer.appendChild(img);
-    
-              var deselectBtn = document.createElement('button');
-              deselectBtn.innerHTML = 'Deselect';
-              deselectBtn.classList.add('deselect-btn');
-              deselectBtn.addEventListener('click', function() {
-                imgContainer.remove();
-                // Remove the deselected file from the array of files
-                var index = filesToUpload.indexOf(file);
-                if (index !== -1) {
-                  filesToUpload.splice(index, 1);
-                }
-                // Update the input field to reflect the deselection
-                input.value = null;
-              });
-              imgContainer.appendChild(deselectBtn);
-    
-              previewContainer.appendChild(imgContainer);
-    
-              // Add the file to the array of files to upload
-              filesToUpload.push(file);
-            };
-          })(file);
-    
-          reader.readAsDataURL(file);
+
+  <!--JS-->
+  <script>
+    function previewImages() {
+      var input = document.getElementById('productImage');
+      var previewContainer = document.querySelector('.image-preview');
+      previewContainer.innerHTML = '';
+
+      var filesToUpload = []; // Array to store only the selected files
+
+      for (var i = 0; i < input.files.length; i++) {
+        var file = input.files[i];
+        var reader = new FileReader();
+
+        reader.onload = (function (file) {
+          return function (e) {
+            var imgContainer = document.createElement('div');
+            imgContainer.classList.add('preview-item');
+
+            var img = document.createElement('img');
+            img.src = e.target.result;
+            img.alt = 'Selected Image';
+            imgContainer.appendChild(img);
+
+            var deselectBtn = document.createElement('button');
+            deselectBtn.innerHTML = 'Deselect';
+            deselectBtn.classList.add('deselect-btn');
+            deselectBtn.addEventListener('click', function () {
+              imgContainer.remove();
+              // Remove the deselected file from the array of files
+              var index = filesToUpload.indexOf(file);
+              if (index !== -1) {
+                filesToUpload.splice(index, 1);
+              }
+              // Update the input field to reflect the deselection
+              input.value = null;
+            });
+            imgContainer.appendChild(deselectBtn);
+
+            previewContainer.appendChild(imgContainer);
+
+            // Add the file to the array of files to upload
+            filesToUpload.push(file);
+          };
+        })(file);
+
+        reader.readAsDataURL(file);
+      }
+    }
+  </script>
+
+
+
+  <script>
+    function deleteImage(index) {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Remove the image from the preview and update the file input
+          var previewContainer = document.querySelector('.image-preview');
+          var imageContainers = previewContainer.querySelectorAll('.preview-item');
+          imageContainers[index].remove();
+
+          // Update the file input to remove the deleted image
+          var input = document.getElementById('productImage');
+          var files = Array.from(input.files);
+          files.splice(index, 1);
+          input.files = new FileList(files);
+
+          Swal.fire("Deleted!", "Your file has been deleted.", "success");
         }
+      });
+    }
+  </script>
+
+  <script>
+    function validateForm() {
+      let isValid = true; // Track overall form validity
+
+      // Product Name validation
+      const editProductNameInput = document.getElementById('editProductName');
+      const editProductNameError = document.getElementById('editProductNameError');
+      if (editProductNameInput.value.trim() === '') {
+        editProductNameError.innerText = 'Product Name is required';
+        isValid = false;
+      } else {
+        editProductNameError.innerText = ''; // Clear any previous error message
       }
-    </script>
-    
-    
 
-<script>
-  function deleteImage(index) {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // Remove the image from the preview and update the file input
-        var previewContainer = document.querySelector('.image-preview');
-        var imageContainers = previewContainer.querySelectorAll('.preview-item');
-        imageContainers[index].remove();
+      // Category validation
+      const editCategoryInput = document.getElementById('editCategory');
+      const editCategoryError = document.getElementById('editCategoryError');
+      if (editCategoryInput.value.trim() === '') {
+        editCategoryError.innerText = 'Category is required';
+        isValid = false;
+      } else {
+        editCategoryError.innerText = ''; // Clear any previous error message
+      }
 
-        // Update the file input to remove the deleted image
-        var input = document.getElementById('productImage');
-        var files = Array.from(input.files);
-        files.splice(index, 1);
-        input.files = new FileList(files);
+      // Description validation
+      const editDescriptionInput = document.getElementById('editDescription');
+      const editDescriptionError = document.getElementById('editDescriptionError');
+      if (editDescriptionInput.value.trim() === '') {
+        editDescriptionError.innerText = 'Description is required';
+        isValid = false;
+      } else {
+        editDescriptionError.innerText = ''; // Clear any previous error message
+      }
+
+      // Price validation
+      const editPriceInput = document.getElementById('editPrice');
+      const editPriceError = document.getElementById('editPriceError');
+      if (isNaN(editPriceInput.value) || editPriceInput.value.trim() === '' || parseFloat(editPriceInput.value) < 0) {
+        editPriceError.innerText = 'Price should be a non-negative number';
+        isValid = false;
+      } else {
+        editPriceError.innerText = ''; // Clear any previous error message
+      }
+
+      // Discount% validation
+      const editOfferpriceInput = document.getElementById('editDiscount');
+      const editDiscountError = document.getElementById('editDiscountError');
+
+      const productPrice = parseFloat(document.getElementById('editPrice').value);
         
-        Swal.fire("Deleted!", "Your file has been deleted.", "success");
+      if(isNaN(editOfferpriceInput.value) || editOfferpriceInput.value.trim() === '' ){
+        editDiscountError.innerText = 'Discount percent is required';
+        isValid = false;
       }
-    });
-  }
-</script>
-
-<script>
-  function validateForm() {
-    let isValid = true; // Track overall form validity
-
-    // Product Name validation
-    const editProductNameInput = document.getElementById('editProductName');
-    const editProductNameError = document.getElementById('editProductNameError');
-    if (editProductNameInput.value.trim() === '') {
-      editProductNameError.innerText = 'Product Name is required';
-      isValid = false;
-    } else {
-      editProductNameError.innerText = ''; // Clear any previous error message
-    }
-
-    // Category validation
-    const editCategoryInput = document.getElementById('editCategory');
-    const editCategoryError = document.getElementById('editCategoryError');
-    if (editCategoryInput.value.trim() === '') {
-      editCategoryError.innerText = 'Category is required';
-      isValid = false;
-    } else {
-      editCategoryError.innerText = ''; // Clear any previous error message
-    }
-
-    // Description validation
-    const editDescriptionInput = document.getElementById('editDescription');
-    const editDescriptionError = document.getElementById('editDescriptionError');
-    if (editDescriptionInput.value.trim() === '') {
-      editDescriptionError.innerText = 'Description is required';
-      isValid = false;
-    } else {
-      editDescriptionError.innerText = ''; // Clear any previous error message
-    }
-
-    // Price validation
-    const editPriceInput = document.getElementById('editPrice');
-    const editPriceError = document.getElementById('editPriceError');
-    if (isNaN(editPriceInput.value) || editPriceInput.value.trim() === '' || parseFloat(editPriceInput.value) < 0) {
-      editPriceError.innerText = 'Price should be a non-negative number';
-      isValid = false;
-    } else {
-      editPriceError.innerText = ''; // Clear any previous error message
-    }
-
-    // Discount validation
-    const editDiscountInput = document.getElementById('editDiscount');
-    const editDiscountError = document.getElementById('editDiscountError');
-    if (isNaN(editDiscountInput.value) || editDiscountInput.value.trim() === '' || parseFloat(editDiscountInput.value) < 0) {
-      editDiscountError.innerText = 'Discount should be a non-negative number';
-      isValid = false;
-    } else {
-      editDiscountError.innerText = ''; // Clear any previous error message
-    }
-
-    // Stock validation
-    const editStockInput = document.getElementById('editStock');
-    const editStockError = document.getElementById('editStockError');
-    if (isNaN(editStockInput.value) || editStockInput.value.trim() === '' || parseInt(editStockInput.value) < 0) {
-      editStockError.innerText = 'Stock should be a non-negative integer';
-      isValid = false;
-    } else {
-      editStockError.innerText = ''; // Clear any previous error message
-    }
-
-    return isValid; // Return overall form validity
-  }
-</script>
-
-
+     else if ( parseFloat(editOfferpriceInput.value) < 0) {
+        editDiscountError.innerText = 'Discount percent should be a non-negative number';
+        isValid = false;
+      } else if (parseFloat(editOfferpriceInput.value) > 50) {
+        editDiscountError.innerText = 'Discount percent cannot be greater than 50';
+        isValid = false;
+      }  else {
+        editDiscountError.innerText = ''; // Clear any previous error message
+      }
 
     
+      // Stock validation
+      const editStockInput = document.getElementById('editStock');
+      const editStockError = document.getElementById('editStockError');
+      if (isNaN(editStockInput.value) || editStockInput.value.trim() === '' || parseInt(editStockInput.value) < 0) {
+        editStockError.innerText = 'Stock should be a non-negative integer';
+        isValid = false;
+      } else {
+        editStockError.innerText = ''; // Clear any previous error message
+      }
 
-<script>
-  function cancelForm() {
-    // Add logic to handle cancel action
-    alert("Form canceled");
-  }
-
-
-
-
- 
-
-</script>
-
-
-
-<!-- ... Rest of your HTML code ... -->
+      return isValid; // Return overall form validity
+    }
+  </script>
 
 
-  </body>
+
+
+
+  <script>
+    function cancelForm() {
+      // Add logic to handle cancel action
+      alert("Form canceled");
+    }
+
+
+
+
+
+
+  </script>
+
+
+
+  <!-- ... Rest of your HTML code ... -->
+
+
+</body>
+
 </html>

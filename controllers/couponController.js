@@ -249,8 +249,6 @@ exports.applyCoupon = async (req, res) => {
      const userData = await userCollection.findOne(session);
      const userId = userData._id;
  
-     console.log("userId", userId);
- 
      // Fetch user's address
      const userAddress = await Address.find({ userId });
  
@@ -260,36 +258,40 @@ exports.applyCoupon = async (req, res) => {
        model: "products",
      });
  
-     // Calculate total price of items in the cart
+     // Initialize variables for totalPrice and discountedPrice
      let totalPrice = 0;
-     cart.items.forEach(item => {
-       totalPrice += item.productId.price * item.quantity;
-     });
+     let discountedPrice = 0;
  
-     console.log("gfhdsgf", req.body);
+     // Calculate total price of items in the cart after applying discounts
+     cart.items.forEach(item => {
+       let itemPrice = item.productId.price;
+       if (item.productId.discount && item.productId.discount > 0) {
+         // Apply discount to product price if it exists
+         itemPrice -= (item.productId.discount / 100) * itemPrice;
+       }
+       totalPrice += itemPrice * item.quantity;
+     });
  
      // Query the database to find the coupon
      const coupon = await couponCollection.findOne({ couponCode });
-
-     let discountedPrice = 0;
  
      // Check if the coupon exists
      if (!coupon) {
-       return res.render('user/checkout', { error: 'Invalid coupon code', userAddress, cart,discountedPrice, totalPrice });
+       return res.render('user/checkout', { error: 'Invalid coupon code', userAddress, cart, discountedPrice, totalPrice });
      }
  
      // Check if the coupon is expired
      if (coupon.expiryDate && coupon.expiryDate < Date.now()) {
-       return res.render('user/checkout', { error: 'Coupon has expired', userAddress, cart,discountedPrice, totalPrice });
+       return res.render('user/checkout', { error: 'Coupon has expired', userAddress, cart, discountedPrice, totalPrice });
      }
  
      // Check if the total price is within the allowed range
      if (coupon.minAmount && totalPrice < coupon.minAmount) {
-       return res.render('user/checkout', { error: 'Total price is less than minimum amount required for this coupon', userAddress, cart,discountedPrice, totalPrice });
+       return res.render('user/checkout', { error: 'Total price is less than minimum amount required for this coupon', userAddress, cart, discountedPrice, totalPrice });
      }
  
      if (coupon.maxAmount && totalPrice > coupon.maxAmount) {
-       return res.render('user/checkout', { error: 'Total price exceeds maximum amount allowed for this coupon', userAddress, cart,discountedPrice, totalPrice });
+       return res.render('user/checkout', { error: 'Total price exceeds maximum amount allowed for this coupon', userAddress, cart, discountedPrice, totalPrice });
      }
  
      // Calculate the discounted price
@@ -297,12 +299,13 @@ exports.applyCoupon = async (req, res) => {
      discountedPrice = totalPrice - discountAmount;
  
      // Pass the selected address, cart items, and discounted price to the checkout page
-     return res.render('user/checkout', { userAddress, cart,totalPrice, discountedPrice });
+     return res.render('user/checkout', { userAddress, cart, totalPrice, discountedPrice });
    } catch (error) {
      console.error("Error applying coupon:", error);
      return res.status(500).json({ error: "Internal server error" });
    }
  };
+ 
  
 
  exports.removeCoupon = async (req,res)=> {

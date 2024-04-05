@@ -69,21 +69,10 @@ const postAddProduct = async (req, res) => {
             discount,
             stock,
             isListed,
-            sizes,
+            
         } = req.body;
 
         console.log("product details", req.body);
-
-
-      
-        // Validate for empty product images
-        if (!req.files || req.files.length === 0) {
-          const categories = await categoryCollection.find();
-          return res.render("admin/addProduct", {
-              categories,
-              msgImage: 'Please upload at least one product image.',
-          });
-      }
 
 
         let productImage = [];
@@ -105,7 +94,7 @@ const postAddProduct = async (req, res) => {
             discount: discount,
             stock: stock,
             isListed: isListed,
-            sizes: Array.isArray(sizes) ? sizes : [sizes], // Ensure sizes is an array
+           
         };       
        console.log('data',data)
 

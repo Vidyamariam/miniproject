@@ -16,44 +16,43 @@ exports.getCart = async (req, res) => {
     const session = req.session.user;
     const userData = await userCollection.findOne(session);
     const userId = userData._id;
-     console.log("session",session);
-     console.log("userData",userData);
-     console.log("userId",userId);
-
-
 
     // Find the user's cart or create a new one if it doesn't exist
     let cart = await userCart.findOne({ userId }).populate({
       path: 'items.productId',
-      model: "products",
+      model: 'products',
     });
-             
+
     if (!cart) {
       // If cart doesn't exist, create a new cart for the user
       cart = new userCart({ userId });
       await cart.save();
     }
 
-     // Calculate total price of items in the cart
-let totalPrice = 0;
-cart.items.forEach(item => {
-  if (item.productId && item.productId.price) {
-    totalPrice += item.productId.price * item.quantity;
-  } else {
-    console.log("Invalid item found:", item);
-  }
-});
-  
-console.log("Total price:",totalPrice);
+    // Calculate total price of items in the cart after applying discounts
+    let totalPrice = 0;
+    cart.items.forEach(item => {
+      if (item.productId && item.productId.price) {
+        let itemPrice = item.productId.price;
+        if (item.productId.discount && item.productId.discount > 0) {
+          // Calculate discounted price if the product has a discount
+          itemPrice -= (item.productId.discount / 100) * itemPrice;
+        }
+        totalPrice += itemPrice * item.quantity;
+      } else {
+        console.log("Invalid item found:", item);
+      }
+    });
 
-     // If cart is empty, render a view without passing cart and sum
-     return res.render("user/cart", { cart, totalPrice });
+    // Render the view with cart and total price
+    return res.render("user/cart", { cart, totalPrice });
   } catch (error) {
     console.log(error);
     // Handle the error and possibly send an error response to the client
     res.status(500).json({ error: 'Internal Server Error1' });
   }
 };
+
 
 
 
@@ -128,76 +127,81 @@ console.log("Total price:",totalPrice);
 
 
  
-exports.addToCart = async (req,res)=> {
+exports.addToCart = async (req, res) => {
+  try {
+    const session = req.session.user;
+    console.log(session);
+    const userData = await userCollection.findOne(session);
+    console.log(userData);
+    const userId = userData._id;
 
-  try{
-   const session = req.session.user;
-   console.log(session);
-   const userData = await userCollection.findOne(session);
-   console.log(userData);
-   const userId = userData._id;
+    console.log("userid: in cart", userId);
 
-   console.log("userid: in cart", userId);
-
-  const productId = req.params.productId;
-   console.log("productId", productId);
-   const quantity = req.query.quantity || 1;
+    const productId = req.params.productId;
+    console.log("productId", productId);
+    const quantity = req.query.quantity || 1;
     console.log("quantity", quantity);
-   
 
-   // Find the user's cart or create a new one if it doesn't exist
-   let cart = await userCart.findOne({ userId });
-   if (!cart) {
-    cart = new userCart({ userId, items: [] });
-   }
+    // Find the user's cart or create a new one if it doesn't exist
+    let cart = await userCart.findOne({ userId });
+    if (!cart) {
+      cart = new userCart({ userId, items: [], totalPrice: 0 });
+    }
 
-   // Check if the product is already in the cart
-   const cartItem = cart.items.find(item => item.productId.toString() === productId);
+    // Check if the product is already in the cart
+    const cartItem = cart.items.find(
+      (item) => item.productId.toString() === productId
+    );
 
-   if(cartItem) {
-           // If the product is already in the cart, increase the quantity
-    cartItem.quantity += 1;
-   }
-   else{
-     // If the product is not in the cart, add it as a new item
-     const product = await productsCollection.findById(productId);
+    if (cartItem) {
+      // If the product is already in the cart, increase the quantity
+      cartItem.quantity += 1;
+    } else {
+      // If the product is not in the cart, add it as a new item
+      const product = await productsCollection.findById(productId);
 
-       
-     if (product) {
-      // Check if the product is listed and has available stock
-      if (product.isListed && product.stock > 0) {
+      if (product) {
+        // Check if the product is listed and has available stock
+        if (product.isListed && product.stock > 0) {
+          let price = product.price; // Initialize the price with the product price
+          
+          // Check if the product has a discount and adjust the price accordingly
+          if (product.discount > 0 && product.discount < 100) {
+            // Calculate the discounted price
+            price -= (product.discount / 100) * price;
+          }
+
           cart.items.push({
-              productId,
-              quantity: 1,
-              price: product.price, 
+            productId,
+            quantity: 1,
+            price, // Use the adjusted price with discount applied
           });
 
-        await cart.save();
- 
-      res.redirect("/cart" );
-      
-      } else{
+          // Update the total price in the cart
+          cart.totalPrice += price;
 
-        res.render("user/home", { error: 'Product is not available for purchase.' });
-      }     
-   }
-   else{
-    return res.render("user/home", { error: 'Product not found.' })
-   }
-  }
-    
-  
+          await cart.save();
+
+          return res.redirect("/cart");
+        } else {
+          return res.render("user/home", {
+            error: "Product is not available for purchase.",
+          });
+        }
+      } else {
+        return res.render("user/home", { error: "Product not found." });
+      }
+    }
+
     // Save the updated cart
     await cart.save();
-   
-    return res.redirect('/cart');
 
-}catch(error){
-  console.error('Error adding product to the cart:', error);
-  // return res.render('user/home',{ error: ' Internal server error.' } );
-}
-
-}
+    return res.redirect("/cart");
+  } catch (error) {
+    console.error("Error adding product to the cart:", error);
+    // return res.render('user/home',{ error: ' Internal server error.' } );
+  }
+};
 
 
 
@@ -291,32 +295,48 @@ exports.updateQuantity = async (req, res) => {
 
 //CHECKOUT
 
-exports.getCheckoutPage = async (req,res)=> {
+exports.getCheckoutPage = async (req, res) => {
+  try {
+    const session = req.session.user;
+    const userData = await userCollection.findOne(session);
+    const userId = userData._id;
+    console.log("userId", userId);
 
-  const session = req.session.user;
-  const userData = await userCollection.findOne(session);
-  const userId = userData._id;
-  console.log("userId",userId);
+    // Find the address associated with the user ID
+    const userAddress = await Address.find({ userId });
 
-  let discountedPrice = 0;
- 
-// Find the address associated with the user ID
-const userAddress = await Address.find({ userId });
+    // Find the user's cart
+    const cart = await userCart.findOne({ userId }).populate({
+      path: 'items.productId',
+      model: "products",
+    });
 
-const cart = await userCart.findOne({userId}).populate({
-  path: 'items.productId',
-  model: "products",
-});
+    // Calculate total price of items in the cart after applying discounts
+    let totalPrice = 0;
+    let discountedPrice = 0; // Initialize discounted price
+    cart.items.forEach(item => {
+      if (item.productId && item.productId.price) {
+        let itemPrice = item.productId.price;
+        if (item.productId.discount && item.productId.discount > 0) {
+          // Calculate discounted price if the product has a discount
+          itemPrice -= (item.productId.discount / 100) * itemPrice;
+          totalPrice += itemPrice * item.quantity;
+        }   
+      } else {
+        console.log("Invalid item found:", item);
+      }
+    });
 
- // Calculate total price of items in the cart
- let totalPrice = 0;
- cart.items.forEach(item => {
-   totalPrice += item.productId.price * item.quantity;
- });
-
-  
-  res.render("user/checkout", {userAddress, cart, totalPrice,discountedPrice});
+    res.render("user/checkout", { userAddress, cart, totalPrice, discountedPrice });
+  } catch (error) {
+    console.log(error);
+    // Handle the error and possibly send an error response to the client
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 }
+
+
+
 
 exports.checkoutAddAddress = async ( req,res)=> {
 
@@ -542,15 +562,20 @@ exports.orderHistory = async (req, res) => {
 
 exports.orderSuccessPage = (req,res)=> {
 
-  res.render("user/orderSuccess");
+  try{
+    res.render("user/orderSuccess");
+  }
+  catch (error) {
+    console.error('Error getting order success page:', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+
+  
 }
 
 exports.cancelOrder = async (req, res) => {
   try {
     const { orderId, productId, reason } = req.body;
-    console.log("orderId", orderId);
-    console.log("productId", productId);
-    console.log("Cancellation reason", reason);
 
     // Find the order by its orderId
     const order = await ordersCollection.findOne({ _id: orderId });
@@ -568,16 +593,21 @@ exports.cancelOrder = async (req, res) => {
       return res.status(404).json({ error: 'Product not found in the order' });
     }
 
+    // Calculate the refunded amount based on the totalPrice or the original price if totalPrice is less
+    let refundedAmount = product.price;
+    if (order.totalPrice < product.price) {
+      refundedAmount = order.totalPrice;
+    }
 
-     // Check if the payment method is Razorpay
-     if (order.paymentMethod === 'Razorpay') {
-      // Add the price of the canceled item to the user's wallet balance
+    // Check if the payment method is Razorpay
+    if (order.paymentMethod === 'Razorpay') {
+      // Add the refunded amount to the user's wallet balance
       const user = await userCollection.findOne({ _id: order.userId });
-      user.Wallet.balance += product.price; // Assuming product.price is the price of the canceled item
+      user.Wallet.balance += refundedAmount;
 
       // Add a transaction record to the user's wallet
       user.Wallet.transactions.push({
-        amount: product.price,
+        amount: refundedAmount,
         description: `Cancellation refund for ${product.productName}`,
       });
 
@@ -585,20 +615,18 @@ exports.cancelOrder = async (req, res) => {
       await user.save();
     }
 
-
     // Update the status and reason for cancellation for the specific product
     product.status = 'cancelled';
     product.reason = reason;
 
     // Update stock in the products collection
-await productsCollection.updateOne(
-  { _id: product.productId },
-  { $inc: { stock: product.quantity } } // Increment stock by the quantity of the canceled product
-);
+    await productsCollection.updateOne(
+      { _id: product.productId },
+      { $inc: { stock: product.quantity } } // Increment stock by the quantity of the canceled product
+    );
 
     // Save the updated order to the database
     await order.save();
-    console.log("Updated Order", order);
 
     // If the order is successfully updated, send a response with the updated order
     return res.status(200).json({
@@ -611,6 +639,7 @@ await productsCollection.updateOne(
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
 
 
 

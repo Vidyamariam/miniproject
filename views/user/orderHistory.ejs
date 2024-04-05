@@ -29,9 +29,14 @@
                   <%= order.orderDate.toLocaleString("en-US", { timeZone:
                   "Asia/Kolkata" }) %>
                 </td>
-                <td>Rs. <%= product.price %></td>
+                <td>
+                  <% if (product.discount && product.discount> 0) { %> Rs. <%=
+                  (product.price - (product.discount / 100) *
+                  product.price).toFixed(2) %> <% } else { %> Rs. <%=
+                  product.price %> <% } %>
+                </td>
                 <td class="order-status">
-                  <% if (product.status === 'Cancelled') { %> <%= product.status
+                  <% if (product.status==='Cancelled' ) { %> <%= product.status
                   %> <% } else { %> <%= product.status %> <% } %>
                 </td>
                 <td>
@@ -46,7 +51,7 @@
                       Cancel Order
                     </button>
 
-                    <% } %> <% if (product.status === 'delivered') { %>
+                    <% } %> <% if (product.status==='delivered' ) { %>
                     <button
                       class="btn btn-sm btn-danger returnbtn"
                       onclick="showReturnPrompt('<%= order._id %>', '<%= product.productId %>')"

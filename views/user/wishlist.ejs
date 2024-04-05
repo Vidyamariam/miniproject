@@ -102,9 +102,15 @@
                         <div class="name-product"><%= product.productName %></div>
                       </div>
                     </td>
-                    <td width="15%" class="price"><%= product.price %></td>
+                    <td width="15%" class="price">
+                      <% if (product.discount && product.discount > 0) { %>
+                        Rs. <%= (product.price - (product.discount / 100) * product.price).toFixed(2) %>
+                        <s><%= product.price %></s>
+                      <% } else { %>
+                        Rs. <%= product.price %>
+                      <% } %>
+                    </td>
                     <td width="15%">
-
                       <% if (product.stock > 0) { %>
                         <span class="in-stock-box">In stock</span>
                     <% } else { %>

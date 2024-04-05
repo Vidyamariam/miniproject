@@ -196,7 +196,7 @@
             <a id="my-account" onclick="toggleDropdown()"><i class="fa fa-regular fa-user fa-xl"></i> My Account</a>
             <div class="dropdown-content" id="account-options">
               <a href="/profile"><i class="fa fa-regular fa-user fa-sm"></i> My Profile</a>
-              <a href="#"><i class="fa fa-regular fa-receipt fa-sm"></i> Orders</a>
+              <a href="/order-history"><i class="fa fa-regular fa-receipt fa-sm"></i> Orders</a>
               <a href="/wishlist"><i class="fa fa-regular fa-heart fa-sm"></i> Wishlist</a>
               <a href="#"><i class="fa fa-regular fa-ticket fa-sm"></i> Coupons</a>
               <a href="/logout"><i class="fa fa-regular fa-sign-out-alt fa-sm"></i> Logout</a>
@@ -264,49 +264,57 @@
   </div>
   
 
-    <h1>ALL PRODUCTS</h1>
-    <div class="row gy-3 all-products">
-            <!--cards section-->
-            <div class="col-md-10 mx-auto" id="product-list-container">
-  <!-- Search results will be dynamically inserted here -->
-</div>
+  <h1>ALL PRODUCTS</h1>
+  <div class="row gy-3 all-products">
+      <!--cards section-->
+      <div class="col-md-10 mx-auto" id="product-list-container">
+          <!-- Search results will be dynamically inserted here -->
+      </div>
       <% products.forEach((product)=> { %> <% if (product.isListed) { %>
       <div class="col-md-3">
-        <div class="card" id="product">
-          <a href="/productDetails/<%= product._id %>">
-            <img
-              src="<%= product.productImage[0] %>"
-              class="card-img-top"
-              alt="..."
-            />
-          </a>
-
-          <div class="card-body" id="pdt-cardbdy">
-            <h6 class="card-text"><%= product.name %></h6>
-            <h6 class="card-title"><%= product.price %></h6>
-            <form action="/add-to-cart/<%= product._id %>" method="post">
-              <% if (product.isListed && product.stock > 0) { %>
-              <!-- Product is available, show Add to Cart button -->
-              <button type="submit" class="cartButton">
-                Add to Cart
-              </button>
-              <% } else { %>
-              <!-- Product is not available, show Out of Stock message -->
-              <span class="text-danger">Out of Stock</span>
-              <% } %>
-            </form>
-            <form action="/add-wishlist/<%= product._id %>" method="post" >
-              <button type="submit" class="wishlistbutton" >
-                <i class="fa fa-duotone fa-heart"></i> Add to wishlist
-              </button>
-
-            </form>     
+          <div class="card" id="product">
+              <a href="/productDetails/<%= product._id %>">
+                  <img
+                      src="<%= product.productImage[0] %>"
+                      class="card-img-top"
+                      alt="..."
+                  />
+              </a>
+  
+              <div class="card-body" id="pdt-cardbdy">
+                  <h6 class="card-text"><%= product.name %></h6>
+                  <% if (product.discount > 0) { %>
+                  <h6 class="card-title">
+                      <!-- Display original price and discounted price -->
+                      <s><%= product.price %></s>
+                      <%= product.price - (product.price * product.discount / 100) %>
+                  </h6>
+                  <% } else { %>
+                  <h6 class="card-title"><%= product.price %></h6>
+                  <% } %>
+                  <form action="/add-to-cart/<%= product._id %>" method="post">
+                      <% if (product.isListed && product.stock > 0) { %>
+                      <!-- Product is available, show Add to Cart button -->
+                      <button type="submit" class="cartButton">
+                          Add to Cart
+                      </button>
+                      <% } else { %>
+                      <!-- Product is not available, show Out of Stock message -->
+                      <span class="text-danger">Out of Stock</span>
+                      <% } %>
+                  </form>
+                  <form action="/add-wishlist/<%= product._id %>" method="post">
+                      <button type="submit" class="wishlistbutton">
+                          <i class="fa fa-duotone fa-heart"></i> Add to wishlist
+                      </button>
+                  </form>
+              </div>
           </div>
-        </div>
       </div>
-
+  
       <% } %> <% }) %>
-    </div>
+  </div>
+  
 
     <br><br>
 
