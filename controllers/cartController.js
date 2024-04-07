@@ -255,8 +255,6 @@ exports.updateQuantity = async (req, res) => {
       model: 'products',
     });
 
-    
-     
     if (!cart) {
       return res.status(404).json({ success: false, message: 'Cart not found' });
     }
@@ -267,8 +265,8 @@ exports.updateQuantity = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Product not found in cart' });
     }
 
-     // Check if the new quantity exceeds the stock limit
-     if (newQuantity > item.productId.stock) {
+    // Check if the new quantity exceeds the stock limit
+    if (newQuantity > item.productId.stock) {
       return res.status(400).json({ success: false, message: 'Stock limit reached' });
     }
 
@@ -276,7 +274,16 @@ exports.updateQuantity = async (req, res) => {
     item.quantity = newQuantity;
 
     // Calculate the new price based on the quantity
-    item.price = item.productId.price * newQuantity;
+    let price = item.productId.price;
+
+    // Check if the product has a discount
+    if (item.productId.discount > 0) {
+      // Calculate the discounted price
+      const discountAmount = (price * item.productId.discount) / 100;
+      price -= discountAmount;
+    }
+
+    item.price = price * newQuantity;
 
     // Update the totalPrice in the cart by recalculating
     cart.totalPrice = cart.items.reduce((total, item) => total + item.price, 0);
@@ -291,6 +298,7 @@ exports.updateQuantity = async (req, res) => {
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
 
 
 //CHECKOUT
@@ -444,7 +452,7 @@ exports.placeOrder = async (req, res) => {
         StockCount: cartItem.productId.stock,
         productImage: cartItem.productId.productImage,
         quantity: cartItem.quantity,
-        price: cartItem.productId.price,
+        price: cartItem.price,
         status: 'Pending', // Initial status
         reason: '',
         discountPrice: 0, // Initial discount
@@ -738,12 +746,8 @@ exports.razorpay = async(req,res)=>{
 
   }catch(err){
 
-
-    console.log(err)
+    console.log(err);
   }
-
-
-
 }
 
 
@@ -753,13 +757,11 @@ exports.razorpayOrder = async(req,res)=>{
 
   try{
 
-
     const session = req.session.user;
     const userData = await userCollection.findOne(session);
     const userId = userData._id;
     const { orderprice,razorpay_payment_id, address} =req.body;
 
-  
     
     const selectedAddress = await Address.findOne({userId:userId,_id:address});
     console.log("selectedAddress",selectedAddress);
@@ -792,7 +794,7 @@ exports.razorpayOrder = async(req,res)=>{
         StockCount: cartItem.productId.stock,
         productImage: cartItem.productId.productImage,
         quantity: cartItem.quantity,
-        price: cartItem.productId.price,
+        price: cartItem.price,
         status: 'Pending', // Initial status
         reason: '',
         discountPrice: 0, // Initial discount

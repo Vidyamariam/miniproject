@@ -3,14 +3,49 @@
   .middle-content {
     margin-top: 100px;
   }
+
+  .carousel-item img {
+    width: 100%;
+    height: auto;
+    max-height: 800px; /* Set your desired max height */
+    padding: 10px;
+    border-radius: 20px;
+  }
 </style>
 
 <!--BANNER SECTION-->
 <div id="banner-section">
-  <img
-    src="/img/home/b3.jpg"
-    style="width: 1500px; padding: 20px; height: 800px; border-radius: 30px"
-  />
+  <div id="carouselhomepage" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="/img/user/hpImg2.jpg" class="d-block w-100" alt="..." />
+      </div>
+      <div class="carousel-item">
+        <img src="/img/user/hpImg3.jpg" class="d-block w-100" alt="..." />
+      </div>
+      <div class="carousel-item">
+        <img src="/img/user/hpImg4.jpg" class="d-block w-100" alt="..." />
+      </div>
+    </div>
+    <button
+      class="carousel-control-prev"
+      type="button"
+      data-bs-target="#carouselExampleAutoplaying"
+      data-bs-slide="prev"
+    >
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button
+      class="carousel-control-next"
+      type="button"
+      data-bs-target="#carouselExampleAutoplaying"
+      data-bs-slide="next"
+    >
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
 </div>
 
 <!--MIDDLE CONTENT-->

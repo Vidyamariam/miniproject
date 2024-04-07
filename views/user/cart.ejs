@@ -180,7 +180,7 @@
                   <span class="text">Shipping</span><span class="price">$0</span>
                 </div> -->
                 <div class="summary-item">
-                  <span class="text" id="total-price">Total Price: Rs. <%= totalPrice %> </span>
+                  <span class="text" id="total-price">Total Price: Rs. <%= cart.totalPrice %> </span>
                 </div>
                 <a>     
                   <a href="/checkout" >
@@ -190,7 +190,7 @@
                   </a>        
                     
                   <% } else{%>
-                   <a href="/home" style="position: absolute; top: 23rem; padding: 10px 30px; border-radius: 14px; background-color: black; color: white; text-decoration: none;">Shop Now</a>
+                   <a href="/all-products" style="position: absolute; top: 23rem; padding: 10px 30px; border-radius: 14px; background-color: black; color: white; text-decoration: none;">Shop Now</a>
                     <%}%>
                 </a> 
                  <!-- Placeholder for error message -->

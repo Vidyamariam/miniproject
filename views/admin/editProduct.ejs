@@ -30,6 +30,12 @@
       padding: 5px 10px;
 
     }
+
+    #imagePreview img {
+        height: 60px;
+        max-width: 90px;
+        margin: 15px;
+      }
   </style>
 </head>
 
@@ -66,13 +72,15 @@
           <% items.productImage.forEach((imageUrl, index)=> { %>
             <div class="preview-item">
               <img src="<%= imageUrl %>" alt="Product Image" />
-              <button class="delete-btn" type="button" onclick="deleteImage('<%= index %>')">Delete</button>
+             
             </div>
             <% }); %>
               <!-- Display preview of newly selected images -->
               <img id="selectedImagePreview" src="">
         </div>
       </div>
+
+    
 
       <div class="mb-3">
         <label for="description">Description:</label>
@@ -111,85 +119,62 @@
 
 
   <!--JS-->
-  <script>
-    function previewImages() {
-      var input = document.getElementById('productImage');
-      var previewContainer = document.querySelector('.image-preview');
-      previewContainer.innerHTML = '';
+<script>
+  function previewImages() {
+  var input = document.getElementById('productImage');
+  var previewContainer = document.querySelector('.image-preview');
 
-      var filesToUpload = []; // Array to store only the selected files
+  // Clear preview container
+  previewContainer.innerHTML = '';
 
-      for (var i = 0; i < input.files.length; i++) {
-        var file = input.files[i];
-        var reader = new FileReader();
+  var filesToUpload = []; // Array to store only the selected files
 
-        reader.onload = (function (file) {
-          return function (e) {
-            var imgContainer = document.createElement('div');
-            imgContainer.classList.add('preview-item');
+  for (var i = 0; i < input.files.length; i++) {
+    var file = input.files[i];
+    var reader = new FileReader();
 
-            var img = document.createElement('img');
-            img.src = e.target.result;
-            img.alt = 'Selected Image';
-            imgContainer.appendChild(img);
+    reader.onload = (function (file) {
+      return function (e) {
+        var imgContainer = document.createElement('div');
+        imgContainer.classList.add('preview-item');
 
-            var deselectBtn = document.createElement('button');
-            deselectBtn.innerHTML = 'Deselect';
-            deselectBtn.classList.add('deselect-btn');
-            deselectBtn.addEventListener('click', function () {
-              imgContainer.remove();
-              // Remove the deselected file from the array of files
-              var index = filesToUpload.indexOf(file);
-              if (index !== -1) {
-                filesToUpload.splice(index, 1);
-              }
-              // Update the input field to reflect the deselection
-              input.value = null;
-            });
-            imgContainer.appendChild(deselectBtn);
+        var img = document.createElement('img');
+        img.src = e.target.result;
+        img.alt = 'Selected Image';
+        imgContainer.appendChild(img);
 
-            previewContainer.appendChild(imgContainer);
+        // Check if the image is from existing images or newly uploaded ones
+        if (!file.dataset) { // If dataset doesn't exist, it's a newly uploaded image
+          var deselectBtn = document.createElement('button');
+          deselectBtn.innerHTML = 'Deselect';
+          deselectBtn.classList.add('deselect-btn');
+          deselectBtn.addEventListener('click', function () {
+            imgContainer.remove();
+            // Remove the deselected file from the array of files
+            var index = filesToUpload.indexOf(file);
+            if (index !== -1) {
+              filesToUpload.splice(index, 1);
+            }
+          });
+          imgContainer.appendChild(deselectBtn);
 
-            // Add the file to the array of files to upload
-            filesToUpload.push(file);
-          };
-        })(file);
-
-        reader.readAsDataURL(file);
-      }
-    }
-  </script>
-
-
-
-  <script>
-    function deleteImage(index) {
-      Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          // Remove the image from the preview and update the file input
-          var previewContainer = document.querySelector('.image-preview');
-          var imageContainers = previewContainer.querySelectorAll('.preview-item');
-          imageContainers[index].remove();
-
-          // Update the file input to remove the deleted image
-          var input = document.getElementById('productImage');
-          var files = Array.from(input.files);
-          files.splice(index, 1);
-          input.files = new FileList(files);
-
-          Swal.fire("Deleted!", "Your file has been deleted.", "success");
+          // Add the file to the array of files to upload
+          filesToUpload.push(file);
         }
-      });
-    }
-  </script>
+
+        previewContainer.appendChild(imgContainer);
+      };
+    })(file);
+
+    reader.readAsDataURL(file);
+  }
+}
+
+</script>
+
+
+
+ 
 
   <script>
     function validateForm() {
@@ -271,7 +256,71 @@
   </script>
 
 
+<!-- <script>
+  // Function to add delete buttons for uploaded images
+  function addDeleteButtons() {
+    let previewDiv = document.getElementById("imagePreview");
+    let previewImages = previewDiv.querySelectorAll("img");
+    previewImages.forEach((image) => {
+      if (
+        !image.nextElementSibling ||
+        !image.nextElementSibling.classList.contains("deleteButton")
+      ) {
+        let deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
+        deleteButton.classList.add("deleteButton");
+        deleteButton.addEventListener("click", deleteImage);
+        image.parentNode.insertBefore(deleteButton, image.nextSibling);
+      }
+    });
+  }
 
+  // Event listener for delete buttons
+  function deleteImage(event) {
+    let deleteButton = event.target;
+    let image = deleteButton.previousElementSibling;
+    let fileName = image.dataset.fileName;
+    let inputId = image.dataset.input;
+    let fileUploader = document.getElementById(inputId);
+    let dt = new DataTransfer();
+    for (let file of fileUploader.files) {
+      if (file.name !== fileName) {
+        dt.items.add(file);
+      }
+    }
+    fileUploader.files = dt.files;
+    let previewDiv = document.querySelector(
+      fileUploader.dataset.imagePreview
+    );
+    previewDiv.removeChild(deleteButton); // Remove delete button
+    previewDiv.removeChild(image); // Remove image
+  }
+
+ 
+ // Add event listener for file input change to add delete buttons
+document
+  .getElementById("fileUploader")
+  .addEventListener("change", (event) => {
+    let fileInput = event.target;
+    let previewDiv = document.querySelector(
+      fileInput.dataset.imagePreview
+    );
+    previewDiv.innerHTML = "";
+    for (let each of fileInput.files) {
+      let imgSrc = URL.createObjectURL(each);
+      let img = document.createElement("img");
+      img.src = imgSrc;
+      img.dataset.fileName = each.name;
+      img.dataset.input = fileInput.id;
+      img.addEventListener("click", cropImage);
+      previewDiv.appendChild(img);
+    }
+    addDeleteButtons(); // Add delete buttons for uploaded images
+  });
+
+
+
+</script> -->
 
 
   <script>
@@ -279,11 +328,6 @@
       // Add logic to handle cancel action
       alert("Form canceled");
     }
-
-
-
-
-
 
   </script>
 

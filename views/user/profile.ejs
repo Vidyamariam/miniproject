@@ -93,11 +93,71 @@
                 </form>
               </div>
             </div>
+
+            <div class="row">
+              <div class="col-sm-3"></div>
+              <div class="col-sm-9 text-secondary">
+                <a href="#" id="createReferralLink">
+                  <button
+                    id="createReferralButton"
+                    type="button"
+                    class="custom-button"
+                    style="
+                      border: none;
+                      background-color: rgb(88, 85, 85);
+                      color: white;
+                      height: 40px;
+                      padding: 10px;
+                      border-radius: 5px;
+                    "
+                  >
+                    Create Referral
+                  </button>
+                </a>
+
+                <div id="referralCodeContainer" style="display: none">
+                  <!-- The referral code will be displayed here -->
+                  <span>Referal code : </span>
+                </div>
+                <h5 id="referralCodeSpan" style="color: black">
+                  Referral code: <%= userdata.referralCode %>
+                </h5>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+  // Add an event listener to the button to handle the click event
+  document
+    .getElementById("createReferralButton")
+    .addEventListener("click", async () => {
+      try {
+        const response = await fetch("/createReferral", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          // If you need to send any data in the request body, include it here
+          body: JSON.stringify({}),
+        });
+        const data = await response.json();
+        // Update the UI with the generated referral code
+        document.getElementById("referralCodeSpan").innerText =
+          "Referral code: " + data.referralCode;
+        // Display the referral code container
+        document.getElementById("referralCodeContainer").style.display =
+          "block";
+      } catch (error) {
+        console.error("Error creating referral:", error);
+        // Handle any errors that occur during the request
+        // Display an error message to the user if needed
+      }
+    });
+</script>
 
 <%- include('footer') %>

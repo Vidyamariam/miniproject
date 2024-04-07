@@ -38,20 +38,20 @@
       #imagePreview img {
         height: 60px;
         max-width: 90px;
-        margin: 5px;
+        margin: 15px;
       }
 
       /* Style for the modal */
       #imagePreview img {
         height: 60px;
         max-width: 90px;
-        margin: 5px;
+        margin: 15px;
       }
 
       #cropper110Modal {
         position: absolute;
-        width: 68vw;
-        height: 79vh;
+        width: 39vw;
+        height: 120vh;
         background-color: rgba(53, 52, 52, 0.532);
         display: flex;
         justify-content: center;
@@ -96,6 +96,19 @@
       .cropper-container {
         width: 300px;
         height: 300px;
+      }
+
+      .deleteButton {
+        background-color: red;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer; /* Add pointer cursor on hover */
+        margin-left: 5px; /* Adjust spacing between delete buttons */
+      }
+
+      .deleteButton:hover {
+        background-color: darkred; /* Change background color on hover */
       }
     </style>
   </head>
@@ -144,6 +157,10 @@
           <div id="imagePreview"></div>
           <span id="imagesError" class="text-danger"></span>
         </div>
+
+        <script>
+          addDeleteButtons();
+        </script>
 
         <div class="mb-3">
           <label for="description">Description:</label>
@@ -415,6 +432,71 @@
           cropper.destroy();
         }
       });
+    </script>
+
+    <script>
+      // Function to add delete buttons for uploaded images
+      function addDeleteButtons() {
+        let previewDiv = document.getElementById("imagePreview");
+        let previewImages = previewDiv.querySelectorAll("img");
+        previewImages.forEach((image) => {
+          if (
+            !image.nextElementSibling ||
+            !image.nextElementSibling.classList.contains("deleteButton")
+          ) {
+            let deleteButton = document.createElement("button");
+            deleteButton.textContent = "Delete";
+            deleteButton.classList.add("deleteButton");
+            deleteButton.addEventListener("click", deleteImage);
+            image.parentNode.insertBefore(deleteButton, image.nextSibling);
+          }
+        });
+      }
+
+      // Event listener for delete buttons
+      function deleteImage(event) {
+        let deleteButton = event.target;
+        let image = deleteButton.previousElementSibling;
+        let fileName = image.dataset.fileName;
+        let inputId = image.dataset.input;
+        let fileUploader = document.getElementById(inputId);
+        let dt = new DataTransfer();
+        for (let file of fileUploader.files) {
+          if (file.name !== fileName) {
+            dt.items.add(file);
+          }
+        }
+        fileUploader.files = dt.files;
+        let previewDiv = document.querySelector(
+          fileUploader.dataset.imagePreview
+        );
+        previewDiv.removeChild(deleteButton); // Remove delete button
+        previewDiv.removeChild(image); // Remove image
+      }
+
+      // Add event listener for file input change to add delete buttons
+      document
+        .getElementById("fileUploader")
+        .addEventListener("change", (event) => {
+          let fileInput = event.target;
+          let previewDiv = document.querySelector(
+            fileInput.dataset.imagePreview
+          );
+          previewDiv.innerHTML = "";
+          for (let each of fileInput.files) {
+            let imgSrc = URL.createObjectURL(each);
+            let img = document.createElement("img");
+            img.src = imgSrc;
+            img.dataset.fileName = each.name;
+            img.dataset.input = fileInput.id;
+            img.addEventListener("click", cropImage);
+            previewDiv.appendChild(img);
+          }
+          addDeleteButtons(); // Add delete buttons for uploaded images
+        });
+
+      // Add delete buttons for initially uploaded images
+      addDeleteButtons();
     </script>
   </body>
 </html>

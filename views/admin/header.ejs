@@ -16,6 +16,14 @@
       crossorigin="anonymous"
     />
 
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
     <link rel="stylesheet" href="/stylesheets/admin/userManage.css" />
     <link rel="stylesheet" href="/stylesheets/admin/paginationStyle.css" />
     <link rel="stylesheet" href="/stylesheets/admin/salesreport.css" />
@@ -92,6 +100,46 @@
       }
       tbody {
         background-color: white;
+      }
+
+      /* Styling for the search bar */
+      .search-container {
+        display: inline-block;
+        position: relative;
+        border: 1px solid black;
+        border-radius: 5px;
+        width: 200px;
+      }
+
+      #search-bar {
+        padding: 8px;
+        border: none;
+        border-radius: 5px;
+        margin-right: 5px;
+        width: 120px; /* Adjust width as needed */
+      }
+
+      #search-bar:focus {
+        outline: none;
+        border: 2px solid #007bff; /* Change color as needed */
+      }
+
+      .searchbtn[type="submit"] {
+        background-color: white; /* Change color as needed */
+        color: #101112;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        padding: 8px 12px;
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin: auto; /* Center the button vertically */
+      }
+
+      .searchbtn[type="submit"] i {
+        vertical-align: middle; /* Align the icon vertically */
       }
     </style>
   </head>

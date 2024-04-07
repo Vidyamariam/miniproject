@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>RegistrationForm_v2 by Colorlib</title>
+    <title>Register</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- MATERIAL DESIGN ICONIC FONT -->
@@ -11,13 +11,20 @@
       href="fonts/material-design-iconic-font/css/material-design-iconic-font.min.css"
     />
 
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+
     <!-- STYLE CSS -->
     <link rel="stylesheet" href="/stylesheets/user/signupNew.css" />
 
     <style>
       .signup-image {
         width: 500px;
-        height: 500px;
+        height: 625px;
         border-top-right-radius: 10px;
         border-bottom-right-radius: 10px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -38,8 +45,8 @@
     <div class="wrapper">
       <div class="inner">
         <form action="/signup" method="post" onsubmit="return validateForm()">
-          <h3>Registration Form <br /></h3>
-          <h4 style="color: rgb(255, 0, 0)"><%=locals.message%></h4>
+          <h3>Registration Form</h3>
+          <h4 style="color: red"><%=locals.message%></h4>
           <div class="form-group">
             <div class="form-wrapper">
               <label for="name">Name</label>
@@ -52,53 +59,88 @@
               <small id="nameError" style="color: red"></small>
             </div>
           </div>
-          <div class="form-wrapper">
-            <label for="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              onblur="validateEmail()"
-            />
-            <small id="emailError" style="color: red"></small>
+          <div class="form-group">
+            <div class="form-wrapper">
+              <label for="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                onblur="validateEmail()"
+              />
+              <small id="emailError" style="color: red"></small>
+            </div>
           </div>
-          <input
-            type="hidden"
-            id="resendEmail"
-            name="resendEmail"
-            value="<%=locals.email%>"
-          />
-
-          <div class="form-wrapper">
-            <label for="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              onblur="validatePassword()"
-            />
-            <small id="passwordError" style="color: red"></small>
-          </div>
-          <div class="form-wrapper">
-            <label for="confirmPassword">Confirm Password</label>
-            <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              onblur="validateConfirmPassword()"
-            />
-            <small id="confirmPasswordError" style="color: red"></small>
+          <div class="form-group">
+            <div class="form-wrapper">
+              <label for="password">Password</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                onblur="validatePassword()"
+              />
+              <small id="passwordError" style="color: red"></small>
+            </div>
           </div>
 
-          <button type="submit" href="/verifyemail">Register Now</button>
+          <div class="form-group">
+            <div class="form-wrapper">
+              <label for="confirmPassword">Confirm Password</label>
+              <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                onblur="validateConfirmPassword()"
+              />
+              <small id="confirmPasswordError" style="color: red"></small>
+            </div>
+          </div>
+          <div class="form-wrapper">
+            <div>
+              <label for="referralInput">Referral Code (if any)</label>
+              <input
+                type="text"
+                id="referralInput"
+                name="referralCode"
+                class="form-control"
+              />
+              <small id="referralError" style="color: red"></small>
+            </div>
+
+            <button
+              type="button"
+              id="referralbutton"
+              onclick="checkReferralCode()"
+              style="
+                border: none;
+                background-color: black;
+                color: white;
+                border-radius: 5px;
+                padding: 5px;
+              "
+            >
+              Check Referral Code
+            </button>
+          </div>
+
+          <button type="submit">Register Now</button>
           <div class="userlogin">
             <p>Already have an account? <a href="/userlogin">Login</a></p>
           </div>
         </form>
-
-        <img src="/img/user/L2.jpg" alt="Image" class="signup-image" />
+        <div class="form-image">
+          <img src="/img/user/L2.jpg" alt="Image" class="signup-image" />
+        </div>
       </div>
     </div>
+
+    <!-- Bootstrap JS dependencies -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
 
     <script>
       function validateForm() {
@@ -185,7 +227,43 @@
         }
       }
     </script>
-  </body>
 
-  <!-- This templates was made by Colorlib (https://colorlib.com) -->
+    <script>
+      function checkReferralCode() {
+        var referralCode = document.getElementById("referralInput").value;
+
+        // Perform client-side validation
+        if (referralCode.trim() === "") {
+          document.getElementById("referralError").innerText =
+            "Referral code is required.";
+          return;
+        }
+
+        // Call the server-side logic to check the referral code
+        fetch("/checkReferralCode", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            referralCode: referralCode,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.isValid) {
+              document.getElementById("referralError").innerText =
+                "Referral code is valid.";
+              document.getElementById("referralError").style.color = "green";
+            } else {
+              document.getElementById("referralError").innerText =
+                "Invalid referral code.";
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+    </script>
+  </body>
 </html>

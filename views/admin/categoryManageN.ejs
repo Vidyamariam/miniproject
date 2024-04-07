@@ -14,7 +14,9 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Category</th>
+                                <th>category Offer</th>
                                 <th>Actions</th>
+
                             </tr>
                         </thead>
                         <tbody>
@@ -22,6 +24,7 @@
                             <tr>
                               <td><%= index + 1 %></td>
                               <td><%= category.categoryName %></td>
+                              <td><%= category.categoryOffer %></td>
                               <td>
                                 <div class="category-actions">
                                   <form
@@ -42,10 +45,11 @@
                                   >
                                     <button
                                       type="submit"
-                                      class="btn btn-danger sListed <%= category.isListed? 'unblocked-user' : 'blocked-user' %>"
+                                      class="btn btn-danger"
                                     >
                                       <% if (category.isListed) { %> Listed <% } else { %> Not
-                                      Listed <% } %>
+                                      Listed 
+                                      <% } %>
                                     </button>
                                   </form>
                                 </div>
@@ -100,7 +104,9 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js" integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/" crossorigin="anonymous"></script></script>
 
-<script>
+
+
+<!-- <script>
     //block option
     var isBlocked = false;
 
@@ -122,7 +128,8 @@
       // Implement your delete logic here
       alert("Item deleted!");
     }
-  </script>
+  </script> -->
+  
 
 <script>
     function fetchPage(page) {

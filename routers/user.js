@@ -53,7 +53,8 @@ router.post("/cancelOrder", cartController.cancelOrder);
 router.post("/returnOrder",cartController.returnOrder);
 router.post("/add-wishlist/:productId",wishlistController.addToWishlist);
 router.post("/create/:orderId",cartController.razorpay);
-
+router.post('/createReferral', userController.createReferral);
+router.post('/checkReferralCode', userController.checkReferralCode);
 
 
 module.exports = router;

@@ -3,12 +3,12 @@ const  signupCollection = require('../model/userSignupSchema');
 const isblocked = async (req, res, next) => {
   try {
       const emailObj = req.session.user;
-      console.log("emailObj",req.session.user);
+     
       const email = emailObj.email; // Extract email from the object
       console.log("email", email); 
       if (email) {
           const userData = await signupCollection.findOne({ email: email });
-          console.log("userData", userData);
+        
           console.log("session", req.session.user);
           if (userData && userData.isBlocked === false) {
               next();

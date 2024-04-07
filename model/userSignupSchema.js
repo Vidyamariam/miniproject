@@ -29,7 +29,9 @@ let userSignupSchema = new mongoose.Schema({
             description:{type:String},
             date: {type: Date, default: Date.now},
         }],
-    }
+    },
+    referralCode:{type: String},
+    referredCode:{type: String}
 });
 
 module.exports = mongoose.model("newusers",userSignupSchema);

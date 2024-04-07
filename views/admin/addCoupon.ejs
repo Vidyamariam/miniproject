@@ -116,6 +116,10 @@
           document.getElementById("discountError").innerText =
             "Discount should not be negative";
           isValid = false;
+        } else if (parseFloat(discount) > 90) {
+          document.getElementById("discountError").innerText =
+            "Discount should not be greater than 90";
+          isValid = false;
         } else {
           document.getElementById("discountError").innerText = "";
         }
@@ -130,7 +134,10 @@
         const currentDateObject = new Date(currentDate);
 
         // Check if expiryDate is before currentDate
-        if (expiryDateObject < currentDateObject) {
+        if (expiryDate === "") {
+          document.getElementById("expiryDateError").innerText =
+            "Expiry date is required";
+        } else if (expiryDateObject < currentDateObject) {
           document.getElementById("expiryDateError").innerText =
             "Expiry Date should not be before the current date";
           isValid = false;
@@ -170,7 +177,7 @@
       }
     </script>
 
-    <script>
+    <!-- <script>
       $(document).ready(function () {
         $("#expiryDate").datepicker({
           format: "dd-mm-yyyy",
@@ -201,7 +208,7 @@
           );
         }
       });
-    </script>
+    </script> -->
 
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

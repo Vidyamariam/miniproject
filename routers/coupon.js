@@ -9,7 +9,7 @@ router.get('/manage-coupon',couponController.getCouponManage);
 router.get('/addcoupon',couponController.getAddCoupon);
 router.get('/editcoupon/:id',couponController.getEditCoupon);
 router.get('/coupons',couponController.getUserCouponManage);
-
+router.get("/search-coupon", couponController.searchCoupon);
 
 router.post('/addcoupon',couponController.postAddCoupon);
 router.post('/editcoupon/:id',couponController.postEditCoupon);

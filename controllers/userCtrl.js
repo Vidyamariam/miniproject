@@ -10,19 +10,28 @@ const bcrypt = require('bcrypt');
 
 
 
-const signupGet = (req, res) => { //user signUp cheyunnathu
-    res.render("user/signup");
+const signupGet = (req, res) => { 
 
+    try{
+
+        res.render("user/signup");
+    }
+    catch (error) {
+        console.error(error); // Log the error details
+        res.status(500).json({ message: 'Internal Server Error for signup' });
+    }
+   
 }
 
 const signupPost = async (req, res) => {
-    const { name, email, password } = req.body;
-
+    const { name, email, password ,referralCode} = req.body;
+     
+    console.log("signuppost data", req.body);
 
     try {
         const existingUser = await signupCollection.findOne({ email });
 
-        console.log(existingUser);
+        console.log("existingUser in signup post", existingUser);
 
         if (existingUser) {
             return res.render("user/signup", { message: "User already exists" });
@@ -36,7 +45,7 @@ const signupPost = async (req, res) => {
             name,
             email,
             password: await bcrypt.hash(password, 10),
-
+            referredCode: referralCode,
         };
 
         const newOTP = new otpCollection({
@@ -91,8 +100,17 @@ const sendOTPVerificationEmail = async (email, title, body) => {
 
 
 const getVerifyEmail = (req, res) => {
+   
+    try{
+        res.render("user/verifyEmail");
 
-    res.render("user/verifyEmail");
+    }
+    catch (error) {
+        console.error("Error getting varify Email page:", error);
+        throw error;
+    }
+
+   
 }
 
 
@@ -110,7 +128,7 @@ const verifyEmailPost = async (req, res) => {
 
         const signupData = req.session.signupData;
 
-        console.log("signupData",signupData);
+        console.log("signupData in verify email post",signupData);
 
         if (!signupData) {
             return res.render("user/verifyEmail", { error: "User data not found. Please sign up again." });
@@ -125,7 +143,19 @@ const verifyEmailPost = async (req, res) => {
         console.log("Retrieved OTP from Database:", otpRecord.otp);
 
         if (otpData === otpRecord.otp) {
-            const newUser = new signupCollection(signupData);
+            const newUser = new signupCollection({
+
+                name:signupData.name,
+                email: signupData.email,
+                password: signupData.password,
+                referredCode: signupData.referredCode
+            });
+             
+            if (signupData.referredCode) {
+                // Add 50 Rs to the wallet balance
+                newUser.Wallet.balance += 50;
+            }
+
             await newUser.save();
             delete req.session.signupData;
             return res.redirect("/userlogin");
@@ -170,11 +200,30 @@ const resendOTP = async (req, res) => {
 
 const login = (req, res) => {
 
-    res.render("user/login");
+    try{
+        res.render("user/login");
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+
+    
 }
 
 const landing = (req, res) => {
-    res.render("user/landing");
+   
+    try{
+       
+        res.render("user/landing");
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+
+
+   
 }
 
 
@@ -243,9 +292,17 @@ const getLogout = (req, res) => {
 
 const postLogout = (req, res) => {
 
-    req.session.user = null;
+    try{
+        req.session.user = null;
 
-     res.redirect("/userlogin");
+        res.redirect("/userlogin");
+
+    }
+    catch (error) {
+        // Handle any errors that occur during database query or rendering
+        console.error('Error logging out:', error);
+        res.status(500).send('Internal Server Error');
+    }
     
 }
 
@@ -518,11 +575,72 @@ const getWallet = async (req,res)=> {
 }
 
 
+const createReferral = async (req, res) => {
+    try {
 
+        // Get the user's email from the session
+        const userEmail = req.session.user;
+        // Find the user in the database
+        const userData = await signupCollection.findOne(userEmail);
+        // Check if the user already has a referral code
+        if (!userData.referralCode) {
+            // Generate a referral code
+            const referralCode = generateReferralCode();
+            // Update the user's document with the referral code
+            await signupCollection.updateOne({ _id: userData._id }, { $set: { referralCode: referralCode } });
+            // Return the generated referral code
+            return res.status(200).json({ referralCode: referralCode });
+        } else {
+            // If the user already has a referral code, return it
+            return res.status(200).json({ referralCode: userData.referralCode });
+        }
+    } catch (error) {
+        // Handle any errors that occur during database query or rendering
+        console.error('Error generating referral code:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+
+// Function to generate a random referral code
+const generateReferralCode = () => {
+    // Define the characters allowed in the referral code
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let referralCode = '';
+    // Generate a random 8-character referral code
+    for (let i = 0; i < 8; i++) {
+        referralCode += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return referralCode;
+}
+
+
+
+const checkReferralCode = async (req,res)=> {
+
+    const { referralCode } = req.body;
+
+    console.log("referral entered in signup", req.body);
+    try {
+        // Check if the referral code exists in the database
+        const existingUser = await signupCollection.findOne({ referralCode });
+        if (existingUser) {
+            
+            return res.json({ isValid: true, message: 'Referral code is valid.' });
+        } 
+        else{
+            return res.json({ isValid: false, message: 'Invalid referral code.' });
+
+        }
+    } catch (error) {
+        console.error('Error checking referral code:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
 
 module.exports = {
     login, loginpost, signupGet, signupPost, landing, getVerifyEmail, verifyEmailPost, getLogout, postLogout,  getHome, resendOTP,
-    searchItems, allProducts, sortProduct,Ethnics,Contemporary,userFilterByCategory,getWallet
+    searchItems, allProducts, sortProduct,Ethnics,Contemporary,userFilterByCategory,getWallet,createReferral,checkReferralCode
 }
 
 

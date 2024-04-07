@@ -83,13 +83,7 @@ exports.postAddCoupon = async (req, res) => {
 
       console.log("newCoupon",newCoupon);
 
-     
-        
-       
-       if ( newCoupon.discount > 90) {
-         return res.render("admin/addCoupon", {couponError: "Cannot apply discount percent above 90"});
-      }
-       else{
+
           // Save the coupon to the database
       await newCoupon.save();
 
@@ -97,7 +91,7 @@ exports.postAddCoupon = async (req, res) => {
 
        res.redirect("/manage-coupon");
 
-       }     
+       
       
       // res.status(200).json({ message: "Coupon added successfully", coupon: newCoupon });
    } catch (error) {
@@ -320,6 +314,43 @@ exports.applyCoupon = async (req, res) => {
       return res.status(500).json({ error: "Internal server error" });
     }
  }
+ 
+
+ exports.searchCoupon = async (req, res) => {
+   try {
+     const searchTerm = req.query.q;
+     const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+     const limit = parseInt(req.query.limit) || 3; // Default limit to 3 if not provided
+ 
+     // Calculate skip value for pagination
+     const skip = (page - 1) * limit;
+ 
+     console.log("Search term in coupon page:", searchTerm);
+ 
+     // Fetch coupons from the database with pagination and search term
+     const coupons = await couponCollection
+       .find({ couponCode: { $regex: searchTerm, $options: 'i' } })
+       .skip(skip)
+       .limit(limit);
+ 
+     // Count total number of coupons for pagination
+     const totalCount = await couponCollection.countDocuments({ couponCode: { $regex: searchTerm, $options: 'i' } });
+ 
+     // Calculate total pages based on total count and limit
+     const totalPages = Math.ceil(totalCount / limit);
+ 
+     console.log("Coupons searched:", coupons);
+ 
+     res.render("admin/couponManage", {
+       coupons: coupons,
+       currentPage: page,
+       totalPages: totalPages,
+     });
+   } catch (error) {
+     console.error("Error searching for coupon:", error);
+     res.status(500).send("Internal Server Error");
+   }
+ };
  
 
 

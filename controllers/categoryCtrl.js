@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const bodyParser = require('body-parser');
 const categoryCollection = require("../model/category");
-
+const productsCollection = require("../model/userSignupSchema");
 
 //get methods
 
@@ -37,30 +37,35 @@ const getaddcategory = (req,res)=>{
 
 const postAddCategory = async (req, res) => {
   const categoryName = req.body.categoryName;
+ 
 
   // Validate if categoryName is provided
   if (!categoryName) {
-      return res.status(400).render("admin/addCategoryN", { error: 'Category name is required' });
+    return res.status(400).render("admin/addCategoryN", { error: 'Category name is required' });
   }
+
 
   try {
-      // Check if the category already exists (case-insensitive)
-      const existingCategory = await categoryCollection.findOne({ categoryName: { $regex: new RegExp('^' + categoryName + '$', 'i') } });
+    // Check if the category already exists (case-insensitive)
+    const existingCategory = await categoryCollection.findOne({ categoryName: { $regex: new RegExp('^' + categoryName + '$', 'i') } });
 
-      if (existingCategory) {
-          // If the category already exists, handle the error
-          return res.status(400).render("admin/addCategoryN", { error: 'Category with this name already exists' });
-      } else {
-          // Add the category to your data storage
-          const newCategory = await categoryCollection.create({ categoryName });
-          console.log("Category added:", newCategory);
-          return res.redirect("/admin/category");
-      }
+    if (existingCategory) {
+      // If the category already exists, handle the error
+      return res.status(400).render("admin/addCategoryN", { error: 'Category with this name already exists' });
+    } else {
+      // Add the category to your data storage
+      const newCategory = await categoryCollection.create({ categoryName});
+      console.log("Category added:", newCategory);
+
+     
+      return res.redirect("/admin/category");
+    }
   } catch (error) {
-      console.error('Error adding category to the database:', error);
-      return res.status(500).json({ error: 'Internal Server Error' });
+    console.error('Error adding category to the database:', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
 
 
 
@@ -72,9 +77,12 @@ const getEditCategory = async(req,res)=>{
     // Find the category by ID
     const category = await categoryCollection.findById(id);
 
+    console.log();
+
     res.render("admin/editCategoryN", {
       id,
-      name: category ? category.categoryName : "", // Ensure category exists before accessing its name
+      name: category.categoryName,
+      offer: category.categoryOffer,
     });
     }
     catch(error){
@@ -85,54 +93,84 @@ const getEditCategory = async(req,res)=>{
 
 
 const postEditCategory = async (req, res) => {
-    try {
-      const categoryId = req.params.id;
-      console.log("categoryId:", categoryId);
-      console.log("req.body:", req.body);
-  
-      // Find the category by id
-      const category = await categoryCollection.findById(categoryId);
-      console.log("Category found ", category);
-  
-      if (!category) {
-        console.log("category not found");
-        return res.status(404).send("category not found");
-      }
-  
-      const newCategory = req.body.categoryName;
-      console.log("New category", newCategory);
+  try {
+    const categoryId = req.params.id;
+    console.log("categoryId:", categoryId);
+    console.log("req.body:", req.body);
 
-      // Check if the new category name is different from the existing one
-      if (newCategory !== category.categoryName) {
-        // Check if the new category name already exists
-        const existsCategory = await categoryCollection.findOne({
-          categoryName: newCategory,
-          _id: { $ne: category._id },
-        });
-  
-        if (existsCategory) {
-          return res.render("admin/editCategoryN", {
-            id: categoryId,
-            name: newCategory,
-            message: "Category Already Exists",
-          });
-        }
-  
-        // Update the properties
-        category.categoryName = newCategory;
-  
-        // Save the updated category
-        const updatedCategory = await category.save();
-  
-        console.log("Update", updatedCategory);
-      }
-  
-      res.redirect("/admin/category");
-    } catch (error) {
-      console.error("Error updating category:", error);
-      res.status(500).send("Internal server error");
+    // Find the category by id
+    const category = await categoryCollection.findById(categoryId);
+    console.log("Category found ", category);
+
+    if (!category) {
+      console.log("category not found");
+      return res.status(404).send("category not found");
     }
-  };
+
+    const newCategoryName = req.body.categoryName;
+    console.log("New category name:", newCategoryName);
+
+    // Check if the new category name is different from the existing one
+    if (newCategoryName !== category.categoryName) {
+      // Check if the new category name already exists
+      const existsCategory = await categoryCollection.findOne({
+        categoryName: newCategoryName,
+        _id: { $ne: category._id },
+      });
+
+      if (existsCategory) {
+        return res.render("admin/editCategoryN", {
+          id: categoryId,
+          name: newCategoryName,
+          offer: category.categoryOffer,
+          message: "Category Already Exists",
+        });
+      }
+
+      // Update the category name
+      category.categoryName = newCategoryName;
+    }
+
+    // Check if the discount is provided and valid
+    if (req.body.categoryOffer !== undefined) {
+      const newOffer = parseFloat(req.body.categoryOffer);
+
+      if (newOffer > 50 || isNaN(newOffer)) {
+        return res.render("admin/editCategoryN", {
+          id: categoryId,
+          name: category.categoryName,
+          offer: category.categoryOffer,
+          message: "Category discount cannot be greater than 50.",
+        });
+      } else if (newOffer < 0) {
+        return res.render("admin/editCategoryN", {
+          id: categoryId,
+          name: category.categoryName,
+          offer: category.categoryOffer,
+          message: "Category discount cannot be negative",
+        });
+      }
+      category.categoryOffer = newOffer;
+
+      // Update products belonging to this category with the new category offer
+      await productsCollection.updateMany(
+        { category: category.categoryName },
+        { $set: { discount: newOffer } }
+      );
+    }
+
+    // Save the updated category
+    const updatedCategory = await category.save();
+
+    console.log("Update", updatedCategory);
+
+    res.redirect("/admin/category");
+  } catch (error) {
+    console.error("Error updating category:", error);
+    res.status(500).send("Internal server error");
+  }
+};
+
 
   
   
@@ -157,25 +195,34 @@ const postEditCategory = async (req, res) => {
 //     }
 // };
 
-const categoryVisibility = async (req,res)=> {
+const categoryVisibility = async (req, res) => {
+  try {
+    const categoryId = req.params.id;
+    const category = await categoryCollection.findById(categoryId);
 
-    try{
-        const categId = req.params.id;
-        const category = await categoryCollection.findById(categId);
+    if (!category) {
+      return res.status(404).send("Category not found");
+    }
 
-        if (!category) {
-            return res.status(404).send("category not found");
-          }
+    // Toggle the visibility of the category
+    category.isListed = !category.isListed;
 
-          category.isListed = !category.isListed;
-  
-      await category.save();
-      res.redirect("/admin/category");
-    }catch (err) {
-        console.log(err);
-        res.status(500).send("Internal Server Error");
-      }
-}
+    // Save the updated category
+    await category.save();
+
+    // Update the visibility of all products in the category
+    await productsCollection.updateMany(
+      { category: category.categoryName },
+      { $set: { isListed: category.isListed } }
+    );
+
+    res.redirect("/admin/category");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
 
 module.exports = {
 
