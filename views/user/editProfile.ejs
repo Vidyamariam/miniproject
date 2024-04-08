@@ -54,7 +54,11 @@
           <div class="card-body">
             <h2 class="card-title">Edit Profile</h2>
             <!-- Edit Profile Form -->
-            <form action="/editprofile" method="post">
+            <form
+              action="/editprofile"
+              method="post"
+              onsubmit="return validateForm()"
+            >
               <div class="mb-3">
                 <label for="editName" class="form-label">Name:</label>
                 <input
@@ -64,8 +68,10 @@
                   placeholder="Enter your name"
                   name="name"
                   value="<%= userdata.name %>"
+                  required
                 />
-                <small style="color: red"><%= nameError %></small>
+                <small id="nameError" style="color: red"></small>
+                <!-- Error message container -->
               </div>
               <div class="mb-3">
                 <label for="editEmail" class="form-label">Email:</label>
@@ -76,8 +82,10 @@
                   placeholder="Enter your email"
                   name="email"
                   value="<%= userdata.email %>"
+                  required
                 />
-                <small style="color: red"><%= emailError %></small>
+                <small id="emailError" style="color: red"></small>
+                <!-- Error message container -->
               </div>
 
               <button type="submit" class="btn btn-primary">
@@ -92,3 +100,34 @@
 </div>
 
 <%- include('footer') %>
+
+<script>
+  function validateForm() {
+    const name = document.getElementById("editName").value;
+    const email = document.getElementById("editEmail").value;
+
+    // Validate name
+    if (name.trim() === "") {
+      document.getElementById("nameError").innerText = "Name is required";
+      return false; // Prevent form submission
+    } else {
+      document.getElementById("nameError").innerText = "";
+    }
+
+    // Validate email
+    if (!isValidEmail(email)) {
+      document.getElementById("emailError").innerText = "Invalid email format";
+      return false; // Prevent form submission
+    } else {
+      document.getElementById("emailError").innerText = "";
+    }
+
+    return true; // Allow form submission
+  }
+
+  function isValidEmail(email) {
+    // Regular expression for validating email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+</script>

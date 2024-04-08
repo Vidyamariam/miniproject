@@ -5,6 +5,7 @@ const Address = require("../model/addressSchema");
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const path = require('path');
+const bcrypt = require('bcrypt');
 
 exports.getProfile = async (req,res) => {
 
@@ -13,7 +14,7 @@ exports.getProfile = async (req,res) => {
    const userEmail = req.session.user;
    const userdata = await userCollection.findOne(userEmail);
 
-   console.log("userdata in profile",userdata);
+//    console.log("userdata in profile",userdata);
 
    
    res.render("user/profile", {userdata});
@@ -32,7 +33,7 @@ exports.getEditProfile = async (req, res) => {
         const userId = req.session.user;
         const userdata = await userCollection.findOne(userId);
 
-        console.log("userdata", userdata);
+        // console.log("userdata", userdata);
 
         res.render("user/editProfile", { 
             userdata,
@@ -47,47 +48,33 @@ exports.getEditProfile = async (req, res) => {
 
 exports.postEditProfile = async (req, res) => {
     try {
-        const userEmail = req.params.user;
-        const userData = await userCollection.findOne(userEmail);
+        const userEmail = req.session.user;   
+        const userData = await userCollection.findOne(userEmail); // Find user by email
+        const userid = userData._id; 
 
-        const userId = userData._id;
+        console.log("userdata in edit profile",userData);
+        console.log("userid in edit profile",userid);
 
-        // Define error messages
-        let nameError = "";
-        let emailError = "";
-
-       // Check if name is empty
-       if (!req.body.name.trim()) {
-        nameError = "Name is required";
-    } 
-    
-        // Check if email is empty or not in a valid format
-        if (!req.body.email.trim() || !/^\S+@\S+\.\S+$/.test(req.body.email)) {
-            emailError = "Invalid email format";
+        if (!userData) {
+            return res.status(404).json({ error: 'User not found' });
         }
 
-        // If there are validation errors, render the form again with error messages
-        if (nameError || emailError) {
-            return res.render("user/editProfile", {
-                userdata: userData,
-                nameError,
-                emailError
-            });
-        }
+        console.log("req body in post edit profile", req.body);
 
         // Update user profile if no validation errors
-        await userCollection.findByIdAndUpdate(userId, {
+      const updatedProfile =  await userCollection.findOneAndUpdate(userid, { // Update user by email
             name: req.body.name,
             email: req.body.email,
         });
 
-        console.log("Profile updated successfully");
+        console.log("Profile updated successfully", updatedProfile);
         res.redirect('/profile');
     } catch (error) {
         console.error("Error in editProfile:", error);
         return res.status(500).json({ error: 'Internal server error' });
     }
 }
+
 
 exports.downloadInvoice = async (req, res) => {
     try {
@@ -115,7 +102,7 @@ exports.downloadInvoice = async (req, res) => {
         const doc = new PDFDocument();
 
         // Set response headers to trigger download in the browser
-        res.setHeader('Content-Disposition', `attachment; filename="invoice_${orderId}.pdf"`);
+        res.setHeader('Content-Disposition', `attachment; filename="invoice_${order.orderId}.pdf"`);
         res.setHeader('Content-Type', 'application/pdf');
 
         // Pipe the PDF document to the response
@@ -157,6 +144,70 @@ exports.downloadInvoice = async (req, res) => {
     }
 };
 
+
+exports.getChangePassword = async (req,res)=> {
+
+     try{
+        const userEmail = req.session.user;   
+        const userData = await userCollection.findOne(userEmail); // Find user by email
+        const userid = userData._id; 
+        
+        console.log("userdata i change password", userData);
+        console.log("userid in change password", userid);
+        
+
+          
+        res.render("user/changePassword");
+
+     }
+     catch (error) {
+        console.error('Error in getting change password page:', error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+
+exports.postChangePassword = async (req, res) => {
+    try {
+        const { existingPassword, newPassword, confirmPassword } = req.body;
+        const userEmail = req.session.user;
+
+        console.log("req.body in post change pw ", req.body);
+
+        // Find the user by email
+        const userData = await userCollection.findOne(userEmail);
+        console.log("userdata in post change pw", userData);
+
+        if (!userData) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Compare existing password with the hashed password stored in the database
+        const passwordMatch = await bcrypt.compare(existingPassword, userData.password);
+         
+        console.log("password match", passwordMatch);
+        if (!passwordMatch) {
+            return res.render("user/changePassword",{ error: 'Existing password is incorrect' });
+        }
+
+        // Check if the new password matches the confirm password
+        if (newPassword !== confirmPassword) {
+            return res.render("user/changePassword",{ newPassworderror: 'New password and confirm password do not match' });
+        }
+
+        // Hash the new password
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        // Update the password in the database
+        await userCollection.findByIdAndUpdate(userData._id, { password: hashedPassword });
+
+        console.log('Password updated successfully');
+        res.redirect('/profile');
+    } catch (error) {
+        console.error('Error in change password:', error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+};
 
 
 

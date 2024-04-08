@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const bodyParser = require('body-parser');
 const categoryCollection = require("../model/category");
-const productsCollection = require("../model/userSignupSchema");
+const productsCollection = require("../model/productSchema");
 
 //get methods
 
@@ -95,8 +95,10 @@ const getEditCategory = async(req,res)=>{
 const postEditCategory = async (req, res) => {
   try {
     const categoryId = req.params.id;
+    
+
     console.log("categoryId:", categoryId);
-    console.log("req.body:", req.body);
+    console.log("req.body in post edit category", req.body);
 
     // Find the category by id
     const category = await categoryCollection.findById(categoryId);
@@ -151,18 +153,22 @@ const postEditCategory = async (req, res) => {
         });
       }
       category.categoryOffer = newOffer;
-
-      // Update products belonging to this category with the new category offer
-      await productsCollection.updateMany(
+     
+       // Update products belonging to this category with the new category offer
+       const newProducts = await productsCollection.updateMany(
         { category: category.categoryName },
-        { $set: { discount: newOffer } }
+        { $set: { discount: newOffer } },
+        
       );
+    console.log("product with new category offer",newProducts );
+
     }
 
+   
     // Save the updated category
     const updatedCategory = await category.save();
 
-    console.log("Update", updatedCategory);
+    // console.log("Update", updatedCategory);
 
     res.redirect("/admin/category");
   } catch (error) {
