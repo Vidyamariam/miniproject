@@ -50,6 +50,19 @@
   }
 
 
+  .wishlistbutton{
+    background-color: rgb(235, 167, 72);
+     border: none; 
+     border-radius: 10px; 
+     height: 50px;
+     margin-left: 10px;
+  }
+
+  .wishlistbutton:hover{
+
+    background-color: wheat;
+  }
+
   
 </style>
 
@@ -65,8 +78,8 @@
           <a id="my-account" onclick="toggleDropdown()"><i class="fa fa-regular fa-user fa-xl"></i> My Account</a>
           <div class="dropdown-content" id="account-options">
             <a href="/profile"><i class="fa fa-regular fa-user fa-sm"></i> My Profile</a>
-            <a href="#"><i class="fa fa-regular fa-receipt fa-sm"></i> Orders</a>
-            <a href="#"><i class="fa fa-regular fa-heart fa-sm"></i> Wishlist</a>
+            <a href="/order-history"><i class="fa fa-regular fa-receipt fa-sm"></i> Orders</a>
+            <a href="/wishlist"><i class="fa fa-regular fa-heart fa-sm"></i> Wishlist</a>
             <a href="/coupons"><i class="fa fa-regular fa-ticket fa-sm"></i> Coupons</a>
             <a href="/logout"><i class="fa fa-regular fa-sign-out-alt fa-sm"></i> Logout</a>
           </div>
@@ -164,8 +177,15 @@
             </form>
           </td>
           <td>
-            <button type="submit" class="btn btn-warning" style="border-radius: none; color: white;">REVIEWS</button>
+            <form action="/add-wishlist/<%= productdetails._id %>" method="post">
+              <button type="submit" class="wishlistbutton" style="">
+                  <i class="fa fa-duotone fa-heart"></i> Add to wishlist
+              </button>
+          </form>
           </td>
+          <!-- <td>
+            <button type="submit" class="btn btn-warning" style="border-radius: none; color: white;">REVIEWS</button>
+          </td> -->
         </tr>
         
       </table>

@@ -40,26 +40,20 @@
               <div class="login-wrap p-4 p-md-5">
                 <div class="d-flex">
                   <div class="w-100">
-                    <h3 class="mb-4">
-                      Sign In <br />
-                      <small style="color: red"><%=locals.error%></small>
-                    </h3>
+                    <h3 class="mb-4">Sign In</h3>
+                    <small style="color: red"><%=locals.error%></small>
                   </div>
                   <div class="w-100">
                     <p class="social-media d-flex justify-content-end">
                       <a
                         href="#"
                         class="social-icon d-flex align-items-center justify-content-center"
-                        ><span class="fa fa-facebook"></span
-                      ></a>
-                      <a
-                        href="#"
-                        class="social-icon d-flex align-items-center justify-content-center"
-                        ><span class="fa fa-twitter"></span
+                        ><span class="fa fa-google"></span
                       ></a>
                     </p>
                   </div>
                 </div>
+
                 <form action="/userlogin" method="post" class="signin-form">
                   <div class="form-group mb-3">
                     <label class="label" for="email">Email</label>
@@ -87,7 +81,7 @@
                       Sign In
                     </button>
                   </div>
-                  <!-- <div class="form-group d-md-flex">
+                  <div class="form-group d-md-flex">
                     <div class="w-50 text-left">
                       <label class="checkbox-wrap checkbox-primary mb-0"
                         >Remember Me
@@ -96,9 +90,9 @@
                       </label>
                     </div>
                     <div class="w-50 text-md-right">
-                      <a href="#">Forgot Password</a>
+                      <a href="/verify-email">Forgot Password</a>
                     </div>
-                  </div> -->
+                  </div>
                 </form>
                 <p class="text-center">
                   Not a member? <a data-toggle="tab" href="/signup">Sign Up</a>

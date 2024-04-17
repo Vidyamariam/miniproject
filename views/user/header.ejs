@@ -67,7 +67,7 @@
   border: none;
   border-radius: 5px;
   margin-right: 5px;
-  width: 120px; /* Adjust width as needed */
+  width: 159px; /* Adjust width as needed */
 }
 
 #search-bar:focus {
@@ -80,6 +80,8 @@
   color: #101112;
   border: none;
   border-radius: 5px;
+  width: 40px;
+  height: 40px;
   cursor: pointer;
   padding: 8px 12px;
   position: absolute;
@@ -93,14 +95,19 @@
   vertical-align: middle; /* Align the icon vertically */
 }
 
+header{
+
+  background-color: rgb(199, 188, 188);
+}
+
    
     </style>
   </head>
   <body>
-    <header>
+    <header >
       <div id="header-info">
         <!-- <p id="contactus">Contact Us</p> -->
-        <img src="/img/amoli-jewels-high-resolution-logo-black.png" class="logo" />
+        <img src="/img/amoli-jewels-high-resolution-logo-black-transparent.png" class="logo" style="width: 100px; height: 100px;"/>
       <h1 id="store-name">Amoli Jewels</h1>
         <div class="nav-icons">
           <div class="dropdown" id="my-account-dropdown">
@@ -112,8 +119,7 @@
               <a href="/coupons"><i class="fa-solid fa-money-bill"></i> Coupons</a>
               <a href="/logout"><i class="fa fa-regular fa-sign-out-alt fa-sm"></i> Logout</a>
             </div>
-          </div>
-          
+          </div>      
           <a id="addtocart" href="/cart" style="color: black; text-decoration: none; margin-left: 10px;">My Cart 
             <i class="fa fa-duotone fa-cart-shopping fa-xl"></i>
           </a>

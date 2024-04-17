@@ -53,7 +53,7 @@
     <div id="header-info">
       <!-- <p id="contactus">Contact Us</p> -->
       <img src="/img/amoli-jewels-high-resolution-logo-black.png" class="logo" />
-        <h1 id="store-name">Amoli Jewels</h1>
+      <h1 id="store-name">Amoli Jewels</h1>
       <div class="nav-icons">
         <div class="dropdown" id="my-account-dropdown">
           <a id="my-account" onclick="toggleDropdown()"><i class="fa fa-regular fa-user fa-xl"></i> My Account</a>
@@ -102,15 +102,17 @@
                   <% cart.items.forEach((item, index)=> { %>
                     <div class="product">
                       <div class="row">
-                        <div class="col-md-2">
-                          <img class="img-fluid mx-auto d-block image" style="border-radius: 10px;"  src="<%= item.productId.productImage[0] %>" />
+                        <div class="col-md-2" id="cartImg">
+                          <img class="img-fluid mx-auto d-block image" style="border-radius: 10px;margin-top: 24px;"
+                            src="<%= item.productId.productImage[0] %>" />
                         </div>
                         <div class="col-md-10">
                           <div class="info">
                             <div class="row">
                               <div class="col-md-5 product-name">
                                 <div class="product-name">
-                                  <a href="/productDetails/<%= item.productId._id %>">
+                                  <a href="/productDetails/<%= item.productId._id %>"
+                                    style="text-decoration: none; color: black;">
                                     <%= item.productId.name %>
                                   </a>
                                   <div id="id" hidden>
@@ -125,27 +127,32 @@
                                         <%= item.quantity %>
                                       </span></div>
                                     <!-- Move the price section here -->
-                                    <div class="price">
-                                      <label style="font-size: 20px;">Price</label>
-                                      <span id="price_<%= item._id %>">Rs<%= item.price %></span>
-                                    </div>
+                                    
+                                  </div>
+
+                                  <div class="price">
+                                    <label style="font-size: 20px;">Price</label>
+                                    <span id="price_<%= item._id %>">Rs<%= item.price %></span>
                                   </div>
                                 </div>
                               </div>
                               <div class="col-md-4 quantity">
                                 <label for="quantity">Update Quantity:</label>
                                 <div class="quantityUpdate">
-                                  <button class="quantity-button" style="border-radius: 50%;height: 25px; width: 25px; background-color: black;color: white; border: none;"
+                                  <button class="quantity-button"
+                                    style="border-radius: 50%;height: 25px; width: 25px; background-color: black;color: white; border: none;"
                                     onclick="decreaseQuantity('<%= item._id %>')">-</button>
-                                  <input data-item-id="<%= item._id %>" id="quantity_<%= item._id %>" type="number"
+                                  <input data-item-id="<%= item._id %>" id="quantity_<%= item._id %>" type="text"
                                     value="<%= item.quantity %>" min="1" max="<%= item.productId.stock %>"
-                                    class="form-control quantity-input" onchange="updateQuantity('<%= item._id %>')" />
-                                  <button class="quantity-button" style="border-radius: 50%;height: 25px; width: 25px; background-color: black;color: white; border: none;"
+                                    class="form-control quantity-input" onchange="updateQuantity('<%= item._id %>')" disabled />
+                                  <button class="quantity-button"
+                                    style="border-radius: 50%;height: 25px; width: 25px; background-color: black;color: white; border: none;"
                                     onclick="increaseQuantity('<%= item._id %>')">+</button>
                                 </div>
                                 <br>
                                 <form action="/remove/<%= item._id %>" method="get">
-                                  <button type="button" style="width: 100px; height: 40px;border-radius: 5px;border: none; background-color: black; color: white;"
+                                  <button type="button"
+                                    style="width: 100px; height: 40px;border-radius: 5px;border: none; background-color: black; color: white;"
                                     onclick="confirmRemove('<%= item._id %>')">Remove</button>
                                 </form>
                               </div>
@@ -168,9 +175,9 @@
             </div>
             <div class="col-md-12 col-lg-3">
               <% if (cart && cart.items && cart.items.length> 0) { %>
-              <div class="summary">
-                <h3>Summary</h3>
-                <!-- <div class="summary-item">
+                <div class="summary">
+                  <h3>Summary</h3>
+                  <!-- <div class="summary-item">
                   <span class="text">Subtotal</span><span class="price"></span>
                 </div>
                 <div class="summary-item">
@@ -179,24 +186,28 @@
                 <div class="summary-item">
                   <span class="text">Shipping</span><span class="price">$0</span>
                 </div> -->
-                <div class="summary-item">
-                  <span class="text" id="total-price">Total Price: Rs. <%= cart.totalPrice %> </span>
-                </div>
-                <a>     
-                  <a href="/checkout" >
-                    <button type="button" style="width: 150px; height: 40px;border-radius: 5px;border: none; background-color: black; color: white;" id="checkoutButton" >
-                      Checkout
-                    </button>
-                  </a>        
-                    
-                  <% } else{%>
-                   <a href="/all-products" style="position: absolute; top: 23rem; padding: 10px 30px; border-radius: 14px; background-color: black; color: white; text-decoration: none;">Shop Now</a>
-                    <%}%>
-                </a> 
-                 <!-- Placeholder for error message -->
-            <p id="checkoutErrorMessage" style="color: red; display: none;"></p>                     
+                  <div class="summary-item">
+                    <span class="text" id="total-price">Total Price: Rs. <%= cart.totalPrice %> </span>
+                  </div>
+                  <a>
+                    <a href="/checkout"  >
+                      <button type="button"
+                        style="width: 150px; height: 40px;border-radius: 5px;border: none; background-color: black; color: white;"
+                        id="checkoutButton">
+                        Checkout
+                      </button>
+                    </a>
 
-              </div>
+                    <% } else{%>
+                      <a href="/all-products"
+                        style="position: absolute; top: 23rem; padding: 10px 30px; border-radius: 14px; background-color: black; color: white; text-decoration: none;">Shop
+                        Now</a>
+                      <%}%>
+                  </a>
+                  <p id="checkoutErrorMessage" style="color: red; display: none;"></p>
+                 
+
+                </div>
             </div>
           </div>
         </div>
@@ -241,9 +252,9 @@
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
     crossorigin="anonymous"></script>
 
- 
-    
-    
+
+
+
 
   <script>
     function confirmRemove(itemId) {
@@ -322,6 +333,15 @@
     function updateQuantity(itemId) {
       var quantityInput = document.getElementById('quantity_' + itemId);
       var newQuantity = quantityInput.value;
+
+      // Validate the quantity
+      if (isNaN(newQuantity) || newQuantity <= 0) {
+        // Display error message
+        var errorMessage = document.getElementById('checkoutErrorMessage');
+        errorMessage.innerText = 'Invalid quantity. Please enter a valid number greater than zero.';
+        errorMessage.style.display = 'block';
+        return; // Stop further execution
+      }
 
       // Make an AJAX request to update the quantity on the server
       fetch('/updateQuantity/' + itemId + '?quantity=' + newQuantity, {

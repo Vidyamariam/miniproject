@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const moment = require('moment-timezone');
 
 
 const orderSchema = mongoose.Schema({
@@ -27,16 +28,19 @@ const orderSchema = mongoose.Schema({
         locality:{type:String},
         pincode: {type:String},
         phone: {type:String},
-        state: {type:String},
-        
+        state: {type:String},   
     },
     paymentMethod: { type: String},
-    orderDate: { type: Date, default: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),},
-    createdAt: { type: Date, default: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }) ,} ,
-   
+    orderDate: { type: Date },
+    createdAt: { type: Date },
 });
 
-
+// Pre-save hook to format orderDate and createdAt fields using Moment.js
+orderSchema.pre('save', function(next) {
+    this.orderDate = moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
+    this.createdAt = moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
+    next();
+});
 
 const ordersCollection = mongoose.model('orders', orderSchema);
 

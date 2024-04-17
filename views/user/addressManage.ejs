@@ -34,6 +34,12 @@
     body {
       font-family: "Bacasime Antique", serif;
 }
+
+
+header{
+
+background-color: rgb(199, 188, 188);
+}
     
   </style>
 </head>
@@ -127,6 +133,13 @@
               <div class="col-md-6 mb-4">
                 <div class="cardCtm">
                   <div class="card2">
+                    <div class="delete-address">
+                      <form action="/deleteAddress/<%= address._id %>" method="post" class="form-delete">
+                        <button type="submit" class="btn-delete">
+                          <i class="fas fa-times"></i>
+                        </button>
+                      </form>
+                    </div>
                     <div class="card-body">
                       <!-- Display address details here -->
                       <h5 class="name">name: <%= address.name %>
@@ -142,13 +155,11 @@
                       <p class="state">State: <%= address.state %>
                       </p>
                       <!-- Edit Address Button -->
-                      <div class="button-actions">
+                      <div class="button-actions" style="margin-top: 25px;">
                         <form action="/editAddress/<%= address._id %>" method="get">
-                          <button class="btn btn-dark btn-sm" type="submit"  >Edit</button>
+                          <button class="btn btn-dark btn-sm" type="submit"  >Edit now</button>
                         </form>
-                        <form action="/deleteAddress/<%= address._id %>" method="post">
-                        <button class="btn btn-danger btn-sm" type="submit">Delete</button>
-                        </form>
+                        
                       </div>                   
                     </div>
                   </div>

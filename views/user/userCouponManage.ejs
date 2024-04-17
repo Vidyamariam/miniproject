@@ -50,28 +50,32 @@
 
       <div class="col-lg-8 user-coupons">
         <div id="copy-message"></div>
-        <div class="coupon">
-          <% coupons.forEach(coupon => { %>
-          <div class="card mb-3">
-            <div class="card-body">
-              <h5 class="card-title">Coupon Code: <%= coupon.couponCode %></h5>
-              <p class="card-text">Discount: <%= coupon.discount %>%</p>
-              <p class="card-text">
-                Expiry Date: <%= coupon.expiryDate.toISOString().split('T')[0]
-                %>
-              </p>
-              <p class="card-text">Min Amount: <%= coupon.minAmount %></p>
-              <p class="card-text">Max Amount: <%= coupon.maxAmount %></p>
-              <!-- Add copy button for each coupon -->
-              <button
-                class="btn btn-sm btn-dark copy-button"
-                data-coupon-code="<%= coupon.couponCode %>"
-              >
-                Copy Coupon
-              </button>
+        <% coupons.forEach((coupon, index)=> { %> <% if (index % 2===0) { %>
+        <div class="row">
+          <% } %>
+          <div class="col-lg-6">
+            <div class="coupon-card">
+              <h3><%= coupon.discount %>% off on all rides within the city</h3>
+              <div class="coupon-row">
+                <span id="cpnCode"> <%= coupon.couponCode %> </span>
+                <span
+                  id="cpnBtn<%= index %>"
+                  onclick="copyCoupon('<%= coupon.couponCode %>', this)"
+                  style="
+                    background-color: rgb(234, 142, 142);
+                    color: rgb(241, 236, 236);
+                    height: 35px;
+                    padding: 5px;
+                  "
+                  >Copy Code</span
+                >
+              </div>
+              <p>Valid Till: <%= coupon.expiryDate.toDateString() %></p>
+              <p>Max amount: <%= coupon.maxAmount %></p>
+              <div class="circle1"></div>
+              <div class="circle2"></div>
             </div>
           </div>
-
           <% }); %>
         </div>
       </div>
@@ -82,26 +86,25 @@
 <%- include('footer') %>
 
 <script>
-  // JavaScript code to handle copying coupon code
-  document.addEventListener("DOMContentLoaded", function () {
-    const copyButtons = document.querySelectorAll(".copy-button");
+  // Define the coupons array in the inline script block
+  var coupons = `<%= JSON.stringify(coupons) %>`;
 
-    copyButtons.forEach((button) => {
-      button.addEventListener("click", function () {
-        const couponCode = this.getAttribute("data-coupon-code");
-        copyToClipboard(couponCode);
-      });
-    });
+  // Function to handle copying coupon code
+  function copyCoupon(couponCode, cpnBtn) {
+    navigator.clipboard.writeText(couponCode);
+    cpnBtn.innerHTML = "COPIED";
+    setTimeout(function () {
+      cpnBtn.innerHTML = "COPY CODE";
+    }, 3000);
+  }
 
-    function copyToClipboard(text) {
-      const el = document.createElement("textarea");
-      el.value = text;
-      document.body.appendChild(el);
-      el.select();
-      document.execCommand("copy");
-      document.body.removeChild(el);
-      const messageContainer = document.getElementById("copy-message");
-      messageContainer.textContent = "Coupon code copied to clipboard: " + text;
-    }
+  // Loop through each coupon and assign event listener
+  coupons.forEach((coupon, index) => {
+    var cpnBtn = document.getElementById("cpnBtn" + index);
+    var cpnCode = document.getElementById("cpnCode" + index);
+
+    cpnBtn.onclick = function () {
+      copyCoupon(cpnCode.innerHTML, cpnBtn);
+    };
   });
 </script>

@@ -4,17 +4,19 @@
   <div class="main-body">
     <div class="row order-main">
       <div class="col-lg-12">
+        <h3>Your Orders</h3>
+
         <div
           class="main-div"
           style="max-height: 400px; overflow-y: auto; scrollbar-width: none"
         >
-          <h4>Your Orders</h4>
           <table class="order-table">
             <thead>
               <tr>
                 <th scope="col">Order ID</th>
                 <th scope="col">Date</th>
                 <th scope="col">Price</th>
+                <th scope="col">Total Price</th>
                 <th scope="col">Status</th>
                 <th scope="col">Actions</th>
               </tr>
@@ -35,6 +37,7 @@
                   product.price).toFixed(2) %> <% } else { %> Rs. <%=
                   product.price %> <% } %>
                 </td>
+                <td><%= order.totalPrice %></td>
                 <td class="order-status">
                   <% if (product.status==='Cancelled' ) { %> <%= product.status
                   %> <% } else { %> <%= product.status %> <% } %>
@@ -73,6 +76,45 @@
             </tbody>
           </table>
         </div>
+
+        <!-- Pagination -->
+        <% if (totalPages > 1) { %>
+        <nav aria-label="Page navigation">
+          <ul class="pagination justify-content-center">
+            <% if (currentPage > 1) { %>
+            <li class="page-item">
+              <a
+                class="page-link"
+                href="?page=<%= currentPage - 1 %>"
+                aria-label="Previous"
+              >
+                <span aria-hidden="true">Previous</span>
+                <span class="sr-only">Previous</span>
+              </a>
+            </li>
+            <% } else { %>
+            <li class="page-item disabled">
+              <span class="page-link" aria-hidden="true">&laquo;</span>
+            </li>
+            <% } %> <% if (currentPage < totalPages) { %>
+            <li class="page-item">
+              <a
+                class="page-link"
+                href="?page=<%= currentPage + 1 %>"
+                aria-label="Next"
+              >
+                <span aria-hidden="true">Next</span>
+                <span class="sr-only">Next</span>
+              </a>
+            </li>
+            <% } else { %>
+            <li class="page-item disabled">
+              <span class="page-link" aria-hidden="true">&raquo;</span>
+            </li>
+            <% } %>
+          </ul>
+        </nav>
+        <% } %>
       </div>
     </div>
   </div>

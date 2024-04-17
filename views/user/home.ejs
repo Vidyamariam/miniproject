@@ -11,6 +11,77 @@
     padding: 10px;
     border-radius: 20px;
   }
+
+  /* Shop By Category section */
+
+  .category-section {
+    font-family: "Bacasime Antique", serif;
+  }
+
+  .row {
+    margin-top: 20px;
+    margin-bottom: 100px;
+  }
+
+  .category-item {
+    position: relative;
+    margin-left: 20px;
+    flex: 1; /* Make each category item take equal space */
+    max-width: calc(
+      50% - 40px
+    ); /* Set maximum width for each item to occupy half of the container's width */
+  }
+
+  .category-item h2 {
+    font-family: "Bacasime Antique", serif;
+    z-index: 1;
+    text-align: center;
+    top: 10px;
+    left: 10px;
+    color: black;
+    font-size: 24px;
+    z-index: 1;
+  }
+
+  .explore-btn {
+    font-family: "Bacasime Antique", serif;
+    position: absolute;
+    top: 90%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 10px 20px;
+    background-color: transparent;
+    color: #000;
+    text-decoration: none;
+    font-size: 30px;
+    font-weight: bold;
+    border-radius: 5px;
+    z-index: 1;
+  }
+
+  .explore-btn:hover {
+    color: palevioletred;
+  }
+
+  .category-items {
+    display: flex;
+  }
+  .category-image {
+    position: relative;
+    overflow: hidden;
+    padding: 20px;
+  }
+
+  .category-image img {
+    border-radius: 20px;
+    height: 570px;
+    width: 650px;
+    transition: transform 0.3s ease-in-out; /* Add transition for transform property */
+  }
+
+  .category-image img:hover {
+    transform: scale(1.1); /* Increase scale on hover */
+  }
 </style>
 
 <!--BANNER SECTION-->
@@ -18,13 +89,13 @@
   <div id="carouselhomepage" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-inner">
       <div class="carousel-item active">
-        <img src="/img/user/hpImg2.jpg" class="d-block w-100" alt="..." />
+        <img src="/img/user/carousImg1.jpg" class="d-block w-100" alt="..." />
       </div>
       <div class="carousel-item">
-        <img src="/img/user/hpImg3.jpg" class="d-block w-100" alt="..." />
+        <img src="/img/user/carouImg2.webp" class="d-block w-100" alt="..." />
       </div>
       <div class="carousel-item">
-        <img src="/img/user/hpImg4.jpg" class="d-block w-100" alt="..." />
+        <img src="/img/user/carousImg4.webp" class="d-block w-100" alt="..." />
       </div>
     </div>
     <button
@@ -48,29 +119,38 @@
   </div>
 </div>
 
-<!--MIDDLE CONTENT-->
-<section class="middle-content">
-  <div class="row inner-content">
-    <div class="col-lg-6">
-      <img
-        src="/img/home/b1.jpg"
-        style="
-          height: 500px;
-          width: 400px;
-          margin-left: 50px;
-          border-radius: 10px;
-        "
-      />
-
-      <p style="font-size: 30px; margin-left: 50px">
-        Elevate Your Elegance: Adorn Yourself with Timeless Necklaces
-      </p>
+<!--categories section-->
+<div class="container">
+  <h1 class="text-center category-section">Shop By Category</h1>
+  <div class="row category-items">
+    <div class="col-md-6 category-item">
+      <h2>Ethnic</h2>
+      <a href="/ethnic" class="explore-btn">Explore</a>
+      <div class="category-image">
+        <a href="/ethnic">
+          <img
+            src="/img/user/hpImg3.jpg"
+            class="img-fluid"
+            alt="Ethnic Image"
+          />
+        </a>
+      </div>
     </div>
 
-    <div class="col-lg-6">
-      <img src="/img/home/b4.webp" style="border-radius: 10px" />
+    <div class="col-md-6 category-item">
+      <h2>Contemporary</h2>
+      <a href="/contemporary" class="explore-btn">Explore</a>
+      <div class="category-image">
+        <a href="/contemporary">
+          <img
+            src="/img/user/hpImg5.jpg"
+            class="img-fluid"
+            alt="Contemporary Image"
+          />
+        </a>
+      </div>
     </div>
   </div>
-</section>
+</div>
 
 <%- include('footer') %>

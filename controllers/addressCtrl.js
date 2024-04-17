@@ -110,11 +110,13 @@ exports.postEditAddress = async (req, res) => {
   }
 };
 
+
+
 exports.deleteAddress = async (req, res) => {
   try {
     console.log('this is delete address');
       const addressId = req.params.addressId;
-      console.log(addressId);
+      console.log("delete addressid in delte addrss",addressId);
       
       const deletedAddress = await Address.findByIdAndDelete(addressId);
 

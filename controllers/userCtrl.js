@@ -13,6 +13,8 @@ const bcrypt = require('bcrypt');
 const signupGet = (req, res) => { 
 
     try{
+        if(req.session.user)
+        return res.redirect("/home");
 
         res.render("user/signup");
     }
@@ -29,6 +31,9 @@ const signupPost = async (req, res) => {
     console.log("signuppost data", req.body);
 
     try {
+        if(req.session.user)
+        return res.redirect("/home");
+    
         const existingUser = await signupCollection.findOne({ email });
 
         console.log("existingUser in signup post", existingUser);
@@ -198,9 +203,234 @@ const resendOTP = async (req, res) => {
 }
 
 
+
+const forgotPassword = (req,res)=> {
+
+    try{
+        
+
+        res.render("user/checkEmail");      
+
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+}
+
+
+const postForgotPassword = async (req,res)=> {
+
+    const  email  = req.body.email;
+
+    try{
+
+        req.session.otpemail = req.body.email;
+
+        console.log("email in forgot password", req.body);
+        
+        // Check if the email exists in the user collection
+        const existingUser = await signupCollection.findOne({ email });
+
+        console.log("existing user in forgot pw",existingUser);
+
+        if(!existingUser){
+            return res.render("user/checkEmail", { errorMessage: "Email not found" });
+        }
+
+        if(existingUser){
+
+            //generate otp
+        const otpGenerated = Math.floor(1000 + Math.random() * 9000).toString();
+
+        const otpData = new otpCollection({
+            email: email,
+            otp: otpGenerated
+        });
+        await otpData.save();
+
+        const mailBody = `Your OTP for registration is ${otpGenerated}`;
+        await sendOTPVerificationEmail(email, "otp registration", mailBody);
+        console.log("email otp");
+
+        // Redirect to verify OTP page
+        return res.redirect('/verifyOtp');     
+
+        }
+        else {
+            // If the email doesn't exist, handle it based on your application's requirements
+            return res.status(404).json({ error: 'Email not found' });
+        }
+        
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+}
+
+const getverifyOtp = (req,res)=> {
+
+    try{
+
+        res.render("user/verifyOtp");
+
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+}
+
+
+
+
+
+
+const postverifyOtp = async (req,res)=> {
+
+      try{
+
+        const {n1, n2, n3, n4 } = req.body;
+        console.log("hgdsfj",req.body);
+        const isValidInput = n1 && n2 && n3 && n4 && /^\d+$/.test(n1 + n2 + n3 + n4);
+          
+        if (!isValidInput) {
+            return res.render("user/verifyOtp", { message: "Only numeric values, and no white spaces" });
+        }
+
+        const otpEntered = `${n1}${n2}${n3}${n4}`;
+        console.log("Entered OTP:", otpEntered);   
+
+        const otpData = await otpCollection.findOne({}).sort({ _id: -1 }).limit(1);
+           
+        console.log("otp data in postverifyOtp",otpData);
+      
+         // Check if the OTP exists and matches the entered OTP
+         if (otpData && otpEntered === otpData.otp ) {
+             // If OTP is valid, redirect to the change password route
+             return res.redirect('/update-password');
+         } else {
+             // If OTP is invalid or doesn't match, display an error message
+             return res.render("user/verifyOtp", { message: "Invalid OTP. Please try again." });
+         }
+
+
+      }
+      catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+}
+
+
+
+const resendForgotOtp = async (req,res)=> {
+
+    try{
+
+        const email = req.session.otpemail;
+        console.log("email", email);
+
+        if (!email) {
+            // Handle the case where the email is not available in the session
+            console.error("Email not found in session");
+            return res.status(400).render("user/verifyOtp", { errorMessage: "Email not found in session" });
+        }
+
+
+         //generate otp
+         const otpGenerated = Math.floor(1000 + Math.random() * 9000).toString();
+
+         const otpData = new otpCollection({
+             email: email,
+             otp: otpGenerated
+         });
+         await otpData.save();
+ 
+         const mailBody = `Your OTP for registration is ${otpGenerated}`;
+         await sendOTPVerificationEmail(email, "otp registration", mailBody);
+         console.log("email otp");
+ 
+
+        res.redirect("/verifyOtp");
+
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+}
+
+
+
+const getChangePassword = (req,res)=> {
+
+    try{
+        
+        // Now you have access to the email in the route handler
+        res.render("user/updatePassword");
+
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+}
+
+const postChangePassword = async (req, res) => {
+
+    const newPassword = req.body.password;
+    console.log("newpassword in post change pw", newPassword);
+
+    try {
+        const user = await signupCollection.findOne({ email: req.session.otpemail });
+
+        if (!user) {
+            return res.status(404).send("User not found");
+        }
+
+        // Hash the new password
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+    
+           // Update the password field with the hashed password
+         user.password = hashedPassword;
+
+     // Save the updated user to the database
+        await user.save();     
+        
+
+     res.redirect("/password-changed");
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+
+const passwordChangeSuccess = (req,res)=> {
+
+    try{
+
+
+           res.render("user/pwChangeSuccess");
+
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+}
+
+
+
+
 const login = (req, res) => {
 
     try{
+        if(req.session.user)
+        return res.redirect("/home")
         res.render("user/login");
     }
     catch (error) {
@@ -211,17 +441,18 @@ const login = (req, res) => {
     
 }
 
-const landing = (req, res) => {
+const landing = async (req, res) => {
    
     try{
-       
+        if(req.session.user)
+        return res.redirect("/home")
         res.render("user/landing");
+
     }
     catch (error) {
         console.error(error);
         return res.status(500).json({ error: "Internal Server Error" });
     }
-
 
    
 }
@@ -309,9 +540,23 @@ const postLogout = (req, res) => {
 const getHome = async (req, res) => {
 
     try{
+        const userEmail = req.session.user;
+        
+        if (!userEmail) {
+            // User is not authenticated, redirect to login page
+            return res.redirect('/userlogin');
+        }
+         
+        const userdata = await signupCollection.findOne(userEmail);
+        const userId = userdata._id;
+       console.log("userid in home page",userId);
+
         const productList = await productsCollection.find();
 
-        res.render('user/home', { productList: productList });
+        if(userEmail){
+           
+            res.render('user/home', { productList: productList });
+        }
 
     }
     catch (error) {
@@ -357,6 +602,7 @@ const Ethnics = async (req, res) => {
 
     
 }
+
 
 const Contemporary = async (req, res) => {
 
@@ -524,11 +770,10 @@ const userFilterByCategory = async ( req,res)=> {
 
     try{
 
-    
     const category = req.query.category;
     console.log("category",category);
     
-    let filter = {}; // Initialize an empty filter object
+    let filter = {}; 
       if (category) {
           filter.category = category; // If a category is selected, add it to the filter
       }
@@ -640,7 +885,7 @@ const checkReferralCode = async (req,res)=> {
 
 module.exports = {
     login, loginpost, signupGet, signupPost, landing, getVerifyEmail, verifyEmailPost, getLogout, postLogout,  getHome, resendOTP,
-    searchItems, allProducts, sortProduct,Ethnics,Contemporary,userFilterByCategory,getWallet,createReferral,checkReferralCode
+    searchItems, allProducts, sortProduct,Ethnics,Contemporary,userFilterByCategory,getWallet,createReferral,checkReferralCode,forgotPassword,postForgotPassword,getverifyOtp,postverifyOtp,resendForgotOtp, getChangePassword, postChangePassword,passwordChangeSuccess
 }
 
 

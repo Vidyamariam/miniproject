@@ -22,27 +22,34 @@
               <li
                 class="list-group-item d-flex justify-content-between align-items-center flex-wrap"
               >
+                <a href="/profile">Profile Information</a>
+              </li>
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center flex-wrap"
+              >
                 <a href="/address">Manage Addresses</a>
               </li>
-              <!-- <li
-                class="list-group-item d-flex justify-content-between align-items-center flex-wrap"
-              >
-                <a href="#">Change Password</a>
-              </li> -->
               <li
                 class="list-group-item d-flex justify-content-between align-items-center flex-wrap"
               >
-                <a href="#">My Orders</a>
+                <a href="/change-password">Change password</a>
+              </li>
+
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center flex-wrap"
+              >
+                <a href="/order-history">My Orders</a>
               </li>
               <li
                 class="list-group-item d-flex justify-content-between align-items-center flex-wrap"
-              ></li>
+              >
+                <a href="/coupons">Coupons</a>
+              </li>
               <li
                 class="list-group-item d-flex justify-content-between align-items-center flex-wrap"
-              ></li>
-              <li
-                class="list-group-item d-flex justify-content-between align-items-center flex-wrap"
-              ></li>
+              >
+                <a href="/wallet">My Wallet</a>
+              </li>
             </ul>
           </div>
         </div>
@@ -83,6 +90,7 @@
                   name="email"
                   value="<%= userdata.email %>"
                   required
+                  disabled
                 />
                 <small id="emailError" style="color: red"></small>
                 <!-- Error message container -->

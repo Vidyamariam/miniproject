@@ -409,6 +409,8 @@ const getSalesReport = async (req, res) => {
       orders,
       currentPage: page,
       totalPages,
+      startDate, // Pass startDate to template
+      endDate,
       totalOrders,
       totalOrderAmount: totalOrderAmount.length > 0 ? totalOrderAmount[0].totalAmount : 0,
       totalUsers: totalUsers.length > 0 ? totalUsers[0].count : 0,
@@ -486,8 +488,9 @@ const downloadExcel = async (req, res) => {
     });
     const userEmail = req.session.user;
     const userdata = await userCollection.findOne(userEmail);
+    console.log("userdata in excel download",userdata);
     const userid = userdata._id;
-    console.log("userid in excel function",userid);
+    console.log("userid in excel function: ",userid);
 
     // Create a new Excel workbook
     const workbook = new ExcelJS.Workbook();
@@ -507,6 +510,7 @@ const downloadExcel = async (req, res) => {
 
     // Add rows for each order
     orders.forEach(order => {
+      
       worksheet.addRow({
         orderId: order.orderId,
         userName: order.userId.name,
@@ -533,10 +537,6 @@ const downloadExcel = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
-
-
-
 
 
 

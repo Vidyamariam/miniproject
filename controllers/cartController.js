@@ -6,8 +6,9 @@ const { ObjectId } = require('mongodb');
 const Swal = require('sweetalert2');
 const mongoose = require('mongoose');
 const Address = require('../model/addressSchema');
-const  ordersCollection = require('../model/orderSchema');
+const ordersCollection = require('../model/orderSchema');
 const Razorpay = require('razorpay');
+const moment = require('moment');
 
 
 
@@ -43,6 +44,8 @@ exports.getCart = async (req, res) => {
         console.log("Invalid item found:", item);
       }
     });
+
+    totalPrice = totalPrice.toFixed(2);
 
     // Render the view with cart and total price
     return res.render("user/cart", { cart, totalPrice });
@@ -126,21 +129,14 @@ exports.getCart = async (req, res) => {
 // };
 
 
- 
 exports.addToCart = async (req, res) => {
   try {
     const session = req.session.user;
-    console.log(session);
     const userData = await userCollection.findOne(session);
-    console.log(userData);
     const userId = userData._id;
 
-    console.log("userid: in cart", userId);
-
     const productId = req.params.productId;
-    console.log("productId", productId);
     const quantity = req.query.quantity || 1;
-    console.log("quantity", quantity);
 
     // Find the user's cart or create a new one if it doesn't exist
     let cart = await userCart.findOne({ userId });
@@ -149,57 +145,55 @@ exports.addToCart = async (req, res) => {
     }
 
     // Check if the product is already in the cart
-    const cartItem = cart.items.find(
+    const cartItemIndex = cart.items.findIndex(
       (item) => item.productId.toString() === productId
     );
 
-    if (cartItem) {
-      // If the product is already in the cart, increase the quantity
-      cartItem.quantity += 1;
+    if (cartItemIndex !== -1) {
+      // If the product is already in the cart, increase the quantity and update price
+      const product = await productsCollection.findById(productId);
+      if (product && product.isListed && product.stock >= cart.items[cartItemIndex].quantity + parseInt(quantity)) {
+        const cartItem = cart.items[cartItemIndex];
+        cartItem.quantity += parseInt(quantity); // Update quantity
+
+        // Update individual item price based on new quantity
+        let price = product.price;
+        if (product.discount > 0 && product.discount < 100) {
+          price -= (product.discount / 100) * price;
+        }
+        cartItem.price = price * cartItem.quantity; // Update item price based on discounts and quantity
+      } else {
+        return res.status(400).json({ success: false, message: 'Product is not available or out of stock.' });
+
+      }
     } else {
       // If the product is not in the cart, add it as a new item
       const product = await productsCollection.findById(productId);
-
-      if (product) {
-        // Check if the product is listed and has available stock
-        if (product.isListed && product.stock > 0) {
-          let price = product.price; // Initialize the price with the product price
-          
-          // Check if the product has a discount and adjust the price accordingly
-          if (product.discount > 0 && product.discount < 100) {
-            // Calculate the discounted price
-            price -= (product.discount / 100) * price;
-          }
-
-          cart.items.push({
-            productId,
-            quantity: 1,
-            price, // Use the adjusted price with discount applied
-          });
-
-          // Update the total price in the cart
-          cart.totalPrice += price;
-
-          await cart.save();
-
-          return res.redirect("/cart");
-        } else {
-          return res.render("user/home", {
-            error: "Product is not available for purchase.",
-          });
+      if (product && product.isListed && product.stock >= quantity) {
+        let price = product.price;
+        if (product.discount > 0 && product.discount < 100) {
+          price -= (product.discount / 100) * price;
         }
+        cart.items.push({ productId, quantity, price });
       } else {
-        return res.render("user/home", { error: "Product not found." });
+        return res.status(400).json({ success: false, message: 'Product is not available or out of stock.' });
       }
     }
 
-    // Save the updated cart
+    // Update total price in the cart
+    cart.totalPrice = cart.items.reduce((total, item) => total + item.price, 0);
+    // Round totalPrice to 2 decimal places
+    if (!isNaN(cart.totalPrice)) {
+      cart.totalPrice = parseFloat(cart.totalPrice.toFixed(2));
+    }
+
     await cart.save();
 
     return res.redirect("/cart");
   } catch (error) {
     console.error("Error adding product to the cart:", error);
-    // return res.render('user/home',{ error: ' Internal server error.' } );
+    // Handle error appropriately
+    return res.status(500).json({ error: 'Internal server error.' });
   }
 };
 
@@ -221,22 +215,22 @@ exports.removeItem = async (req, res) => {
     if (cart) {
       // Remove the item with the specified productId from the cart
       cart.items = cart.items.filter(item => item._id.toString() !== productId);
-   
-      
-   cart.totalPrice = cart.items.reduce((total, item) => total + item.price * item.quantity, 0);
- 
-   await cart.save();
 
-   return res.redirect('/cart');
- } else {
-   // Handle the case where the cart does not exist
-   return res.render('user/cart', { error: 'Cart not found.' });
- }
 
-}catch (error) {
-  console.error('Error removing product from the cart:', error);
-  return res.render('user/cart', { error: 'Internal server error.' });
-}
+      cart.totalPrice = cart.items.reduce((total, item) => total + item.price * item.quantity, 0);
+
+      await cart.save();
+
+      return res.redirect('/cart');
+    } else {
+      // Handle the case where the cart does not exist
+      return res.render('user/cart', { error: 'Cart not found.' });
+    }
+
+  } catch (error) {
+    console.error('Error removing product from the cart:', error);
+    return res.render('user/cart', { error: 'Internal server error.' });
+  }
 
 };
 
@@ -246,10 +240,10 @@ exports.updateQuantity = async (req, res) => {
     const itemId = req.params.itemId;
     const newQuantity = parseInt(req.query.quantity);
     const userEmail = req.session.user;
-    
+
     const userData = await userCollection.findOne(userEmail);
     const userId = userData._id;
-  
+
     const cart = await userCart.findOne({ userId }).populate({
       path: 'items.productId',
       model: 'products',
@@ -283,10 +277,12 @@ exports.updateQuantity = async (req, res) => {
       price -= discountAmount;
     }
 
-    item.price = price * newQuantity;
+    item.price = (price * newQuantity).toFixed(2);
 
     // Update the totalPrice in the cart by recalculating
     cart.totalPrice = cart.items.reduce((total, item) => total + item.price, 0);
+
+    cart.totalPrice = parseFloat(cart.totalPrice.toFixed(2));
 
     // Save the updated cart to the database
     await cart.save();
@@ -329,11 +325,14 @@ exports.getCheckoutPage = async (req, res) => {
           // Calculate discounted price if the product has a discount
           itemPrice -= (item.productId.discount / 100) * itemPrice;
           totalPrice += itemPrice * item.quantity;
-        }   
+        }
       } else {
         console.log("Invalid item found:", item);
       }
     });
+
+    totalPrice = totalPrice.toFixed(2);
+   
 
     res.render("user/checkout", { userAddress, cart, totalPrice, discountedPrice });
   } catch (error) {
@@ -346,15 +345,15 @@ exports.getCheckoutPage = async (req, res) => {
 
 
 
-exports.checkoutAddAddress = async ( req,res)=> {
+exports.checkoutAddAddress = async (req, res) => {
 
-  try{ 
+  try {
     const userEmail = req.session.user;
     const userdata = await userCollection.findOne(userEmail);
     const userId = userdata._id;
 
-    const data = { 
-      userId:userId,  
+    const data = {
+      userId: userId,
       name: req.body.name,
       address: req.body.address,
       phone: req.body.phone,
@@ -366,15 +365,15 @@ exports.checkoutAddAddress = async ( req,res)=> {
 
     const savedAddress = await Address.insertMany([data]);
 
-    console.log("savedAddress",savedAddress);
+    console.log("savedAddress", savedAddress);
     res.redirect("/checkout");
 
-  } catch(error){
+  } catch (error) {
     console.error('Error adding new address:', error);
     // Handle the error (e.g., show an error page)
     res.status(500).send('Internal Server Error');
 
-}
+  }
 
 }
 
@@ -387,7 +386,7 @@ exports.placeOrder = async (req, res) => {
     const userId = userData._id;
     const { totalPrice } = req.body;
 
-    console.log("totalPrice in place order",req.body);
+    console.log("totalPrice in place order", req.body);
 
     // Get the selected address from the request body
     const shippingAdrsId = req.body.selectedAddressId;
@@ -411,7 +410,7 @@ exports.placeOrder = async (req, res) => {
 
     // Access orderId from the request body after it's generated by the middleware
     const orderId = req.body.orderId;
-    console.log("orderId",orderId);
+    console.log("orderId", orderId);
 
     // Check if payment option is wallet and user has sufficient balance
     if (paymentOption === 'walletpayment') {
@@ -430,7 +429,7 @@ exports.placeOrder = async (req, res) => {
 
       // Update wallet balance and transaction in the database
       const transaction = {
-        amount: -totalPrice, 
+        amount: -totalPrice,
         description: `Payment for order ${orderId} (${paymentOption})`, // Description for transaction
         date: new Date(), // Current date
         paymentMethod: paymentOption // Payment method used
@@ -443,7 +442,7 @@ exports.placeOrder = async (req, res) => {
     // Create an order document
     const orderData = {
       userId,
-      orderId,  
+      orderId,
       products: cart.items.map((cartItem) => ({
         productId: cartItem.productId._id,
         productName: cartItem.productId.name,
@@ -475,7 +474,7 @@ exports.placeOrder = async (req, res) => {
 
     // Create the order
     const newOrder = await ordersCollection.create(orderData);
-    console.log("newOrder",newOrder);
+    console.log("newOrder", newOrder);
 
     // Update product stock and clear the user's cart
     await Promise.all([
@@ -489,7 +488,6 @@ exports.placeOrder = async (req, res) => {
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 };
-
 
 
 
@@ -531,7 +529,7 @@ exports.orderDetails = async (req, res) => {
     // Find the product within the order that matches the productId
     const product = order.products.find(prod => String(prod.productId) === productId);
 
-    console.log("product",product);
+    console.log("product", product);
 
     // Render the order details page with the order and product details
     return res.render("user/orderDetails", { order, product });
@@ -549,16 +547,35 @@ exports.orderHistory = async (req, res) => {
     const userData = await userCollection.findOne(session);
     const userId = userData._id; // Assuming userId is an ObjectId
 
-    // Retrieve all orders for the user
+    // Pagination parameters
+    const page = parseInt(req.query.page) || 1; // Current page, default is 1
+    const perPage = 10; // Number of orders per page
+
+    // Calculate the number of orders to skip
+    const skip = (page - 1) * perPage;
+
+    // Retrieve orders for the user with pagination
     const userOrders = await ordersCollection
       .find({ userId })
       .sort({ orderDate: -1 })
+      .skip(skip)
+      .limit(perPage)
       .populate('userId'); // Populate the user details
-    
-      console.log("userOrder in orderhistory,",userOrders );
 
-    // Render the order history page with the order details
-    return res.render("user/orderHistory", { orders: userOrders });
+    // Count total orders for pagination
+    const totalOrders = await ordersCollection.countDocuments({ userId });
+
+    // Calculate total pages
+    const totalPages = Math.ceil(totalOrders / perPage);
+
+    console.log("userOrder in orderhistory,", userOrders);
+
+    // Render the order history page with the order details and pagination information
+    return res.render("user/orderHistory", { 
+      orders: userOrders,
+      currentPage: page,
+      totalPages
+    });
   } catch (error) {
     console.error('Error fetching order details:', error);
     return res.status(500).json({ error: 'Internal Server Error' });
@@ -568,9 +585,9 @@ exports.orderHistory = async (req, res) => {
 
 
 
-exports.orderSuccessPage = (req,res)=> {
+exports.orderSuccessPage = (req, res) => {
 
-  try{
+  try {
     res.render("user/orderSuccess");
   }
   catch (error) {
@@ -578,7 +595,7 @@ exports.orderSuccessPage = (req,res)=> {
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 
-  
+
 }
 
 exports.cancelOrder = async (req, res) => {
@@ -691,19 +708,19 @@ exports.returnOrder = async (req, res) => {
 
     if (order.paymentMethod === 'Razorpay') {
       const userId = order.userId;
-      const totalPrice = product.price; 
-     
+      const totalPrice = product.price;
+
       const user = await userCollection.findOne({ _id: userId });
 
       user.Wallet.balance += totalPrice;
 
       user.Wallet.transactions.push({
 
-          amount: totalPrice,
-          description: `Return refund for ${product.productName}`,
+        amount: totalPrice,
+        description: `Return refund for ${product.productName}`,
       })
 
-      
+
       await user.save();
     }
 
@@ -718,15 +735,18 @@ exports.returnOrder = async (req, res) => {
 }
 
 
-exports.razorpay = async(req,res)=>{
+exports.razorpay = async (req, res) => {
 
-  try{
+  try {
 
     const { amount } = req.body;
-   
-     var instance = new Razorpay({ key_id: process.env.KEY_ID, key_secret: process.env.KEY_SECRET});
+
+    // Convert totalPrice to an integer by multiplying it by 100
+    const totalPriceInPaisa = Math.round(amount * 100);
+
+    var instance = new Razorpay({ key_id: process.env.KEY_ID, key_secret: process.env.KEY_SECRET });
     var options = {
-      amount: amount * 100, 
+      amount: totalPriceInPaisa,
       currency: "INR",
       receipt: "order_rcptid_11",
     };
@@ -738,13 +758,13 @@ exports.razorpay = async(req,res)=>{
         res.status(500).send("Error creating order");
         return;
       }
-    
-      res.send({ orderId: order.id ,orderprice:amount});
-     
-     });
+
+      res.send({ orderId: order.id, orderprice: amount });
+
+    });
 
 
-  }catch(err){
+  } catch (err) {
 
     console.log(err);
   }
@@ -753,18 +773,18 @@ exports.razorpay = async(req,res)=>{
 
 
 
-exports.razorpayOrder = async(req,res)=>{
+exports.razorpayOrder = async (req, res) => {
 
-  try{
+  try {
 
     const session = req.session.user;
     const userData = await userCollection.findOne(session);
     const userId = userData._id;
-    const { orderprice,razorpay_payment_id, address} =req.body;
+    const { orderprice, razorpay_payment_id, address } = req.body;
 
-    
-    const selectedAddress = await Address.findOne({userId:userId,_id:address});
-    console.log("selectedAddress",selectedAddress);
+
+    const selectedAddress = await Address.findOne({ userId: userId, _id: address });
+    console.log("selectedAddress", selectedAddress);
 
     const paymentOption = req.body.selectedPaymentOption;
 
@@ -773,19 +793,19 @@ exports.razorpayOrder = async(req,res)=>{
       model: 'products',
     });
 
-  
+
     if (!cart || !cart.items || cart.items.length === 0) {
       return res.status(400).json({ error: 'Cart is empty' });
     }
 
-     // Access orderId from the request body after it's generated by the middleware
-     const orderId = req.body.orderId;
-     console.log("orderId",orderId);
+    // Access orderId from the request body after it's generated by the middleware
+    const orderId = req.body.orderId;
+    console.log("orderId", orderId);
 
     // Create an order document
     const orderData = {
       userId,
-      orderId,  
+      orderId,
       products: cart.items.map((cartItem) => ({
         productId: cartItem.productId._id,
         productName: cartItem.productId.name,
@@ -817,7 +837,7 @@ exports.razorpayOrder = async(req,res)=>{
 
     // Create the order
     const newOrder = await ordersCollection.create(orderData);
-    console.log("newOrder",newOrder);
+    console.log("newOrder", newOrder);
 
     // Update product stock and clear the user's cart
     await Promise.all([
@@ -829,13 +849,13 @@ exports.razorpayOrder = async(req,res)=>{
 
 
 
-  }catch(err){
+  } catch (err) {
 
 
     console.log(err)
   }
 
-} 
+}
 
 
 

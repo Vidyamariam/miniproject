@@ -58,9 +58,11 @@
                   <span class="text-danger">Out of Stock</span>
                   <% } %>
                 </form>
-                <button type="submit" class="btn btn-lg">
-                  <i class="fa fa-duotone fa-heart"></i> Add to wishlist
-                </button>
+                <form action="/add-wishlist/<%= product._id %>" method="post">
+                  <button type="submit" class="btn btn-lg">
+                    <i class="fa fa-duotone fa-heart"></i> Add to wishlist
+                  </button>
+                </form>
               </div>
             </div>
           </div>

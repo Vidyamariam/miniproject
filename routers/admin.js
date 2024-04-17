@@ -26,9 +26,9 @@ router.get("/adminlogout",AdminAuthentcation ,adminController.getAdminLogout);
 router.get("/order-list",AdminAuthentcation ,adminController.getOrders);
 router.get("/filterproducts",AdminAuthentcation ,adminController.filterByCategory);
 router.get("/adminOrderDetails/:orderId/:productId",AdminAuthentcation ,adminController.adminOrderDetails);
-router.get("/sales-report", adminController.getSalesReport);
-router.get("/download/pdf", adminController.downloadPdf);
-router.get("/download/excel", adminController.downloadExcel);
+router.get("/sales-report",AdminAuthentcation, adminController.getSalesReport);
+router.get("/download/pdf",AdminAuthentcation, adminController.downloadPdf);
+router.get("/download/excel",AdminAuthentcation, adminController.downloadExcel);
 
 
 

@@ -88,9 +88,7 @@
   <div class="checkout-content">
     <div class="title">CHECKOUT</div>
 
-
     
-   
     <div class="address-details">
       <!-- <label for="fullName">Full Name:</label>
       <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" />
@@ -98,6 +96,7 @@
       <label for="address">Select Address:</label>
       <select id="address" name="shippingAddresss">
         <% if (userAddress) { %>
+         
           <% userAddress.forEach(address => { %>
             <option value="<%= address._id %>">
               <%= address.name %>: <%= address.address %>, <%= address.locality %>, <%= address.state %> - <%= address.pincode %>
@@ -110,11 +109,10 @@
       </select>
 
       <br>
-      <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#addAddressModal">Add Address</button>
+      <button class="btn btn-dark mt-3" data-bs-toggle="modal" data-bs-target="#addAddressModal">Add Address</button>
     </div>
 
-     
- <!-- Modal- ADD ADDRESS -->
+<!-- Modal- ADD ADDRESS -->
 <div class="modal fade" id="addAddressModal" tabindex="-1" role="dialog" aria-labelledby="addAddressModalLabel"
 aria-hidden="true">
 <div class="modal-dialog" role="document">
@@ -237,40 +235,37 @@ function validateForm() {
     document.getElementById('addressForm').submit();
   }
 }
+
 </script>
   
 
     <div class="main-content">
       <div class="product-list-container">
-      <div class="product-list">
-        <table>
-          <thead>
-            <tr>
-              <th>Product Name</th>
-              <th>Image</th>
-              <th>Description</th>
-              <th>Quantity</th>
-              <th>Price</th>
-            </tr>
-          </thead>
-          <tbody>
-           
-            <!-- Loop through your cart items and display relevant information -->
-            <% if (cart && cart.items && cart.items.length> 0 ) { %>
+        <div class="product-list">
+          <!-- Loop through your cart items and display relevant information -->
+          <% if (cart && cart.items && cart.items.length> 0 ) { %>
             <% cart.items.forEach((item) => { %>
-              <tr>
-                <td><%= item.productId.name %></td>
-                <td><img src="<%= item.productId.productImage[0] %>" alt="Product Image" style="max-width: 100px; max-height: 100px;"></td>
-                <td  > <%= item.productId.description %></td>
-                <td><%= item.quantity %></td>
-                <td>Rs.<%= item.price %></td>
-            </tr>
-            <% });%>
-          
-            <!-- Add more product items as needed -->
-          </tbody>
-        </table>
-    
+              <div class="product-card">
+                <div class="product-image">
+                  <img src="<%= item.productId.productImage[0] %>" alt="Product Image">
+                </div>
+                <div class="product-details">
+                  <h3 class="product-name"><%= item.productId.name %></h3>
+                  <p class="product-description"><%= item.productId.description %></p>
+                  <p class="product-quantity">Quantity: <%= item.quantity %></p>
+                  <p class="product-price">Price: Rs.<%= item.price %></p>
+                </div>
+              </div>
+
+              
+              
+            <% }); %>
+
+          <% } else { %>
+            <p>No items in the cart.</p>
+          <% } %>
+        </div>
+
         <div class="totalprice">
           <% if (discountedPrice) { %>
             <del><h4>Total Price: ₹<%= totalPrice %></h4></del>
@@ -280,51 +275,47 @@ function validateForm() {
             <h4>Total Price: ₹<%= totalPrice %></h4>
             <span id="price" data-totalprice="<%= totalPrice %>"></span>
           <% } %>
-        </div>        
-        
-
-
-        <% } else { %>
-          <p>No items in the cart.</p>
-        <% } %>
-      </div>
+        </div>  
     </div>
+           
+    <hr style="width: 800px;height: 1rem;">
+   
    
       <div class="order-place">
-         
-        <div class="coupon-section" style="display: flex; padding: 10px;">
-          <h6 for="couponCode">Coupons</h6>
+        <h4 for="couponCode">Apply Coupon</h4>
+        <div class="coupon-section" style="display: flex; padding: 10px;">       
           
           <form action="/apply-coupon" method="POST" style="margin-right: 10px;">
-              <div class="coupon-input">
+             
                   <input name="couponCode" type="text" placeholder="enter coupon code">
-                  <button class="btn btn-sm btn-primary" type="submit">Apply</button>
-              </div>
+
+                  <small style="color: red;"><%= locals.error %></small>
+                  <button class="btn btn-sm btn-dark" type="submit">Apply</button>          
           </form>
       
           <form action="/remove-coupon" method="POST">
-              <button style="width: 80px; border: none; background-color: rgb(229, 90, 90); color: white;margin-left: 15px;" type="submit">Remove</button>
+              <button class="btn btn-sm btn-danger" type="submit">Remove</button>
           </form>
-          <small style="color: red;"><%= locals.error %></small>
+         
       </div>
       
         
-       <br>
+     
 
 
        <!-- <div class="payment_type payment_type--paypal">
         <input type="radio" id="RazorPay" name="payment_type" value="RazorPay">
         <button id="razorpayBtn">Pay with Razorpay <i class="fa-brands fa-paypal"></i></button>
       </div>   -->
-       
+     <hr style="width: 800px;">  
 
         <div class="payment-section">
           <!-- Use radio buttons for payment options -->
-          <h6>Payment Options</h6>
+          <h4>Payment Options</h4>
           <div class="form-check">
             <input class="form-check-input" type="radio" name="paymentOption" id="RazorPay" value="razorpay">
             <label class="form-check-label" for="RazorPay" style="display: flex; align-items: center;"> 
-                <button id="razorpayBtn" style="border: none; border-radius: 15px; background-color:white; color: black; display: hidden;">Pay with Razorpay <i class="fab fa-paypal"></i></button>
+                <button id="razorpayBtn" style="border: none; border-radius: 15px; background-color:rgb(227, 196, 197); color: black; display: hidden;">Pay with Razorpay <i class="fab fa-paypal"></i></button>
                
             </label>
         </div>
@@ -332,7 +323,7 @@ function validateForm() {
          <br>
         
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="paymentOption" id="cashOption" value="cash" onclick="selectPaymentOption('cash')">
+            <input class="form-check-input" type="radio" name="paymentOption" id="cashOption" value="cash" onclick="selectPaymentOption('cash on delivery')">
             <label class="form-check-label" for="cashOption">
               Cash on Delivery 
               <i class="fa fa-duotone fa-money-bill-wave fa-lg"></i>
@@ -346,9 +337,13 @@ function validateForm() {
               Pay with wallet 
               <i class="fa-solid fa-wallet fa-lg"></i>
           </div>
-        
-          <!-- Add more payment options as needed -->
-        
+         
+
+          <!-- Add this element to display the error message -->
+           <div id="paymentError" style="color: red;"></div>
+
+           <h4 style="color: red"><%= locals.walletError %></h4>
+             
           <!-- Hidden input to store the selected payment option -->
           <input type="hidden" id="selectedPaymentOption" name="selectedPaymentOption" value="">
         </div>
@@ -356,12 +351,12 @@ function validateForm() {
       </div>
 
     </div>
+    
+    <hr>
    
-   
-     <br>
     <div class="place-order">
       <form action="/checkout" method="post" id="placeOrderForm">
-        <button class="btn btn-lg btn-warning" type="button" onclick="placeOrder()">Place Order</button>
+        <button class="btn btn-lg btn-dark" type="button" onclick="placeOrder()">Place Order</button>
      </form> 
     </div>
   
@@ -555,6 +550,9 @@ function validateForm() {
   }
 </script> -->
 
+<!-- SweetAlert CDN -->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
 
 <script>
 
@@ -564,6 +562,13 @@ function placeOrder() {
 
   // Get the selected payment option
   const selectedPaymentOption = $("input[name='paymentOption']:checked").val();
+
+  // Check if a payment option is selected
+  if (!selectedPaymentOption) {
+    // Display an error message to the user in the placeholder element
+    $("#paymentError").text("Please select a payment option");
+    return; // Stop further execution of the function
+  }
 
   // Get the total price
   const totalPrice = $("#price").attr("data-totalprice");
@@ -587,6 +592,15 @@ function placeOrder() {
     error: function (error) {
       // Handle error, if needed
       console.error(error);
+
+      // Check if the error response contains the message for insufficient funds
+      if (error.responseJSON && error.responseJSON.error === 'Insufficient funds in wallet') {
+        // Display a SweetAlert with the error message
+        swal("Insufficient Funds", "Your wallet balance is insufficient for this purchase.", "error");
+      } else {
+        // For other errors, display a generic error message
+        swal("Error", "An error occurred while placing your order. Please try again later.", "error");
+      }
     }
   });
 }

@@ -36,23 +36,31 @@ exports.addToWishlist = async (req, res) => {
         const userId = userdata._id;
         const productId = req.params.productId;
 
-        // Find the product from the products collection
-        const product = await productsCollection.findById(productId);
+        // Check if the product already exists in the wishlist
+        const existingItem = await wishlistCollection.findOne({ userId: userId, productId: productId });
 
-        const wishlistItem = new wishlistCollection({
-            userId: userId,
-            productId: productId,
-            productName: product.name,
-            productImage: product.productImage,
-            price: product.price,
-            stock: product.stock,
-        });
+        if (existingItem) {
+            // Product already exists in the wishlist, send a message or handle it as needed
+            res.redirect("/wishlist");
+        } else {
+            // Find the product from the products collection
+            const product = await productsCollection.findById(productId);
 
-        // Save the wishlistItem to the database
-        await wishlistItem.save();
+            const wishlistItem = new wishlistCollection({
+                userId: userId,
+                productId: productId,
+                productName: product.name,
+                productImage: product.productImage,
+                price: product.price,
+                stock: product.stock,
+            });
 
-        // Redirect after the wishlist item is added
-        res.redirect("/wishlist");
+            // Save the wishlistItem to the database
+            await wishlistItem.save();
+
+            // Redirect after the wishlist item is added
+            res.redirect("/wishlist");
+        }
     } catch (error) {
         console.error("Error adding to wishlist:", error);
         // Handle the error appropriately, e.g., display an error page or redirect

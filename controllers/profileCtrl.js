@@ -108,6 +108,13 @@ exports.downloadInvoice = async (req, res) => {
         // Pipe the PDF document to the response
         doc.pipe(res);
 
+         // Hardcoded site title and logo
+         const siteTitle = "Amoli Jewels";
+        
+         // Title and logo
+         doc.fontSize(20).text(siteTitle, { align: 'center' }).moveDown();
+         
+
         // Write order details to the PDF document
         doc.moveDown();
         doc.fontSize(14).text('Order Details', { align: 'center' }).moveDown();
@@ -193,6 +200,11 @@ exports.postChangePassword = async (req, res) => {
         // Check if the new password matches the confirm password
         if (newPassword !== confirmPassword) {
             return res.render("user/changePassword",{ newPassworderror: 'New password and confirm password do not match' });
+        }
+
+        // Check if the new password is the same as the existing password
+        if (existingPassword === newPassword) {
+            return res.render("user/changePassword",{ error: 'New password should be different from existing password' });
         }
 
         // Hash the new password

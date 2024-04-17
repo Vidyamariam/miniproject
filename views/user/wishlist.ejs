@@ -31,6 +31,17 @@
     <link rel="stylesheet" href="/stylesheets/user/wishlist.css" />
     <link rel="stylesheet" href="/stylesheets/user/athletic.css" />
     <link rel="stylesheet" href="/stylesheets/user/home.css" />
+
+    
+
+  <style>
+
+header{
+
+background-color: rgb(199, 188, 188);
+}
+  </style>
+
   </head>
   <body>
 
@@ -118,16 +129,14 @@
                     <% } %>
                         <span class="item-quantity">1</span>
                     </td>
-                    <td width="15%">
-
-                      <form action="/add-to-cart/<%= product.productId %>" method="post">
-                       
+                    <td width="15%">             
+                        <form onsubmit="addToCart('<%= product.productId %>'); return false;">
                         <button type="submit" class="round-black-btn small-btn">
                           Add to Cart
                         </button>
                       </form>
-                     
                     </td>
+                    
                     <td width="10%" class="text-center">
                       <a href="/remove-wishlist/<%= product._id %>" class="trash-icon">
                           <i class="far fa-trash-alt"></i>
@@ -187,6 +196,28 @@
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
     crossorigin="anonymous"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <script>
+      function addToCart(productId, productName, stock) {
+        if (stock > 0) {
+          // Submit the form directly
+          document.getElementById('add-to-cart-form-' + productId).submit();
+        } else {
+          // Show SweetAlert if stock is not available
+          Swal.fire({
+            icon: 'error',
+            title: 'Out of Stock',
+            text: productName + ' is out of stock!',
+            confirmButtonText: 'OK'
+          });
+        }
+      }
+    </script>
+    
+    
+
 
     <script>
         function toggleDropdown() {
@@ -204,6 +235,42 @@
           }
         };
       </script>
+
+
+<script>
+  // Function to handle form submission and show SweetAlert
+  function addToCart(productId) {
+    // Submit the form asynchronously using fetch
+    fetch(`/add-to-cart/${productId}`, {
+      method: 'POST',
+    })
+    .then(response => {
+      if (!response.ok) {
+        // If response is not ok, show SweetAlert with error message
+        return response.json().then(data => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops....',
+            text: data.message
+          });
+        });
+      } else {
+        // If response is ok, redirect to cart page or perform any other action
+        window.location.href = '/cart';
+      }
+    })
+    .catch(error => {
+      console.error('Error adding product to cart:', error);
+      // Handle any other errors that occur during form submission
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'An error occurred while adding the product to the cart. Please try again later.'
+      });
+    });
+  }
+</script>
+
 
   </body>
 </html>

@@ -81,6 +81,92 @@
         text-decoration: none;
         color: #333;
       }
+
+      .middle-content {
+    margin-top: 100px;
+  }
+
+  .carousel-item img {
+    width: 100%;
+    height: auto;
+    max-height: 800px; /* Set your desired max height */
+    padding: 10px;
+    border-radius: 20px;
+  }
+
+      
+  /* Add your custom styles here */
+
+/* Shop By Category section */
+
+.category-section{
+  font-family: "Bacasime Antique", serif;
+}
+
+.row {
+    margin-top: 20px;
+    margin-bottom: 100px;
+    
+}
+
+.category-item {
+    position: relative;
+    margin-left: 20px;
+    flex: 1; /* Make each category item take equal space */
+    max-width: calc(50% - 40px); /* Set maximum width for each item to occupy half of the container's width */
+}
+
+.category-item h2 {
+  font-family: "Bacasime Antique", serif;
+    z-index: 1;
+    text-align: center;
+    top: 10px;
+    left: 10px;
+    color: black;
+    font-size: 24px;
+    z-index: 1;
+}
+
+
+.explore-btn {
+  font-family: "Bacasime Antique", serif;
+    position: absolute;
+    top: 90%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 10px 20px;
+    background-color: transparent;
+    color: #000;
+    text-decoration: none;
+    font-size: 30px;
+    font-weight: bold;
+    border-radius: 5px;
+    z-index: 1;
+}
+
+
+.category-items{
+  display: flex;
+}
+.category-image {
+    position: relative;
+    overflow: hidden;
+    padding: 20px;
+}
+
+.category-image img {
+    border-radius: 20px;
+    height: 570px;
+    width: 650px;
+    transition: transform 0.3s ease-in-out; /* Add transition for transform property */
+}
+
+.category-image img:hover {
+    transform: scale(1.1); /* Increase scale on hover */
+}
+
+
+
     </style>
   </head>
   <body>
@@ -105,12 +191,69 @@
       </nav>
     </header>
 
-    <!--BANNER SECTION-->
-    <div id="banner-section" >
-      <img src="/img/carousel/banner3.jpg">
-   </div>
+   
+   <!--BANNER SECTION-->
+<div id="banner-section">
+  <div id="carouselhomepage" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="/img/user/carousImg1.jpg" class="d-block w-100" alt="..." />
+      </div>
+      <div class="carousel-item">
+        <img src="/img/user/carouImg2.webp" class="d-block w-100" alt="..." />
+      </div>
+      <div class="carousel-item">
+        <img src="/img/user/carousImg4.webp" class="d-block w-100" alt="..." />
+      </div>
+    </div>
+    <button
+      class="carousel-control-prev"
+      type="button"
+      data-bs-target="#carouselExampleAutoplaying"
+      data-bs-slide="prev"
+    >
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button
+      class="carousel-control-next"
+      type="button"
+      data-bs-target="#carouselExampleAutoplaying"
+      data-bs-slide="next"
+    >
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+</div>
     
-     <!--categories section-->
+    <!--categories section-->
+    <div class="container">
+      <h1 class="text-center category-section">Shop By Category</h1>
+      <div class="row category-items">
+  
+          <div class="col-md-6 category-item">
+              <h2>Ethnic</h2>
+              <a href="/ethnic" class=" explore-btn">Explore</a>
+              <div class="category-image">
+                <a href="/ethnic">
+                  <img src="/img/user/hpImg3.jpg" class="img-fluid" alt="Ethnic Image">
+                </a>
+                 
+              </div>
+          </div>
+  
+          <div class="col-md-6 category-item">
+              <h2>Contemporary</h2>
+              <a href="/contemporary" class="explore-btn">Explore</a>
+              <div class="category-image">
+                  <img src="/img/user/hpImg5.jpg" class="img-fluid" alt="Contemporary Image">
+              </div>
+          </div>
+      
+      </div>
+  </div>
+  
 
 
 

@@ -5,38 +5,51 @@
     padding-left: 100px;
     margin-top: 20px;
     margin-left: 100px;
-    background-color: rgb(225, 218, 148);
+    background-color: none;
     border-radius: 20px;
-    border: 1px solid rgb(88, 87, 87);
+    border: none;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5); 
+    
 }
 
 .wallet-balance{
-   padding-left: 200px;
+   text-align: center;
    padding-top: 30px;
+   display: flex;
+   justify-content: center;
     width: 600px;
-    height: 150px;
-    background-color: rgb(165, 164, 162);
+    height: 100px;
+    background-color: rgb(51, 50, 50);
     color: white;
-    border-radius: 20px;
-  
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(81, 80, 80, 0.5); 
    border: 1px solid rgb(93, 91, 91);
 }
 
-.wallet-history{
-    width: 600px;
+.wallet-balance h4{
+    margin-left:10px;
+}
+
+
+.wallet-history {
+    width: 650px;
     height: 150px;
     padding: 20px;
     background-color: rgb(245, 246, 247);
-    border-radius: 20px;
+    border-radius: 10px;
     margin-top: 20px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); 
-    overflow-y:  scroll;
-     height: 300px;
+    overflow-y: scroll; /* Enable vertical scrolling */
+    height: 300px;
 }
+
+.horizontal-cards::-webkit-scrollbar {
+    width: 0; /* Set the width of the scrollbar to 0 */
+    height: 0; /* Set the height of the scrollbar to 0 */
+}
+
 
 .wallet-history h3{
     text-align: center;

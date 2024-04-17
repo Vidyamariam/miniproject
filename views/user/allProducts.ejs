@@ -68,7 +68,7 @@
   border: none;
   border-radius: 5px;
   margin-right: 5px;
-  width: 120px; /* Adjust width as needed */
+  width: 159px; /* Adjust width as needed */
 }
 
 #search-bar:focus {
@@ -81,6 +81,8 @@
   color: #101112;
   border: none;
   border-radius: 5px;
+  width: 40px;
+  height: 40px;
   cursor: pointer;
   padding: 8px 12px;
   position: absolute;
@@ -181,11 +183,68 @@
   margin-left: 80px;
 }
 
+/* Sort Dropdown */
+.dropdown {
+    display: inline-block;
+    position: relative;
+  }
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    background-color: #fff;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    padding: 5px 0;
+    border-radius: 5px;
+  }
+  .dropdown-menu a {
+    color: #000;
+    text-decoration: none;
+    display: block;
+    padding: 10px;
+  }
+  .dropdown-menu a:hover {
+    background-color: #f2f2f2;
+  }
+  .dropdown:hover .dropdown-menu {
+    display: block;
+  }
+
+  /* Filter Dropdown */
+  .filter-dropdown {
+    display: inline-block;
+    margin-left: 20px;
+  }
+  .categoryForm {
+    padding: 5px;
+    border-radius: 5px;
+    margin-right: 10px;
+  }
+
+  .filter-dropdown select{
+
+    width: 150px;
+    height: 40px;
+  }
+
+  .filter-dropdown select option{
+
+    height: 50px;
+
+  }
+
+  header{
+
+background-color: rgb(199, 188, 188);
+}
+
 
    
     </style>
   </head>
   <body>
+    
     <header>
       <div id="header-info">
         <!-- <p id="contactus">Contact Us</p> -->
@@ -198,7 +257,7 @@
               <a href="/profile"><i class="fa fa-regular fa-user fa-sm"></i> My Profile</a>
               <a href="/order-history"><i class="fa fa-regular fa-receipt fa-sm"></i> Orders</a>
               <a href="/wishlist"><i class="fa fa-regular fa-heart fa-sm"></i> Wishlist</a>
-              <a href="#"><i class="fa fa-regular fa-ticket fa-sm"></i> Coupons</a>
+              <a href="/coupons"><i class="fa fa-regular fa-ticket fa-sm"></i> Coupons</a>
               <a href="/logout"><i class="fa fa-regular fa-sign-out-alt fa-sm"></i> Logout</a>
             </div>
           </div>
@@ -256,63 +315,79 @@
           <select id="categoryFilter" name="category" class="categoryForm">
               <option value="">All Categories</option>
               <% categories.forEach(category => { %>
-                  <option value="<%= category %>"><%= category %></option>
+                  <option class="categorydropdwn" value="<%= category %>"><%= category %></option>
               <% }); %>
           </select>
           <button type="submit" style="width: 100px;height: 40px; background-color: black; color: white;border: none; border-radius: 10px;">Apply Filter</button>
       </form>
+     </div>
   </div>
+
+
   
 
-  <h1>ALL PRODUCTS</h1>
+  <h1 style="margin-top: 100px; text-align: center">ALL PRODUCTS</h1>
+
   <div class="row gy-3 all-products">
       <!--cards section-->
       <div class="col-md-10 mx-auto" id="product-list-container">
           <!-- Search results will be dynamically inserted here -->
       </div>
-      <% products.forEach((product)=> { %> <% if (product.isListed) { %>
-      <div class="col-md-3">
-          <div class="card" id="product">
-              <a href="/productDetails/<%= product._id %>">
-                  <img
-                      src="<%= product.productImage[0] %>"
-                      class="card-img-top"
-                      alt="..."
-                  />
-              </a>
-  
-              <div class="card-body" id="pdt-cardbdy">
-                  <h6 class="card-text"><%= product.name %></h6>
-                  <% if (product.discount > 0) { %>
-                  <h6 class="card-title">
-                      <!-- Display original price and discounted price -->
-                      <s><%= product.price %></s>
-                      <%= product.price - (product.price * product.discount / 100) %>
-                  </h6>
-                  <% } else { %>
-                  <h6 class="card-title"><%= product.price %></h6>
-                  <% } %>
-                  <form action="/add-to-cart/<%= product._id %>" method="post">
-                      <% if (product.isListed && product.stock > 0) { %>
-                      <!-- Product is available, show Add to Cart button -->
-                      <button type="submit" class="cartButton">
-                          Add to Cart
-                      </button>
-                      <% } else { %>
-                      <!-- Product is not available, show Out of Stock message -->
-                      <span class="text-danger">Out of Stock</span>
-                      <% } %>
-                  </form>
-                  <form action="/add-wishlist/<%= product._id %>" method="post">
-                      <button type="submit" class="wishlistbutton">
-                          <i class="fa fa-duotone fa-heart"></i> Add to wishlist
-                      </button>
-                  </form>
-              </div>
-          </div>
-      </div>
-  
-      <% } %> <% }) %>
+     <% products.forEach((product)=> { %> <% if (product.isListed) { %>
+
+<div class="col-md-3">
+    <div class="card" id="product">
+        <a href="/productDetails/<%= product._id %>">
+            <img
+                src="<%= product.productImage[0] %>"
+                class="card-img-top"
+                alt="..."
+            />
+        </a>
+
+        <div class="card-body" id="pdt-cardbdy">
+            <h6 class="card-text"><%= product.name %></h6>
+
+            <% 
+            // Check if there is a category offer for the product's category
+            var categoryOffer = categories.find(category => category.categoryName === product.category)?.categoryOffer || 0;
+            // Calculate the maximum discount between category offer and product discount
+            var maxDiscount = Math.max(categoryOffer, product.discount);
+            // Calculate the discounted price
+            var discountedPrice = product.price - (product.price * maxDiscount / 100);
+            %>
+
+            <% if (maxDiscount > 0) { %>
+            <h6 class="card-title">
+                <!-- Display original price and discounted price -->
+                <s><%= product.price %></s>
+                <%= discountedPrice %>
+            </h6>
+            <% } else { %>
+            <h6 class="card-title"><%= product.price %></h6>
+            <% } %>
+            <form onsubmit="addToCart('<%= product._id %>'); return false;">
+                <% if (product.isListed && product.stock > 0) { %>
+                <!-- Product is available, show Add to Cart button -->
+                <button type="submit" class="cartButton">
+                    Add to Cart
+                </button>
+                <% } else { %>
+                <!-- Product is not available, show Out of Stock message -->
+                <span class="text-danger">Out of Stock</span>
+                <% } %>
+            </form>
+            <form action="/add-wishlist/<%= product._id %>" method="post">
+                <button type="submit" class="wishlistbutton">
+                    <i class="fa fa-duotone fa-heart"></i> Add to wishlist
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<% } %> <% }) %>
+
   </div>
   
 
@@ -366,8 +441,12 @@
     <p>&copy; 2024 Your Company. All rights reserved.</p>
   </footer>
   
+  
   <!-- Bootstrap JS dependencies -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  <!-- SweetAlert CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
   
   
   <!-- <script>
@@ -452,6 +531,64 @@
   };
   
   </script>
+<script>
+  // Function to handle form submission and show SweetAlert
+  function addToCart(productId) {
+    // Submit the form asynchronously using fetch
+    fetch(`/add-to-cart/${productId}`, {
+      method: 'POST',
+    })
+    .then(response => {
+      if (!response.ok) {
+        // If response is not ok, show SweetAlert with error message
+        return response.json().then(data => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops....',
+            text: data.message
+          });
+        });
+      } else {
+        // If response is ok, redirect to cart page or perform any other action
+        window.location.href = '/cart';
+      }
+    })
+    .catch(error => {
+      console.error('Error adding product to cart:', error);
+      // Handle any other errors that occur during form submission
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'An error occurred while adding the product to the cart. Please try again later.'
+      });
+    });
+  }
+</script>
+
+  
+
+
+<!-- <script>
+  // Function to update sort dropdown links with selected category
+  function updateSortDropdown(category) {
+    var sortDropdown = document.getElementById("sortDropdown");
+    var sortLinks = sortDropdown.nextElementSibling.querySelectorAll("a");
+
+    sortLinks.forEach(function(link) {
+      var href = link.getAttribute("href").split("/"); // Split the URL by "/"
+      href[2] = category; // Replace the category with the selected one
+      link.setAttribute("href", href.join("/")); // Join the URL parts back
+    });
+  }
+
+  // Event listener for category selection change
+  document.getElementById("categoryFilter").addEventListener("change", function() {
+    var selectedCategory = this.value; // Get the selected category value
+    updateSortDropdown(selectedCategory); // Update sort dropdown links
+  });
+
+</script> -->
+
 
 
   </body>
