@@ -1,6 +1,9 @@
 .order-table{
 
     width: 1000px;
+    height: auto;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); 
+
 }
 
 .order-table tbody tr td{
@@ -30,4 +33,6 @@
 .order-main{
     display: flex;
     justify-content: space-between;
+
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); 
 }

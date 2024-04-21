@@ -53,17 +53,194 @@ const loginpost = async (req, res) => {
 }
 
 
-const dashboard =(req,res)=>{
+const dashboard = async (req, res) => {
+  try {
+    // Calculate total orders, total order amount, and total users from the orders collection
+    const totalOrders = await ordersCollection.countDocuments({});
+    const totalOrderAmount = await ordersCollection.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalAmount: { $sum: "$totalPrice" },
+        },
+      },
+    ]);
+    const totalUsers = await ordersCollection.aggregate([
+     
+      {
+        $group: {
+          _id: "$userId", 
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          count: { $sum: 1 }, 
+        },
+      },
+    ]);
 
-  try{
 
-     res.render("admin/dashboard");
-  }catch(err){
+     // Calculate top 10 best selling products
+     const topProducts = await ordersCollection.aggregate([
+      { $unwind: "$products" }, // Deconstruct the products array
+      {
+        $group: {
+          _id: "$products.productId", // Group by product ID
+          productName: { $first: "$products.productName" }, // Get the product name
+          totalQuantity: { $sum: "$products.quantity" }, // Sum the quantities
+        },
+      },
+      { $sort: { totalQuantity: -1 } }, // Sort by total quantity in descending order
+      { $limit: 10 }, // Limit to top 10 results
+    ]);
+    
 
-    console.log(err)
+    // console.log("top products ",topProducts);
+
+     // Calculate best selling category
+     const bestSellingCategory = await ordersCollection.aggregate([
+      { $unwind: "$products" }, // Deconstruct the products array
+      {
+        $lookup: {
+          from: "products", // Collection to join with
+          localField: "products.productId", // Field from the orders collection
+          foreignField: "_id", // Field from the products collection
+          as: "productDetails", // Alias for the joined documents
+        },
+      },
+      { $unwind: "$productDetails" }, // Deconstruct the productDetails array
+      {
+        $group: {
+          _id: "$productDetails.category", // Group by product category
+          totalQuantity: { $sum: "$products.quantity" }, // Sum the quantities
+        },
+      },
+      { $sort: { totalQuantity: -1 } }, // Sort by total quantity in descending order
+      { $limit: 1 }, // Limit to the top result
+    ]);
+
+    console.log("best catgeory: ", bestSellingCategory);
+
+
+   // Calculate total orders per day and their statuses including total amount made
+const ordersPerDay = await ordersCollection.aggregate([
+  {
+    $group: {
+      _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }, // Group by order date
+      totalOrders: { $sum: 1 }, // Count total orders per day
+      totalAmount: { $sum: "$totalPrice" } // Sum of total price per day
+    },
+  },
+  { $sort: { _id: 1 } }, // Sort by order date
+]);
+
+
+     // Calculate the count of orders with different statuses
+     const statusCounts = await ordersCollection.aggregate([
+      {
+        $unwind: "$products" // Deconstruct the products array
+      },
+      {
+        $group: {
+          _id: "$products.status", // Group by status
+          count: { $sum: 1 } // Count the occurrences of each status
+        }
+      }
+    ]);
+
+    // console.log("status counts: ", statusCounts);
+    
+
+    // Render the dashboard template with data
+    res.render("admin/dashboard", {
+      totalOrders,
+      totalOrderAmount: totalOrderAmount.length > 0 ? totalOrderAmount[0].totalAmount : 0,
+        totalUsers: totalUsers.length > 0 ? totalUsers[0].count : 0,
+        topProducts,
+        bestSellingCategory: bestSellingCategory.length > 0 ? bestSellingCategory : [],
+        ordersPerDay,
+        statusCounts
+    });
+  } catch (error) {
+    console.error("Error fetching dashboard data:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
-  
-}
+};
+
+
+const salesFilter = async (req, res) => {
+  try {
+    const selectedOption = req.body.selectedOption;
+
+    // Define variables to hold total orders data
+    let totalOrdersData = [];
+
+    // Calculate total orders based on selected option
+    switch (selectedOption) {
+      case "daily":
+        // Calculate total orders per day
+        totalOrdersData = await ordersCollection.aggregate([
+          {
+            $group: {
+              _id: { $dateToString: { format: "%Y-%m-%d", date: "$orderDate" } },
+              totalOrders: { $sum: 1 },
+            },
+          },
+          { $sort: { _id: 1 } },
+        ]);
+        break;
+      case "weekly":
+        // Calculate total orders per week
+        totalOrdersData = await ordersCollection.aggregate([
+          {
+            $group: {
+              _id: { $isoWeek: "$orderDate" },
+              totalOrders: { $sum: 1 },
+            },
+          },
+          { $sort: { _id: 1 } },
+        ]);
+        break;
+      case "monthly":
+        // Calculate total orders per month
+        totalOrdersData = await ordersCollection.aggregate([
+          {
+            $group: {
+              _id: { $dateToString: { format: "%Y-%m", date: "$orderDate" } },
+              totalOrders: { $sum: 1 },
+            },
+          },
+          { $sort: { _id: 1 } },
+        ]);
+        break;
+      case "yearly":
+        // Calculate total orders per year
+        totalOrdersData = await ordersCollection.aggregate([
+          {
+            $group: {
+              _id: { $year: "$orderDate" },
+              totalOrders: { $sum: 1 },
+            },
+          },
+          { $sort: { _id: 1 } },
+        ]);
+        break;
+      default:
+        // Handle invalid option
+        res.status(400).json({ error: "Invalid option" });
+        return;
+    }
+
+    // Send total orders data back to the client
+    res.json(totalOrdersData);
+  } catch (error) {
+    console.error("Error fetching total orders data:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
 
 
 const getUserManage = async (req, res) => {
@@ -548,7 +725,7 @@ const downloadExcel = async (req, res) => {
 
 
 module.exports = {
-    dashboard, login,loginpost,getUserManage,blockUser,getAdminLogout,postAdminLogout,getOrders,postOrders,filterByCategory,adminOrderDetails,getSalesReport,downloadPdf,downloadExcel
+    dashboard, login,loginpost,getUserManage,blockUser,getAdminLogout,postAdminLogout,getOrders,postOrders,filterByCategory,adminOrderDetails,getSalesReport,downloadPdf,downloadExcel,salesFilter
 }
 
 

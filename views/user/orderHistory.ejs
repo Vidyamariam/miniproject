@@ -17,6 +17,7 @@
                 <th scope="col">Date</th>
                 <th scope="col">Price</th>
                 <th scope="col">Total Price</th>
+
                 <th scope="col">Status</th>
                 <th scope="col">Actions</th>
               </tr>
@@ -38,14 +39,24 @@
                   product.price %> <% } %>
                 </td>
                 <td><%= order.totalPrice %></td>
+
                 <td class="order-status">
                   <% if (product.status==='Cancelled' ) { %> <%= product.status
                   %> <% } else { %> <%= product.status %> <% } %>
                 </td>
                 <td>
                   <div class="order-actions" style="display: flex; gap: 10px">
-                    <% if (product.status==='Pending' ||
-                    product.status==='pending' ) { %>
+                    <% if (product.status === 'failed') { %>
+                    <button
+                      class="btn btn-sm btn-primary retryPaymentBtn"
+                      type="button"
+                      onclick="retryPayment('<%= order._id %>','<%= product.productId %>','<%= product.price %>')"
+                    >
+                      Retry Payment
+                    </button>
+
+                    <% } else if (product.status === 'Pending' || product.status
+                    === 'pending') { %>
                     <button
                       id="cancelButton_<%= order._id %>"
                       class="btn btn-sm btn-danger cancelbtn"
@@ -53,8 +64,7 @@
                     >
                       Cancel Order
                     </button>
-
-                    <% } %> <% if (product.status==='delivered' ) { %>
+                    <% } %> <% if (product.status === 'delivered') { %>
                     <button
                       class="btn btn-sm btn-danger returnbtn"
                       onclick="showReturnPrompt('<%= order._id %>', '<%= product.productId %>')"
@@ -66,9 +76,8 @@
                       href="/order-details/<%= order._id %>/<%= product.productId %>"
                       class="btn btn-dark btn-sm"
                       style="padding: 5px 10px"
+                      >View Details</a
                     >
-                      View Details
-                    </a>
                   </div>
                 </td>
               </tr>
@@ -121,6 +130,9 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<!-- Include Razorpay SDK -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <script>
   function showCancelConfirmation(orderId, productId) {
@@ -228,6 +240,115 @@
           });
       }
     });
+  }
+</script>
+
+<script>
+  function retryPayment(orderId, productId, price) {
+    // Create an object with the data to be sent to the backend
+    const data = {
+      orderId: orderId,
+      productId: productId,
+      price: price,
+    };
+
+    // Log data fields
+    console.log("Retry Payment Data:", data);
+
+    // Make a fetch request to the backend
+    fetch("/retry-payment", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Handle successful response from the backend
+        console.log("Retry Payment Successful:", data);
+        // Open the Razorpay payment window
+        openRazorpay(data.orderId, data.productId, data.orderprice);
+      })
+      .catch((error) => {
+        // Handle errors
+        console.error("Error retrying payment:", error);
+        // You can display an error message to the user or handle the error in any other way
+      });
+  }
+
+  function openRazorpay(orderId, productId, orderprice) {
+    var options = {
+      key: "rzp_test_zuuyQNQOwzCbtw", // Replace with your Razorpay Key ID
+      amount: orderprice * 100,
+      currency: "INR",
+      name: "Amoli Jewels",
+      description: "Retry Payment",
+      image: "https://your-company-logo.png",
+      order_id: orderId,
+      handler: function (response) {
+        // Handle successful payment
+        console.log("Payment successful:", response);
+        // Send payment success status to the backend
+        updateOrderStatus(orderId, productId, "pending");
+      },
+      prefill: {
+        name: "Vidya M Mathew",
+        email: "vidyamathew13@gmail.com",
+        contact: "6282910820",
+      },
+      notes: {
+        address: "Customer Address",
+      },
+      theme: {
+        color: "#3399cc",
+      },
+    };
+
+    console.log("Razorpay Options:", options);
+    var rzp1 = new Razorpay(options);
+    rzp1.open();
+  }
+
+  function updateOrderStatus(orderId, productId, status) {
+    console.log(
+      "Update Order Status - Order ID:",
+      orderId,
+      "productid:",
+      productId,
+      "Status:",
+      status
+    );
+
+    // Send a request to update the order status to 'pending' in the backend
+    fetch("/update-order-status", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        orderId: orderId,
+        productId: productId,
+        status: status,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Order status updated:", data);
+      })
+      .catch((error) => {
+        console.error("Error updating order status:", error);
+      });
   }
 </script>
 

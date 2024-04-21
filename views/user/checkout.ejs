@@ -9,9 +9,11 @@
     href="https://fonts.googleapis.com/css?family=Barlow+Semi+Condensed|Josefin+Sans&display=swap|Permanent+Marker&display&display=swap"
     rel="stylesheet" /> -->
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
@@ -27,15 +29,15 @@
 
   <!-- <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet"> -->
   <link rel="stylesheet" href="/stylesheets/user/cart.css">
-  
+
   <link rel="stylesheet" href="/stylesheets/user/checkout.css">
 
   <title>Amoli</title>
   <style>
     body {
       font-family: "Kanit", sans-serif;
-  font-weight: 500;
-  font-style: normal;
+      font-weight: 500;
+      font-style: normal;
     }
   </style>
 </head>
@@ -43,20 +45,20 @@
 <body>
 
   <script>
-     function calculateTotalPrice(items) {
-    let totalPrice = 0;
+    function calculateTotalPrice(items) {
+      let totalPrice = 0;
 
-    items.forEach(item => {
-      totalPrice += item.quantity * item.price;
-    });
+      items.forEach(item => {
+        totalPrice += item.quantity * item.price;
+      });
 
-    return totalPrice;
-  }
+      return totalPrice;
+    }
   </script>
   <header>
     <div id="header-info">
       <!-- <p id="contactus">Contact Us</p> -->
-      <img src="/img/logo-witebg.png" class="logo"  style="width: 80px; height: 60px;" />
+      <img src="/img/logo-witebg.png" class="logo" style="width: 80px; height: 60px;" />
       <h1 id="store-name">AMoli Jewels</h1>
       <div class="nav-icons">
         <div class="dropdown" id="my-account-dropdown">
@@ -88,7 +90,7 @@
   <div class="checkout-content">
     <div class="title">CHECKOUT</div>
 
-    
+
     <div class="address-details">
       <!-- <label for="fullName">Full Name:</label>
       <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" />
@@ -96,313 +98,317 @@
       <label for="address">Select Address:</label>
       <select id="address" name="shippingAddresss">
         <% if (userAddress) { %>
-         
-          <% userAddress.forEach(address => { %>
+
+          <% userAddress.forEach(address=> { %>
             <option value="<%= address._id %>">
-              <%= address.name %>: <%= address.address %>, <%= address.locality %>, <%= address.state %> - <%= address.pincode %>
+              <%= address.name %>: <%= address.address %>, <%= address.locality %>, <%= address.state %> - <%=
+                        address.pincode %>
             </option>
-          <% }); %>
-          
-        <% } else { %>
-          <option value="" disabled>No address available. Please add an address.</option>
-        <% } %>
+            <% }); %>
+
+              <% } else { %>
+                <option value="" disabled>No address available. Please add an address.</option>
+                <% } %>
       </select>
 
       <br>
       <button class="btn btn-dark mt-3" data-bs-toggle="modal" data-bs-target="#addAddressModal">Add Address</button>
     </div>
 
-<!-- Modal- ADD ADDRESS -->
-<div class="modal fade" id="addAddressModal" tabindex="-1" role="dialog" aria-labelledby="addAddressModalLabel"
-aria-hidden="true">
-<div class="modal-dialog" role="document">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h5 class="modal-title" id="addAddressModalLabel">Add Address</h5>
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
+    <!-- Modal- ADD ADDRESS -->
+    <div class="modal fade" id="addAddressModal" tabindex="-1" role="dialog" aria-labelledby="addAddressModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addAddressModalLabel">Add Address</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <!-- Input boxes for name, address, phone, locality, pincode, state -->
+            <form id="addressForm" method="post" action="/add-address">
+              <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" class="form-control" id="name" name="name">
+                <small class="text-danger" id="nameError"></small>
+              </div>
+
+              <!-- Address -->
+              <div class="form-group">
+                <label for="address">Address:</label>
+                <input type="text" class="form-control" id="address" name="address">
+                <small class="text-danger" id="addressError"></small>
+              </div>
+
+              <!-- Phone -->
+              <div class="form-group">
+                <label for="phone">Phone:</label>
+                <input type="tel" class="form-control" id="phone" name="phone" pattern="[0-9]{10}"
+                  title="Phone number should be 10 digits">
+                <small class="text-danger" id="phoneError"></small>
+              </div>
+
+              <div class="form-group">
+                <label for="locality">Locality:</label>
+                <input type="text" class="form-control" id="locality" name="locality">
+                <small class="text-danger" id="localityError"></small>
+              </div>
+
+              <!-- Pincode -->
+              <div class="form-group">
+                <label for="pincode">Pincode:</label>
+                <input type="text" class="form-control" id="pincode" name="pincode" pattern="[0-9]{6}"
+                  title="Pincode should be 6 digits">
+                <small class="text-danger" id="pincodeError"></small>
+              </div>
+
+              <div class="form-group">
+                <label for="state">State:</label>
+                <input type="text" class="form-control" id="state" name="state">
+                <small class="text-danger" id="stateError"></small>
+              </div>
+              <button type="button" onclick="validateForm()" class="btn btn-primary">Submit</button>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="modal-body">
-      <!-- Input boxes for name, address, phone, locality, pincode, state -->
-      <form id="addressForm" method="post" action="/add-address">
-        <div class="form-group">
-          <label for="name">Name:</label>
-          <input type="text" class="form-control" id="name" name="name">
-          <small class="text-danger" id="nameError"></small>
-        </div>
 
-        <!-- Address -->
-        <div class="form-group">
-          <label for="address">Address:</label>
-          <input type="text" class="form-control" id="address" name="address">
-          <small class="text-danger" id="addressError"></small>
-        </div>
+    <script>
+      function validateForm() {
+        const name = document.getElementById('name').value.trim();
+        const address = document.getElementById('address').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const locality = document.getElementById('locality').value.trim();
+        const pincode = document.getElementById('pincode').value.trim();
+        const state = document.getElementById('state').value.trim();
 
-        <!-- Phone -->
-        <div class="form-group">
-          <label for="phone">Phone:</label>
-          <input type="tel" class="form-control" id="phone" name="phone" pattern="[0-9]{10}"
-            title="Phone number should be 10 digits">
-          <small class="text-danger" id="phoneError"></small>
-        </div>
+        // Reset error messages
+        document.getElementById('nameError').textContent = '';
+        document.getElementById('addressError').textContent = '';
+        document.getElementById('phoneError').textContent = '';
+        document.getElementById('localityError').textContent = '';
+        document.getElementById('pincodeError').textContent = '';
+        document.getElementById('stateError').textContent = '';
 
-        <div class="form-group">
-          <label for="locality">Locality:</label>
-          <input type="text" class="form-control" id="locality" name="locality">
-          <small class="text-danger" id="localityError"></small>
-        </div>
+        let isValid = true;
 
-        <!-- Pincode -->
-        <div class="form-group">
-          <label for="pincode">Pincode:</label>
-          <input type="text" class="form-control" id="pincode" name="pincode" pattern="[0-9]{6}"
-            title="Pincode should be 6 digits">
-          <small class="text-danger" id="pincodeError"></small>
-        </div>
+        if (!name) {
+          document.getElementById('nameError').textContent = 'Name is required';
+          isValid = false;
+        }
 
-        <div class="form-group">
-          <label for="state">State:</label>
-          <input type="text" class="form-control" id="state" name="state">
-          <small class="text-danger" id="stateError"></small>
-        </div>
-        <button type="button" onclick="validateForm()" class="btn btn-primary">Submit</button>
-      </form>
-    </div>
-  </div>
-</div>
-</div>
+        // if (!address) {
+        //   document.getElementById('addressError').textContent = 'Address is required';
+        //   isValid = false;
+        // }
 
-<script>
-function validateForm() {
-  const name = document.getElementById('name').value.trim();
-  const address = document.getElementById('address').value.trim();
-  const phone = document.getElementById('phone').value.trim();
-  const locality = document.getElementById('locality').value.trim();
-  const pincode = document.getElementById('pincode').value.trim();
-  const state = document.getElementById('state').value.trim();
+        if (!phone) {
+          document.getElementById('phoneError').textContent = 'Phone is required';
+          isValid = false;
+        } else if (!/^\d{10}$/.test(phone)) {
+          document.getElementById('phoneError').textContent = 'Phone number should be 10 digits';
+          isValid = false;
+        }
 
-  // Reset error messages
-  document.getElementById('nameError').textContent = '';
-  document.getElementById('addressError').textContent = '';
-  document.getElementById('phoneError').textContent = '';
-  document.getElementById('localityError').textContent = '';
-  document.getElementById('pincodeError').textContent = '';
-  document.getElementById('stateError').textContent = '';
+        if (!locality) {
+          document.getElementById('localityError').textContent = 'Locality is required';
+          isValid = false;
+        }
 
-  let isValid = true;
+        if (!pincode) {
+          document.getElementById('pincodeError').textContent = 'Pincode is required';
+          isValid = false;
+        } else if (!/^\d{6}$/.test(pincode)) {
+          document.getElementById('pincodeError').textContent = 'Pincode should be 6 digits';
+          isValid = false;
+        }
 
-  if (!name) {
-    document.getElementById('nameError').textContent = 'Name is required';
-    isValid = false;
-  }
+        if (!state) {
+          document.getElementById('stateError').textContent = 'State is required';
+          isValid = false;
+        } else if (!/^[A-Za-z]+$/.test(state)) {
+          document.getElementById('stateError').textContent = 'State should contain only alphabetic characters';
+          isValid = false;
+        }
 
-  // if (!address) {
-  //   document.getElementById('addressError').textContent = 'Address is required';
-  //   isValid = false;
-  // }
+        if (isValid) {
+          document.getElementById('addressForm').submit();
+        }
+      }
 
-  if (!phone) {
-    document.getElementById('phoneError').textContent = 'Phone is required';
-    isValid = false;
-  } else if (!/^\d{10}$/.test(phone)) {
-    document.getElementById('phoneError').textContent = 'Phone number should be 10 digits';
-    isValid = false;
-  }
+    </script>
 
-  if (!locality) {
-    document.getElementById('localityError').textContent = 'Locality is required';
-    isValid = false;
-  }
-
-  if (!pincode) {
-    document.getElementById('pincodeError').textContent = 'Pincode is required';
-    isValid = false;
-  } else if (!/^\d{6}$/.test(pincode)) {
-    document.getElementById('pincodeError').textContent = 'Pincode should be 6 digits';
-    isValid = false;
-  }
-
-  if (!state) {
-  document.getElementById('stateError').textContent = 'State is required';
-  isValid = false;
-} else if (!/^[A-Za-z]+$/.test(state)) {
-  document.getElementById('stateError').textContent = 'State should contain only alphabetic characters';
-  isValid = false;
-}
-
-  if (isValid) {
-    document.getElementById('addressForm').submit();
-  }
-}
-
-</script>
-  
 
     <div class="main-content">
       <div class="product-list-container">
         <div class="product-list">
           <!-- Loop through your cart items and display relevant information -->
           <% if (cart && cart.items && cart.items.length> 0 ) { %>
-            <% cart.items.forEach((item) => { %>
+            <% cart.items.forEach((item)=> { %>
               <div class="product-card">
                 <div class="product-image">
                   <img src="<%= item.productId.productImage[0] %>" alt="Product Image">
                 </div>
                 <div class="product-details">
-                  <h3 class="product-name"><%= item.productId.name %></h3>
-                  <p class="product-description"><%= item.productId.description %></p>
-                  <p class="product-quantity">Quantity: <%= item.quantity %></p>
-                  <p class="product-price">Price: Rs.<%= item.price %></p>
+                  <h3 class="product-name">
+                    <%= item.productId.name %>
+                  </h3>
+                  <p class="product-description">
+                    <%= item.productId.description %>
+                  </p>
+                  <p class="product-quantity">Quantity: <%= item.quantity %>
+                  </p>
+                  <p class="product-price">Price: Rs.<%= item.price %>
+                  </p>
                 </div>
               </div>
 
-              
-              
-            <% }); %>
 
-          <% } else { %>
-            <p>No items in the cart.</p>
-          <% } %>
+
+              <% }); %>
+
+                <% } else { %>
+                  <p>No items in the cart.</p>
+                  <% } %>
         </div>
 
         <div class="totalprice">
           <% if (discountedPrice) { %>
-            <del><h4>Total Price: ₹<%= totalPrice %></h4></del>
-            <h4>Discounted price: ₹<%= discountedPrice %> </h4>
-            <span id="price" data-totalprice="<%= discountedPrice %>" data-discountprice="<%= discountedPrice %>"></span>
-          <% } else { %>
-            <h4>Total Price: ₹<%= totalPrice %></h4>
-            <span id="price" data-totalprice="<%= totalPrice %>"></span>
-          <% } %>
-        </div>  
-    </div>
-           
-    <hr style="width: 800px;height: 1rem;">
-   
-   
+            <del>
+              <h4>Total Price: ₹<%= totalPrice %>
+              </h4>
+            </del>
+            <h4>Discounted price: ₹<%= discountedPrice %>
+            </h4>
+            <span id="price" data-totalprice="<%= discountedPrice %>"
+              data-discountprice="<%= discountedPrice %>"></span>
+            <% } else { %>
+              <h4>Total Price: ₹<%= totalPrice %>
+              </h4>
+              <span id="price" data-totalprice="<%= totalPrice %>"></span>
+              <% } %>
+        </div>
+      </div>
+
+      <hr style="width: 800px;height: 1rem;">
+
+
       <div class="order-place">
         <h4 for="couponCode">Apply Coupon</h4>
-        <div class="coupon-section" style="display: flex; padding: 10px;">       
-          
+        <div class="coupon-section" style="display: flex; padding: 10px;">
+
           <form action="/apply-coupon" method="POST" style="margin-right: 10px;">
-             
-                  <input name="couponCode" type="text" placeholder="enter coupon code">
 
-                  <small style="color: red;"><%= locals.error %></small>
-                  <button class="btn btn-sm btn-dark" type="submit">Apply</button>          
+            <input name="couponCode" type="text" placeholder="enter coupon code">
+
+            <small style="color: red;">
+              <%= locals.error %>
+            </small>
+            <button class="btn btn-sm btn-dark" type="submit">Apply</button>
           </form>
-      
+
           <form action="/remove-coupon" method="POST">
-              <button class="btn btn-sm btn-danger" type="submit">Remove</button>
+            <button class="btn btn-sm btn-danger" type="submit">Remove</button>
           </form>
-         
-      </div>
-      
-        
-     
+
+        </div>
 
 
-       <!-- <div class="payment_type payment_type--paypal">
+
+
+
+        <!-- <div class="payment_type payment_type--paypal">
         <input type="radio" id="RazorPay" name="payment_type" value="RazorPay">
         <button id="razorpayBtn">Pay with Razorpay <i class="fa-brands fa-paypal"></i></button>
       </div>   -->
-     <hr style="width: 800px;">  
+        <hr style="width: 800px;">
 
         <div class="payment-section">
           <!-- Use radio buttons for payment options -->
-          <h4>Payment Options</h4>
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="paymentOption" id="RazorPay" value="razorpay">
-            <label class="form-check-label" for="RazorPay" style="display: flex; align-items: center;"> 
-                <button id="razorpayBtn" style="border: none; border-radius: 15px; background-color:rgb(227, 196, 197); color: black; display: hidden;">Pay with Razorpay <i class="fab fa-paypal"></i></button>
-               
-            </label>
-        </div>
-        
-         <br>
-        
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="paymentOption" id="cashOption" value="cash" onclick="selectPaymentOption('cash on delivery')">
-            <label class="form-check-label" for="cashOption">
-              Cash on Delivery 
-              <i class="fa fa-duotone fa-money-bill-wave fa-lg"></i>
-            </label>
-          </div>
-          <br>
 
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="paymentOption" id="wallPayment" value="walletpayment" onclick="selectedPaymentOption('walletpayment')">
-            <label class="form-check-label" for="wallPayment">
-              Pay with wallet 
-              <i class="fa-solid fa-wallet fa-lg"></i>
+
+          <div class="form-group">
+            <label for="paymentOption">Select Payment Method:</label>
+
+            <select class="form-control" id="paymentOption" name="paymentOption">
+              <option value="none">select payment option</option>
+              <option value="cash">Cash on Delivery</option>
+              <option value="razorpay">Razorpay</option>
+              <option value="walletPayment">Wallet Payment</option>
+
+            </select>
           </div>
-         
+
 
           <!-- Add this element to display the error message -->
-           <div id="paymentError" style="color: red;"></div>
+          <div id="paymentError" style="color: red;"></div>
 
-           <h4 style="color: red"><%= locals.walletError %></h4>
-             
+          <h4 style="color: red">
+            <%= locals.walletError %>
+          </h4>
+
           <!-- Hidden input to store the selected payment option -->
           <input type="hidden" id="selectedPaymentOption" name="selectedPaymentOption" value="">
         </div>
-  
+
       </div>
 
     </div>
-    
+
     <hr>
-   
+
     <div class="place-order">
       <form action="/checkout" method="post" id="placeOrderForm">
         <button class="btn btn-lg btn-dark" type="button" onclick="placeOrder()">Place Order</button>
-     </form> 
+      </form>
     </div>
-  
+
 
   </div>
 
- 
 
- <!--FOOTER SECTION-->
- <footer>
-  <div class="footer-content">
-    <div class="footer-logo">
-      <img src="/img/logo-blackbg.png" class="logo" style="width: 70px; height: 60px;"  />
-    </div>
-    <h2>FOLLOW US</h2>
-    <div class="social-icons">
-      <div class="icon-div">
-        <a href="#" class="icon"><i class="fa-brands fa-facebook fa-xl" style="color: #f1f3f3;"></i></a>
+
+  <!--FOOTER SECTION-->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-logo">
+        <img src="/img/logo-blackbg.png" class="logo" style="width: 70px; height: 60px;" />
       </div>
-      <div class="icon-div">
-        <a href="#" class="icon"><i class="fa-brands fa-twitter fa-xl" style="color: #f1f3f3;"></i></a>
+      <h2>FOLLOW US</h2>
+      <div class="social-icons">
+        <div class="icon-div">
+          <a href="#" class="icon"><i class="fa-brands fa-facebook fa-xl" style="color: #f1f3f3;"></i></a>
+        </div>
+        <div class="icon-div">
+          <a href="#" class="icon"><i class="fa-brands fa-twitter fa-xl" style="color: #f1f3f3;"></i></a>
+        </div>
+        <div class="icon-div">
+          <a href="#" class="icon"><i class="fa-brands fa-instagram fa-xl" style="color: #f1f3f3;"></i></i></a>
+        </div>
+        <div class="icon-div">
+          <a href="#" class="icon"><i class="fa-brands fa-youtube fa-xl" style="color: #f1f3f3;"></i></a>
+        </div>
       </div>
-       <div class="icon-div">
-      <a href="#" class="icon"><i class="fa-brands fa-instagram fa-xl" style="color: #f1f3f3;"></i></i></a>
-       </div>
-       <div class="icon-div">
-        <a href="#" class="icon"><i class="fa-brands fa-youtube fa-xl" style="color: #f1f3f3;"></i></a>
-       </div>         
+      <ul class="footer-links">
+        <li><a href="#">FAQS</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Shippping and Delivery</a></li>
+        <li><a href="#">Payments</a></li>
+      </ul>
     </div>
-    <ul class="footer-links">
-      <li><a href="#">FAQS</a></li>
-      <li><a href="#">About</a></li>
-      <li><a href="#">Shippping and Delivery</a></li>
-      <li><a href="#">Payments</a></li>
-    </ul>
-  </div>
-  <p>&copy; 2024 Your Company. All rights reserved.</p>
-</footer>
+    <p>&copy; 2024 Your Company. All rights reserved.</p>
+  </footer>
 
 
 
-<!-- Add this script to include jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <!-- Add this script to include jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 
-<!-- Razor Pay -->
+  <!-- Razor Pay -->
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <!-- Razor Pay -->
 
@@ -410,7 +416,7 @@ function validateForm() {
 
 
 
-<script>
+  <!-- <script>
   let orderId;
   let price = document.getElementById('price')
   let orderprice = price.getAttribute('data-totalprice')
@@ -505,40 +511,40 @@ function validateForm() {
     e.preventDefault();
   }
 
-</script>
+</script> -->
 
 
 
 
 
-<!-- Script for modal initialization -->
-<script>
-  // Wait for the document to be ready
-  document.addEventListener('DOMContentLoaded', function () {
-     // Initialize the modal
-     new bootstrap.Modal(document.getElementById('addAddressModal'));
-  });
-</script>
-
-<!-- Script for modal dismissal -->
-<script>
-  // Wait for the document to be ready
-  document.addEventListener('DOMContentLoaded', function () {
-    // Get the modal element
-    var addAddressModal = new bootstrap.Modal(document.getElementById('addAddressModal'));
-
-    // Set up an event listener for the modal close button
-    var closeModalButton = document.querySelector('#addAddressModal .close');
-    closeModalButton.addEventListener('click', function () {
-      // Close the modal when the close button is clicked
-      addAddressModal.hide();
+  <!-- Script for modal initialization -->
+  <script>
+    // Wait for the document to be ready
+    document.addEventListener('DOMContentLoaded', function () {
+      // Initialize the modal
+      new bootstrap.Modal(document.getElementById('addAddressModal'));
     });
-  });
+  </script>
 
-    
-</script>
+  <!-- Script for modal dismissal -->
+  <script>
+    // Wait for the document to be ready
+    document.addEventListener('DOMContentLoaded', function () {
+      // Get the modal element
+      var addAddressModal = new bootstrap.Modal(document.getElementById('addAddressModal'));
 
-<!-- <script>
+      // Set up an event listener for the modal close button
+      var closeModalButton = document.querySelector('#addAddressModal .close');
+      closeModalButton.addEventListener('click', function () {
+        // Close the modal when the close button is clicked
+        addAddressModal.hide();
+      });
+    });
+
+
+  </script>
+
+  <!-- <script>
       function calculateTotalPrice(items) {
     let totalPrice = 0;
 
@@ -550,84 +556,259 @@ function validateForm() {
   }
 </script> -->
 
-<!-- SweetAlert CDN -->
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <!-- SweetAlert CDN -->
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 
-<script>
+  <script>
 
-function placeOrder() {
-  // Get the selected address
-  const selectedAddressId = $("#address").val();
+    function placeOrder() {
+      // Get the selected address
+      const selectedAddressId = $("#address").val();
 
-  // Get the selected payment option
-  const selectedPaymentOption = $("input[name='paymentOption']:checked").val();
+      // Get the selected payment option
+      const selectedPaymentOption = $("#paymentOption").val();
 
-  // Check if a payment option is selected
-  if (!selectedPaymentOption) {
-    // Display an error message to the user in the placeholder element
-    $("#paymentError").text("Please select a payment option");
-    return; // Stop further execution of the function
-  }
+      // Check if a payment option is selected
+      if (!selectedPaymentOption || selectedPaymentOption === "none") {
+        // Display an error message to the user
+        $("#paymentError").text("Please select a payment option");
+        return;
+      }
 
-  // Get the total price
-  const totalPrice = $("#price").attr("data-totalprice");
+      // Get the total price
+      const totalPrice = $("#price").attr("data-totalprice");
 
-  // AJAX request
+      // Check if the selected payment option is Razorpay
+      if (selectedPaymentOption === "razorpay") {
+        // Place Razorpay logic here
+
+        let orderId;
+        let orderprice = totalPrice;
+
+        // AJAX request to create a new order ID
+        var settings = {
+          url: "/create/orderId",
+          method: "POST",
+          timeout: 0,
+          headers: {
+            "Content-Type": "application/json"
+          },
+          data: JSON.stringify({
+            amount: orderprice
+          }),
+        };
+
+        $.ajax(settings).done(function (response) {
+          orderId = response.orderId;
+          orderprice = response.orderprice;
+          ordresignature = response.signature;
+
+          var options = {
+            key: "rzp_test_zuuyQNQOwzCbtw",
+            amount: orderprice,
+            currency: "INR",
+            name: "Amoli Jewels",
+            description: "Online Payment",
+            image: "",
+            order_id: orderId,
+            handler: function (response) {
+              // Handle successful payment
+              var form = document.createElement('form');
+              form.method = 'post';
+              form.action = '/order2ForRazorPay';
+
+              var orderPriceInput = document.createElement('input');
+              orderPriceInput.type = 'hidden';
+              orderPriceInput.name = 'orderprice';
+              orderPriceInput.value = orderprice;
+              form.appendChild(orderPriceInput);
+
+              var paymentIdInput = document.createElement('input');
+              paymentIdInput.type = 'hidden';
+              paymentIdInput.name = 'razorpay_payment_id';
+              paymentIdInput.value = response.razorpay_payment_id;
+              form.appendChild(paymentIdInput);
+
+              var paymentModeInput = document.createElement('input');
+              paymentModeInput.type = 'hidden';
+              paymentModeInput.name = 'paymentMethod';
+
+              var addressSelector = document.getElementById('address')
+              var selectedAddressValue = addressSelector.value;
+              var addressIdInput = document.createElement('input');
+              addressIdInput.type = 'hidden';
+              addressIdInput.name = 'address';
+              addressIdInput.value = selectedAddressValue;
+              form.appendChild(addressIdInput);
+
+              document.body.appendChild(form);
+              form.submit();
+            }
+          };
+
+          var rzp1 = new Razorpay(options);
+          rzp1.on('payment.failed', function (response) {
+              
+            paymentFailure(selectedAddressId, selectedPaymentOption, totalPrice,orderId);
+           
+          });
+          rzp1.open();
+        });
+      } else if (selectedPaymentOption === "cash") {
+        // Make an AJAX request to submit the order with cash on delivery
+        $.ajax({
+          type: "POST",
+          url: "/checkout",
+          data: {
+            selectedAddressId: selectedAddressId,
+            selectedPaymentOption: selectedPaymentOption,
+            totalPrice: totalPrice
+          },
+          success: function (response) {
+            // Handle success response, if needed
+            console.log(response);
+            // Redirect to the order success page after placing the order
+            window.location.href = "/order-success";
+          },
+          error: function (error) {
+            // Handle error, if needed
+            console.error(error);
+            // Display a generic error message
+            alert("An error occurred while placing your order. Please try again later.");
+          }
+        });
+
+      }
+      else if (selectedPaymentOption === "walletPayment") {
+
+        // Make an AJAX request to submit the order with wallet payment
+        $.ajax({
+          type: "POST",
+          url: "/checkout",
+          data: {
+            selectedAddressId: selectedAddressId,
+            selectedPaymentOption: selectedPaymentOption,
+            totalPrice: totalPrice
+          },
+          success: function (response) {
+            // Handle success response, if needed
+            console.log(response);
+            // Redirect to the order success page after placing the order
+            window.location.href = "/order-success";
+          },
+          error: function (error) {
+            // Handle error, if needed
+            console.error(error);
+            // Check if the error response contains the message for insufficient funds
+            if (error.responseJSON && error.responseJSON.error === "Insufficient funds in wallet") {
+              // Display a SweetAlert for insufficient funds
+              swal("Insufficient Funds", "You do not have enough funds in your wallet.", "error");
+            } else {
+              // Display a generic error message
+              swal("Error", "An error occurred while placing your order. Please try again later.", "error");
+            }
+          }
+        });
+
+      }
+
+    }
+
+
+
+
+    function paymentFailure(selectedAddressId, selectedPaymentOption, totalPrice, orderId) {
+  console.log("paymentFailure");
+  console.log("Selected Address ID:", selectedAddressId);
+  console.log("Selected Payment Option:", selectedPaymentOption);
+  console.log("Total Price:", totalPrice);
+  console.log("Order ID:", orderId);
+
+  // Create an object with all the data
+  const data = {
+    selectedAddressId: selectedAddressId,
+    selectedPaymentOption: selectedPaymentOption,
+    totalPrice: totalPrice,
+    orderId: orderId,
+  };
+
+  // Make a POST request to the controller endpoint
   $.ajax({
     type: "POST",
-    url: "/checkout",
-    data: {
-      selectedAddressId: selectedAddressId,
-      selectedPaymentOption: selectedPaymentOption,
-      totalPrice: totalPrice
-    },
-    success: function (response) {
-      // Handle success response, if needed
+    url: "/payment-failure", // Replace this with the actual endpoint URL
+    data: data,
+    success: function(response) {
+      // Handle success response
       console.log(response);
 
-      // Redirect to the order success page after placing the order
-      window.location.href = "/order-success";
+      // Show SweetAlert dialog asking to retry payment or continue shopping
+      Swal.fire({
+        title: "Payment Failed",
+        text: "Would you like to retry payment and continue shopping?",
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "Retry Payment",
+        cancelButtonText: "Continue Shopping",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // User wants to retry payment
+          // You can implement retry payment logic here
+          window.location.href = "/order-history"; // Call your retry payment function here if implemented
+        } else {
+          // User wants to continue shopping
+          // Redirect to the home page or any other desired action
+          window.location.href = "/";
+        }
+      });
     },
-    error: function (error) {
-      // Handle error, if needed
-      console.error(error);
-
-      // Check if the error response contains the message for insufficient funds
-      if (error.responseJSON && error.responseJSON.error === 'Insufficient funds in wallet') {
-        // Display a SweetAlert with the error message
-        swal("Insufficient Funds", "Your wallet balance is insufficient for this purchase.", "error");
-      } else {
-        // For other errors, display a generic error message
-        swal("Error", "An error occurred while placing your order. Please try again later.", "error");
-      }
+    error: function(xhr, status, error) {
+      // Handle error
+      console.error(xhr.responseText);
+      Swal.fire({
+        title: "Error",
+        text: "An error occurred while processing your payment. Please try again later.",
+        icon: "error",
+      });
     }
   });
 }
 
+  </script>
+
+
+<script>
 
 function toggleDropdown() {
-var dropdown = document.getElementById("account-options");
-dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-}
+      var dropdown = document.getElementById("account-options");
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    }
 
-// Close the dropdown if the user clicks outside of it
-window.onclick = function (event) {
-if (!event.target.matches('#my-account')) {
-var dropdown = document.getElementById("account-options");
-if (dropdown.style.display === "block") {
-  dropdown.style.display = "none";
-}
-}
-};
-
+    // Close the dropdown if the user clicks outside of it
+    window.onclick = function (event) {
+      if (!event.target.matches('#my-account')) {
+        var dropdown = document.getElementById("account-options");
+        if (dropdown.style.display === "block") {
+          dropdown.style.display = "none";
+        }
+      }
+    };
 </script>
 
 
-<!-- Bootstrap JS dependencies -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+
+
+
+
+  <!-- Bootstrap JS dependencies -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
 
 
 
 </body>
+
 </html>

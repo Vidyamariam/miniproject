@@ -6,14 +6,14 @@ const nocache = require('nocache');
 const {name}=require("ejs")
 const cookieParser= require('cookie-parser')
 const session = require('express-session');
-const bodyparser = require('body-parser');
+const bodyParser = require("body-parser");
 
 
 require('dotenv').config();
 
 
 
-
+app.use(bodyParser.json());
 // app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));

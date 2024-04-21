@@ -52,7 +52,7 @@ router.post("/add-to-cart/:productId",isBlock.isblocked, cartController.addToCar
 router.post("/updateQuantity/:itemId",isBlock.isblocked, cartController.updateQuantity);
 router.post("/add-address",isBlock.isblocked ,cartController.checkoutAddAddress);
 router.post("/checkout",isBlock.isblocked, generateOrderId, cartController.placeOrder);
-router.post("/order2ForRazorPay", isBlock.isblocked ,generateOrderId, cartController.razorpayOrder)
+router.post("/order2ForRazorPay", isBlock.isblocked ,generateOrderId, cartController.razorpayOrder);
 router.post("/cancelOrder",isBlock.isblocked ,cartController.cancelOrder);
 router.post("/returnOrder",isBlock.isblocked ,cartController.returnOrder);
 router.post("/add-wishlist/:productId",isBlock.isblocked ,wishlistController.addToWishlist);
@@ -62,6 +62,8 @@ router.post('/checkReferralCode', userController.checkReferralCode);
 router.post('/verify-email', userController.postForgotPassword);
 router.post("/verifyOtp", userController.postverifyOtp);
 router.post("/update-password",userController.postChangePassword);
-
+router.post("/payment-failure", cartController.paymentFailure);
+router.post("/retry-payment", cartController.retryPayment);
+router.patch('/update-order-status', cartController.updateOrderStatus);
 
 module.exports = router;

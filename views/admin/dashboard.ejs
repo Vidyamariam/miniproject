@@ -1,11 +1,425 @@
-<%- include('header')%>
+<%- include('header') %>
+
+<style>
+  .dashboard-info {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+  }
+
+  .info-card {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 30%;
+    min-width: 200px;
+  }
+
+  .info-card h4 {
+    margin-bottom: 10px;
+    color: #333;
+  }
+
+  .info-card p {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+    color: #007bff;
+  }
+
+  .chart-container {
+    margin-top: 30px;
+    width: 800px;
+    height: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Adjust the values as needed */
+    border-radius: 8px;
+  }
+
+  #salesfilterddown select {
+    background-color: #999595;
+    color: white;
+    text-align: center;
+  }
+</style>
 
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
   <h3>Dashboard</h3>
   <hr />
+
+  <div class="dashboard-info">
+    <div class="info-card">
+      <h4>Total Orders</h4>
+      <p><%= totalOrders %></p>
+    </div>
+    <div class="info-card">
+      <h4>Total Order Amount</h4>
+      <p>₹<%= totalOrderAmount %></p>
+    </div>
+    <div class="info-card">
+      <h4>Total Users</h4>
+      <p><%= totalUsers %></p>
+    </div>
+  </div>
+  <br />
+  <!-- Dropdown menu -->
+  <div class="dropdown">
+    <button
+      class="btn btn-secondary dropdown-toggle"
+      type="button"
+      id="salesFilterDropdown"
+    >
+      Filter Sales By
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="salesFilterDropdown">
+      <li>
+        <a class="dropdown-item" href="#" data-option="daily">Daily</a>
+      </li>
+      <li>
+        <a class="dropdown-item" href="#" data-option="weekly">Weekly</a>
+      </li>
+      <li>
+        <a class="dropdown-item" href="#" data-option="monthly">Monthly</a>
+      </li>
+      <li>
+        <a class="dropdown-item" href="#" data-option="yearly">Yearly</a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="chart-container">
+    <canvas id="totalOrdersChart"></canvas>
+  </div>
+
+  <div class="chart-cintainer-row" style="display: flex">
+    <div class="chart-container">
+      <canvas id="bestSellingChart"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-container-row" style="display: flex">
+    <div class="chart-container">
+      <canvas
+        id="bestSellingCategoryChart"
+        style="width: 250px; height: 300px"
+      ></canvas>
+    </div>
+
+    <div class="chart-container">
+      <canvas id="statusChart" width="100" height="100"></canvas>
+    </div>
+  </div>
 </main>
 
-</div>
-</div>
+<%- include('footer') %>
 
-<%- include('footer')%>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  let totalOrdersChart;
+
+  document.addEventListener("DOMContentLoaded", function() {
+
+      // Total Orders Line Chart
+  const totalOrdersChartCtx = document.getElementById('totalOrdersChart').getContext('2d');
+  totalOrdersChart = new Chart(totalOrdersChartCtx, {
+    type: 'line',
+    data: {
+      labels: [<% ordersPerDay.forEach(day => { %>'<%= day._id %>',<% }); %>],
+      datasets: [{
+        label: 'Total Orders Per Day',
+        data: [<% ordersPerDay.forEach(day => { %><%= day.totalOrders %>,<% }); %>],
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 1
+      },{
+        label: 'Total Amount Made Per Day',
+        data: [<% ordersPerDay.forEach(day => { %><%= day.totalAmount %>,<% }); %>],
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+
+
+
+
+    const bestSellingChartCtx = document.getElementById('bestSellingChart').getContext('2d');
+
+    new Chart(bestSellingChartCtx, {
+      type: 'bar',
+      data: {
+        labels: [
+          <% topProducts.forEach(product => { %>
+            '<%= product.productName %>',
+          <% }); %>
+
+        ],
+        datasets: [{
+          label: 'Quantity Sold',
+          data: [
+            <% topProducts.forEach(product => { %>
+              <%= product.totalQuantity %>,
+            <% }); %>
+            0
+          ],
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)',
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+
+
+     // Status Pie Chart
+     const statusChartCtx = document.getElementById('statusChart').getContext('2d');
+    new Chart(statusChartCtx, {
+      type: 'pie',
+      data: {
+        labels: [<% statusCounts.forEach(status => { %>'<%= status._id %>',<% }); %>],
+        datasets: [{
+          label: 'Status Counts',
+          data: [<% statusCounts.forEach(status => { %><%= status.count %>,<% }); %>],
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.7)', // Red for cancelled
+            'rgba(54, 162, 235, 0.7)', // Blue for pending
+            'rgba(255, 206, 86, 0.7)', // Yellow for returned
+            'rgba(75, 192, 192, 0.7)' // Green for delivered
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        legend: {
+          position: 'bottom',
+        },
+        radius: '50%'
+      }
+    });
+
+
+     // Best Selling Category Pie Chart
+     const bestSellingCategoryChartCtx = document.getElementById('bestSellingCategoryChart').getContext('2d');
+    new Chart(bestSellingCategoryChartCtx, {
+      type: 'pie',
+      data: {
+        labels: [<% bestSellingCategory.forEach(category => { %>'<%= category._id %>',<% }); %>],
+        datasets: [{
+          label: 'Best Selling Category',
+          data: [<% bestSellingCategory.forEach(category => { %><%= category.totalQuantity %>,<% }); %>],
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.7)', // Red
+            'rgba(54, 162, 235, 0.7)', // Blue
+            'rgba(255, 206, 86, 0.7)', // Yellow
+            'rgba(75, 192, 192, 0.7)', // Green
+            // Add more colors as needed
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        legend: {
+          position: 'bottom',
+        },
+        radius: '50%'
+
+      }
+    });
+
+
+  });
+</script>
+
+<!-- <script>
+   // Function to create the pie chart for best selling category
+   function createBestSellingCategoryChart(data) {
+    const bestSellingCategoryChartCtx = document.getElementById('bestSellingCategoryChart').getContext('2d');
+    new Chart(bestSellingCategoryChartCtx, {
+      type: 'pie',
+      data: {
+        labels: data.map(item => item._id), // Extract category names
+        datasets: [{
+          label: 'Best Selling Category',
+          data: data.map(item => item.totalQuantity), // Extract total quantity for each category
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.7)', // Red
+            'rgba(54, 162, 235, 0.7)', // Blue
+            'rgba(255, 206, 86, 0.7)', // Yellow
+            'rgba(75, 192, 192, 0.7)', // Green
+            // Add more colors as needed
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        legend: {
+          position: 'bottom',
+        },
+      }
+    });
+  }
+
+  // Call the function to create the chart when the document is loaded
+  createBestSellingCategoryChart(<%= JSON.stringify(bestSellingCategory) %>);
+</script> -->
+
+<!-- <script>
+  $(document).ready(function () {
+    // Event listener for when the dropdown selection changes
+    $("#filterDropdown").change(function () {
+      var selectedOption = $(this).val(); // Get the selected value
+      var jsonData = { selectedOption: selectedOption }; // Create JSON data
+      // Send JSON data to backend via AJAX
+      $.ajax({
+        type: "POST",
+        url: "/admin/sales-filter", // Replace 'your_backend_endpoint' with your actual backend URL
+        data: JSON.stringify(jsonData), // Convert JSON data to string
+        contentType: "application/json",
+        success: function (response) {
+          console.log("Success:", response);
+          // Handle success response from the backend
+        },
+        error: function (xhr, status, error) {
+          console.error("Error:", error);
+          // Handle error response from the backend
+        },
+      });
+    });
+  });
+</script> -->
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const dropdownItems = document.querySelectorAll(".dropdown-item");
+
+    dropdownItems.forEach((item) => {
+      item.addEventListener("click", function (event) {
+        event.preventDefault(); // Prevent default link behavior
+
+        const selectedOption = item.getAttribute("data-option");
+
+        // Send selected option to the server via fetch
+        fetch("/admin/sales-filter", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ selectedOption: selectedOption }),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            console.log("Response from server:", data);
+
+            // Update total orders line chart with new data
+            updateTotalOrdersChart(data);
+          })
+          .catch((error) => {
+            console.error("Error sending data to server:", error);
+            // Handle error
+          });
+      });
+    });
+  });
+
+  function updateTotalOrdersChart(data) {
+    const labels = data.map((item) => item._id);
+    const totalOrders = data.map((item) => item.totalOrders);
+
+    // Update chart data
+    totalOrdersChart.data.labels = labels;
+    totalOrdersChart.data.datasets[0].data = totalOrders;
+
+    // Update chart
+    totalOrdersChart.update();
+  }
+</script>
+
+<!-- Include jQuery library from CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<!-- Your custom JavaScript code goes here -->
+<script>
+  $(document).ready(function () {
+    $(".dropdown-toggle").click(function () {
+      $(".dropdown-menu").toggleClass("show");
+    });
+
+    $(".dropdown-item").click(function (e) {
+      e.preventDefault();
+      var selectedOption = $(this).data("option");
+      console.log("Selected option:", selectedOption);
+      // Handle the selected option as needed
+      // You can close the dropdown menu here if desired
+      $(".dropdown-menu").removeClass("show");
+    });
+
+    // Close dropdown when clicking outside
+    $(document).on("click", function (e) {
+      if (!$(e.target).closest(".dropdown").length) {
+        $(".dropdown-menu").removeClass("show");
+      }
+    });
+  });
+</script>
