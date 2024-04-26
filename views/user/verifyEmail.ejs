@@ -217,44 +217,49 @@
 ////////////////////////////////////////
 
 document.addEventListener("DOMContentLoaded", function () {
-  // Set the initial time (in seconds)
-  let timeLeft = 20; // Change this to your desired time
+        // Get the expiration time passed from the server
+        const expirationTime = new Date("<%= expirationTime %>");
+        // Calculate the remaining time in seconds
+        let timeLeft = Math.floor((expirationTime - Date.now()) / 1000);
 
-  // Function to update the timer display
-  function updateTimer() {
-    const minutes = Math.floor(timeLeft / 60);
-    const seconds = timeLeft % 60;
-    document.getElementById("otp-timer").innerHTML = `Time Left: ${minutes}:${seconds}`;
-  }
+        // Function to update the timer display
+        function updateTimer() {
+            const timerElement = document.getElementById("otp-timer");
+            if (timerElement) {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerElement.innerHTML = `Time Left: ${minutes}:${seconds}`;
+            }
+        }
 
-  // Function to decrement the timer and update the display
-  function decrementTimer() {
-    if (timeLeft > 0) {
-      timeLeft--;
-      updateTimer();
-    } else {
-      // Disable form submission or redirect to a different page when the timer reaches 0
-      // You can customize this behavior based on your requirements
-    }
-  }
+        // Function to decrement the timer and update the display
+        function decrementTimer() {
+            if (timeLeft > 0) {
+                timeLeft--;
+                updateTimer();
+            } else {
+                // Optionally, handle expiration of OTP here
+            }
+        }
 
-  // Call the updateTimer function initially
-  updateTimer();
+        // Call the updateTimer function initially
+        updateTimer();
 
-  // Set an interval to decrement the timer every second
-  const timerInterval = setInterval(decrementTimer, 1000);
+        // Set an interval to decrement the timer every second
+        const timerInterval = setInterval(decrementTimer, 1000);
 
-  // Optionally, you can stop the timer when the form is submitted or when the page is unloaded
-  document.querySelector("form").addEventListener("submit", function () {
-    clearInterval(timerInterval);
-  });
+        // Optionally, you can stop the timer when the form is submitted or when the user navigates away from the page
+        document.querySelector("form").addEventListener("submit", function () {
+            clearInterval(timerInterval);
+        });
 
-  // Optionally, you can stop the timer when the user navigates away from the page
-  window.addEventListener("beforeunload", function () {
-    clearInterval(timerInterval);
-  });
-});
+        // Optionally, you can stop the timer when the user navigates away from the page
+        window.addEventListener("beforeunload", function () {
+            clearInterval(timerInterval);
+        });
+    });
 
+    
     </script>
     
 </body>

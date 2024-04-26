@@ -112,26 +112,42 @@ const postEditCategory = async (req, res) => {
     const newCategoryName = req.body.categoryName;
     console.log("New category name:", newCategoryName);
 
-    // Check if the new category name is different from the existing one
-    if (newCategoryName !== category.categoryName) {
-      // Check if the new category name already exists
-      const existsCategory = await categoryCollection.findOne({
-        categoryName: newCategoryName,
-        _id: { $ne: category._id },
+
+     // Check if the new category name is empty
+     if (!newCategoryName.trim()) {
+      return res.render("admin/editCategoryN", {
+        id: categoryId,
+        name: category.categoryName,
+        offer: category.categoryOffer,
+        categoryNameError: "Category name is required.",
       });
-
-      if (existsCategory) {
-        return res.render("admin/editCategoryN", {
-          id: categoryId,
-          name: newCategoryName,
-          offer: category.categoryOffer,
-          message: "Category Already Exists",
-        });
-      }
-
-      // Update the category name
-      category.categoryName = newCategoryName;
     }
+
+     // Check if the first character of the new category name is a letter (uppercase or lowercase)
+     if (!/^[a-zA-Z]/.test(newCategoryName)) {
+      return res.render("admin/editCategoryN", {
+        id: categoryId,
+        name: category.categoryName,
+        offer: category.categoryOffer,
+        categoryNameError: "Category Name must start with a letter.",
+      });
+    }
+
+    const existingCategory = await categoryCollection.findOne({
+      categoryName: { $regex: new RegExp('^' + newCategoryName + '$', 'i') }
+    });
+    if (existingCategory && existingCategory._id.toString() !== categoryId) {
+      return res.render("admin/editCategoryN", {
+        id: categoryId,
+        name: category.categoryName,
+        offer: category.categoryOffer,
+        categoryNameError: "Category Already Exists",
+      });
+    }
+    
+
+// Update the category name
+category.categoryName = newCategoryName;
 
     // Check if the discount is provided and valid
     if (req.body.categoryOffer !== undefined) {

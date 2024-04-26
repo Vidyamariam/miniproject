@@ -16,8 +16,6 @@
                 <th scope="col">Order ID</th>
                 <th scope="col">Date</th>
                 <th scope="col">Price</th>
-                <th scope="col">Total Price</th>
-
                 <th scope="col">Status</th>
                 <th scope="col">Actions</th>
               </tr>
@@ -38,7 +36,6 @@
                   product.price).toFixed(2) %> <% } else { %> Rs. <%=
                   product.price %> <% } %>
                 </td>
-                <td><%= order.totalPrice %></td>
 
                 <td class="order-status">
                   <% if (product.status==='Cancelled' ) { %> <%= product.status
@@ -272,47 +269,47 @@
       .then((data) => {
         // Handle successful response from the backend
         console.log("Retry Payment Successful:", data);
-        // Open the Razorpay payment window
-        openRazorpay(data.orderId, data.productId, data.orderprice);
+
+        const razorpayOrderId = data.orderId;
+        // Razorpay payment logic
+        const options = {
+          key: "rzp_test_zuuyQNQOwzCbtw", // Replace with your Razorpay Key ID
+          amount: data.orderprice * 100,
+          currency: "INR",
+          name: "Amoli Jewels",
+          description: "Retry Payment",
+          image: "https://your-company-logo.png",
+          order_id: razorpayOrderId,
+          handler: function (response) {
+            // Handle successful payment
+            console.log("Payment successful:", response);
+
+            console.log("Order", orderId);
+
+            // Send payment success status to the backend
+            updateOrderStatus(orderId, productId, "pending");
+          },
+          prefill: {
+            name: "Vidya M Mathew",
+            email: "vidyamathew13@gmail.com",
+            contact: "6282910820",
+          },
+          notes: {
+            address: "Customer Address",
+          },
+          theme: {
+            color: "#3399cc",
+          },
+        };
+        console.log("Razorpay Options:", options);
+        var rzp1 = new Razorpay(options);
+        rzp1.open();
       })
       .catch((error) => {
         // Handle errors
         console.error("Error retrying payment:", error);
         // You can display an error message to the user or handle the error in any other way
       });
-  }
-
-  function openRazorpay(orderId, productId, orderprice) {
-    var options = {
-      key: "rzp_test_zuuyQNQOwzCbtw", // Replace with your Razorpay Key ID
-      amount: orderprice * 100,
-      currency: "INR",
-      name: "Amoli Jewels",
-      description: "Retry Payment",
-      image: "https://your-company-logo.png",
-      order_id: orderId,
-      handler: function (response) {
-        // Handle successful payment
-        console.log("Payment successful:", response);
-        // Send payment success status to the backend
-        updateOrderStatus(orderId, productId, "pending");
-      },
-      prefill: {
-        name: "Vidya M Mathew",
-        email: "vidyamathew13@gmail.com",
-        contact: "6282910820",
-      },
-      notes: {
-        address: "Customer Address",
-      },
-      theme: {
-        color: "#3399cc",
-      },
-    };
-
-    console.log("Razorpay Options:", options);
-    var rzp1 = new Razorpay(options);
-    rzp1.open();
   }
 
   function updateOrderStatus(orderId, productId, status) {
@@ -327,7 +324,7 @@
 
     // Send a request to update the order status to 'pending' in the backend
     fetch("/update-order-status", {
-      method: "PATCH",
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
@@ -345,6 +342,8 @@
       })
       .then((data) => {
         console.log("Order status updated:", data);
+
+        window.location.reload();
       })
       .catch((error) => {
         console.error("Error updating order status:", error);

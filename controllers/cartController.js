@@ -416,13 +416,6 @@ exports.placeOrder = async (req, res) => {
     }
 
    
-    //  // Check if payment status is failed
-    //  if (paymentStatusToUpdate === 'failed') {
-    //   return res.redirect('/order-history'); // Redirect to order history page
-    // }
-
-
-
     // Check if payment option is wallet and user has sufficient balance
     if (paymentOption === 'walletPayment') {
       // Retrieve user's wallet balance
@@ -559,11 +552,11 @@ exports.paymentFailure = async ( req,res)=> {
         productImage: item.productId.productImage,
         quantity: item.quantity,
         price: item.price,
-        status: "failed", // Assuming default status is "Pending"
-        reason: "", // Assuming no reason initially
-        discountPrice: 0, // Assuming no discount initially
-        couponCode: "", // Assuming no coupon initially
-        referralCode: "", // Assuming no referral code initially
+        status: "failed",
+        reason: "", 
+        discountPrice: 0, 
+        couponCode: "", 
+        referralCode: "",
       })),
       totalQuantity: cart.items.reduce((total, item) => total + item.quantity, 0),
       totalPrice: totalPrice,
@@ -649,48 +642,31 @@ exports.retryPayment = (req, res) => {
 
 exports.updateOrderStatus = async (req, res) => {
   try {
-
     const session = req.session.user;
     const userData = await userCollection.findOne(session);
     const userId = userData._id;
 
-    const {orderId, productId, status } = req.body;
+    const { orderId, productId, status } = req.body;
 
     // Log orderId, productId, and status
     console.log("Update Order Status - Order ID:", orderId, "Product ID:", productId, "Status:", status);
 
-    // Find the order by orderId
-    const order = await ordersCollection.findOne({ _id: orderId });
+    const updatedOrder = await ordersCollection.findOneAndUpdate(
+      { _id: orderId, "products.productId": productId },
+      { $set: { "products.$.status": status } },
+      { new: true }
+  );
 
-    // Log order
-    console.log("Found Order:", order);
+  if (!updatedOrder) {
+    console.log('Order not found or product not found in order.');
+    return res.status(404).json({ error: 'Order not found or product not found in order' });
+}
 
-    if (!order) {
-      console.log("Order not found");
-      return res.status(404).json({ error: 'Order not found' });
-    }
+console.log('Order status updated successfully:', updatedOrder);
 
-    // Find the product within the order by productId
-    const productToUpdate = order.products.find(product => product.productId === productId);
+// Send the updated order details along with the status update response
+res.json({ updatedOrder, message: 'Order status updated successfully' });
 
-    // Log productToUpdate
-    console.log("Product to Update:", productToUpdate);
-
-    if (!productToUpdate) {
-      console.log("Product not found in the order");
-      return res.status(404).json({ error: 'Product not found in the order' });
-    }
-
-    // Update the status of the product to 'pending'
-    productToUpdate.status = status;
-
-    // Save the updated order
-    await order.save();
-
-    // Log updated order
-    console.log("Updated Order:", order);
-
-    return res.status(200).json(order);
   } catch (error) {
     console.error('Error updating order status:', error);
     return res.status(500).json({ error: 'Internal Server Error' });

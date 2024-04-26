@@ -2,11 +2,12 @@ const express = require('express');
 const adminController = require("../controllers/adminCtrl");
 const productController = require("../controllers/productCtrl");
 const categoryController = require("../controllers/categoryCtrl");
+const bannerController = require("../controllers/bannerController");
 const router = express.Router();
 const session = require("express-session")
 const uploads = require("../middleware/upload");
 const AdminAuthentcation = require("../middleware/adminAuth");
-
+const bannerUpload = require('../middleware/bannerUpload');
 
 
 
@@ -29,7 +30,7 @@ router.get("/adminOrderDetails/:orderId/:productId",AdminAuthentcation ,adminCon
 router.get("/sales-report",AdminAuthentcation, adminController.getSalesReport);
 router.get("/download/pdf",AdminAuthentcation, adminController.downloadPdf);
 router.get("/download/excel",AdminAuthentcation, adminController.downloadExcel);
-
+router.get("/banner-manage",AdminAuthentcation, bannerController.getBannerManage);
 
 
 //POST METHODS
@@ -44,5 +45,8 @@ router.post("/blockuser/:userId",AdminAuthentcation ,adminController.blockUser);
 router.post("/adminlogout",AdminAuthentcation ,adminController.postAdminLogout);
 router.post("/updateOrderStatus",AdminAuthentcation ,adminController.postOrders);
 router.post("/sales-filter", adminController.salesFilter);
+
+router.post("/bannerUpload", bannerUpload, bannerController.uploadBannerImage);
+router.delete("/removeBanner/:id", bannerController.removeBannerImage);
 
 module.exports = router;

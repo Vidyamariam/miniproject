@@ -58,7 +58,8 @@
   <header>
     <div id="header-info">
       <!-- <p id="contactus">Contact Us</p> -->
-      <img src="/img/logo-witebg.png" class="logo" style="width: 80px; height: 60px;" />
+      <img src="/img/amoli-jewels-high-resolution-logo-white-transparent.png" class="logo"
+        style="width: 80px; height: 60px;" />
       <h1 id="store-name">AMoli Jewels</h1>
       <div class="nav-icons">
         <div class="dropdown" id="my-account-dropdown">
@@ -331,10 +332,10 @@
 
 
           <div class="form-group">
-            <label for="paymentOption">Select Payment Method:</label>
+            <label for="paymentOption">Select Payment Method: </label>
 
             <select class="form-control" id="paymentOption" name="paymentOption">
-              <option value="none">select payment option</option>
+              <option value="none">select payment option </option>
               <option value="cash">Cash on Delivery</option>
               <option value="razorpay">Razorpay</option>
               <option value="walletPayment">Wallet Payment</option>
@@ -375,7 +376,8 @@
   <footer>
     <div class="footer-content">
       <div class="footer-logo">
-        <img src="/img/logo-blackbg.png" class="logo" style="width: 70px; height: 60px;" />
+        <img src="/img/amoli-jewels-high-resolution-logo-black-transparent.png" class="logo"
+          style="width: 70px; height: 60px;" />
       </div>
       <h2>FOLLOW US</h2>
       <div class="social-icons">
@@ -411,107 +413,6 @@
   <!-- Razor Pay -->
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <!-- Razor Pay -->
-
-
-
-
-
-  <!-- <script>
-  let orderId;
-  let price = document.getElementById('price')
-  let orderprice = price.getAttribute('data-totalprice')
-  // let orderprice = 700
-
-  $(document).ready(function () {
-    console.log('here ajx');
-    var settings = {
-      "url": "/create/orderId",
-      "method": "POST",
-      "timeout": 0,
-      "headers": {
-      "Content-Type": "application/json"
-      },
-      "data": JSON.stringify({
-        "amount": orderprice
-      }),
-    };
-
-    //creates new orderId everytime
-    $.ajax(settings).done(function (response) {
-      orderId = response.orderId;
-      orderprice = response.orderprice; 
-      ordresignature = response.signature;
-      $("#razorpayBtn").show();
-
-     
-    });
-  });
-
-  document.getElementById('razorpayBtn').onclick = function (e) {
-
-    let totalPriceElement = document.getElementById('price');
-    let orderprice = totalPriceElement.getAttribute('data-totalprice');
-    
-
-    var options = {
-        "key": "rzp_test_zuuyQNQOwzCbtw",
-        "amount": orderprice,
-        "currency": "INR",
-        "name": "Amoli Jewels",
-        "description": "Online Payment",
-        "image": "",
-        "order_id": orderId,
-        "handler": function (response) {
-        var form = document.createElement('form');
-        form.method = 'post';
-        form.action = '/order2ForRazorPay';  
-       
-
-        var orderPriceInput = document.createElement('input');
-        orderPriceInput.type = 'hidden';
-        orderPriceInput.name = 'orderprice';
-        orderPriceInput.value = orderprice; 
-        form.appendChild(orderPriceInput);       
-    
-        
-
-        var paymentIdInput = document.createElement('input');
-        paymentIdInput.type = 'hidden';
-        paymentIdInput.name = 'razorpay_payment_id';
-        paymentIdInput.value = response.razorpay_payment_id;
-        form.appendChild(paymentIdInput);
-       
-
-        var paymentModeInput = document.createElement('input');
-        paymentModeInput.type = 'hidden';
-        paymentModeInput.name = 'paymentMethod';
-       
-
-        var addressSelector = document.getElementById('address')
-        var selectedAddressValue = addressSelector.value;
-        var addressIdInput = document.createElement('input');
-        addressIdInput.type = 'hidden';
-        addressIdInput.name = 'address';
-        addressIdInput.value = selectedAddressValue; 
-        form.appendChild(addressIdInput);
-
-       
-        document.body.appendChild(form);      
-        form.submit();
-      }
-    };
-        var rzp1 = new Razorpay(options);
-        rzp1.on('payment.failed', function (response) {
-        alert(response.error.code);
-        alert(response.error.reason);
-        alert(response.error.metadata.order_id);
-        alert(response.error.metadata.payment_id);
-    });
-    rzp1.open();
-    e.preventDefault();
-  }
-
-</script> -->
 
 
 
@@ -557,7 +458,7 @@
 </script> -->
 
   <!-- SweetAlert CDN -->
-  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <!-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> -->
 
 
   <script>
@@ -578,6 +479,14 @@
 
       // Get the total price
       const totalPrice = $("#price").attr("data-totalprice");
+
+
+      // Check if the total price is above Rs. 1000 for cash on delivery
+      if (selectedPaymentOption === "cash" && totalPrice > 1000) {
+        // Display an error message to the user
+        $("#paymentError").text("Cash on delivery is not available for orders above Rs. 1000");
+        return;
+      }
 
       // Check if the selected payment option is Razorpay
       if (selectedPaymentOption === "razorpay") {
@@ -649,9 +558,9 @@
 
           var rzp1 = new Razorpay(options);
           rzp1.on('payment.failed', function (response) {
-              
-            paymentFailure(selectedAddressId, selectedPaymentOption, totalPrice,orderId);
-           
+
+            paymentFailure(selectedAddressId, selectedPaymentOption, totalPrice, orderId);
+
           });
           rzp1.open();
         });
@@ -698,15 +607,24 @@
             window.location.href = "/order-success";
           },
           error: function (error) {
-            // Handle error, if needed
-            console.error(error);
-            // Check if the error response contains the message for insufficient funds
+            // Log the error response for debugging
+            console.log("Error response:", error.responseJSON);
+
             if (error.responseJSON && error.responseJSON.error === "Insufficient funds in wallet") {
-              // Display a SweetAlert for insufficient funds
-              swal("Insufficient Funds", "You do not have enough funds in your wallet.", "error");
+
+              Swal.fire({
+                title: "Insufficient Funds",
+                text: "You do not have enough funds in your wallet.",
+                icon: "error",
+              });
             } else {
-              // Display a generic error message
-              swal("Error", "An error occurred while placing your order. Please try again later.", "error");
+              
+              Swal.fire({
+                title: "Error",
+                text: "An error occurred while placing your order. Please try again later.",
+                icon: "error",
+              });
+             
             }
           }
         });
@@ -719,67 +637,67 @@
 
 
     function paymentFailure(selectedAddressId, selectedPaymentOption, totalPrice, orderId) {
-  console.log("paymentFailure");
-  console.log("Selected Address ID:", selectedAddressId);
-  console.log("Selected Payment Option:", selectedPaymentOption);
-  console.log("Total Price:", totalPrice);
-  console.log("Order ID:", orderId);
+      console.log("paymentFailure");
+      console.log("Selected Address ID:", selectedAddressId);
+      console.log("Selected Payment Option:", selectedPaymentOption);
+      console.log("Total Price:", totalPrice);
+      console.log("Order ID:", orderId);
 
-  // Create an object with all the data
-  const data = {
-    selectedAddressId: selectedAddressId,
-    selectedPaymentOption: selectedPaymentOption,
-    totalPrice: totalPrice,
-    orderId: orderId,
-  };
+      // Create an object with all the data
+      const data = {
+        selectedAddressId: selectedAddressId,
+        selectedPaymentOption: selectedPaymentOption,
+        totalPrice: totalPrice,
+        orderId: orderId,
+      };
 
-  // Make a POST request to the controller endpoint
-  $.ajax({
-    type: "POST",
-    url: "/payment-failure", // Replace this with the actual endpoint URL
-    data: data,
-    success: function(response) {
-      // Handle success response
-      console.log(response);
+      // Make a POST request to the controller endpoint
+      $.ajax({
+        type: "POST",
+        url: "/payment-failure", // Replace this with the actual endpoint URL
+        data: data,
+        success: function (response) {
+          // Handle success response
+          console.log(response);
 
-      // Show SweetAlert dialog asking to retry payment or continue shopping
-      Swal.fire({
-        title: "Payment Failed",
-        text: "Would you like to retry payment and continue shopping?",
-        icon: "error",
-        showCancelButton: true,
-        confirmButtonText: "Retry Payment",
-        cancelButtonText: "Continue Shopping",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          // User wants to retry payment
-          // You can implement retry payment logic here
-          window.location.href = "/order-history"; // Call your retry payment function here if implemented
-        } else {
-          // User wants to continue shopping
-          // Redirect to the home page or any other desired action
-          window.location.href = "/";
+          // Show SweetAlert dialog asking to retry payment or continue shopping
+          Swal.fire({
+            title: "Payment Failed",
+            text: "Would you like to retry payment and continue shopping?",
+            icon: "error",
+            showCancelButton: true,
+            confirmButtonText: "Retry Payment",
+            cancelButtonText: "Continue Shopping",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // User wants to retry payment
+              // You can implement retry payment logic here
+              window.location.href = "/order-history"; // Call your retry payment function here if implemented
+            } else {
+              // User wants to continue shopping
+              // Redirect to the home page or any other desired action
+              window.location.href = "/";
+            }
+          });
+        },
+        error: function (xhr, status, error) {
+          // Handle error
+          console.error(xhr.responseText);
+          Swal.fire({
+            title: "Error",
+            text: "An error occurred while processing your payment. Please try again later.",
+            icon: "error",
+          });
         }
       });
-    },
-    error: function(xhr, status, error) {
-      // Handle error
-      console.error(xhr.responseText);
-      Swal.fire({
-        title: "Error",
-        text: "An error occurred while processing your payment. Please try again later.",
-        icon: "error",
-      });
     }
-  });
-}
 
   </script>
 
 
-<script>
+  <script>
 
-function toggleDropdown() {
+    function toggleDropdown() {
       var dropdown = document.getElementById("account-options");
       dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
     }
@@ -793,11 +711,10 @@ function toggleDropdown() {
         }
       }
     };
-</script>
+  </script>
 
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
 

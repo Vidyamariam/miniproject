@@ -46,7 +46,21 @@
 
               <div class="card-body">
                 <h6 class="card-text"><%= product.name %></h6>
+
+                <% if (product.discount > 0) { %>
+                <!-- Display discounted price if discount is available -->
+                <h6 class="card-title">
+                  <!-- Calculate discounted price -->
+                  <%= product.price - (product.price * (product.discount / 100))
+                  %>
+                </h6>
+                <!-- Display original price with strike-through -->
+                <s><%= product.price %></s>
+                <% } else { %>
+                <!-- Display original price if no discount -->
                 <h6 class="card-title"><%= product.price %></h6>
+                <% } %>
+
                 <form action="/add-to-cart/<%= product._id %>" method="post">
                   <% if (product.isListed && product.stock > 0) { %>
                   <!-- Product is available, show Add to Cart button -->

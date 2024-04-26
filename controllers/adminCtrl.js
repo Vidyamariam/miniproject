@@ -440,6 +440,7 @@ const filterByCategory = async (req, res) => {
   }
 };
 
+
 const adminOrderDetails = async (req,res)=> {
   try {
     const  orderId= req.params.orderId;
@@ -659,15 +660,22 @@ const downloadPdf = async (req, res) => {
 const downloadExcel = async (req, res) => {
   try {
     // Fetch orders from the database
-    const orders = await ordersCollection.find() .populate({
+    const orders = await ordersCollection.find().populate({
       path: "userId",
       model: "newusers",
     });
     const userEmail = req.session.user;
     const userdata = await userCollection.findOne(userEmail);
-    console.log("userdata in excel download",userdata);
+    console.log("userdata in excel download", userdata);
     const userid = userdata._id;
-    console.log("userid in excel function: ",userid);
+    console.log("userid in excel function: ", userid);
+
+
+     // Calculate total users and total products
+     const userName = new Set(orders.map(order => order.userId)).size;
+     const products = orders.reduce((acc, order) => acc + order.products.length, 0);
+     console.log("totalUsers: ", userName);
+     console.log("totalProducts: ", products);
 
     // Create a new Excel workbook
     const workbook = new ExcelJS.Workbook();
@@ -682,12 +690,19 @@ const downloadExcel = async (req, res) => {
       { header: 'Total Price', key: 'totalPrice', width: 15 },
       { header: 'Address', key: 'address', width: 40 },
       { header: 'Payment Method', key: 'paymentMethod', width: 20 },
-      { header: 'Order Date', key: 'orderDate', width: 20 }
+      { header: 'Order Date', key: 'orderDate', width: 20 },
+    
     ];
+
+    let totalQuantity = 0;
+    let totalPrice = 0;
 
     // Add rows for each order
     orders.forEach(order => {
-      
+      // Calculate totals
+      totalQuantity += order.totalQuantity;
+      totalPrice += order.totalPrice;
+
       worksheet.addRow({
         orderId: order.orderId,
         userName: order.userId.name,
@@ -698,6 +713,15 @@ const downloadExcel = async (req, res) => {
         paymentMethod: order.paymentMethod,
         orderDate: order.orderDate.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' })
       });
+    });
+
+    // Add totals row
+    worksheet.addRow({
+      orderId: 'Total',
+      totalQuantity: totalQuantity,
+      totalPrice: totalPrice.toFixed(2),
+      userName: userName,
+      products: products
     });
 
     // Set response headers to indicate an Excel file download
@@ -725,8 +749,10 @@ const downloadExcel = async (req, res) => {
 
 
 module.exports = {
-    dashboard, login,loginpost,getUserManage,blockUser,getAdminLogout,postAdminLogout,getOrders,postOrders,filterByCategory,adminOrderDetails,getSalesReport,downloadPdf,downloadExcel,salesFilter
-}
+    dashboard, login,loginpost,getUserManage,blockUser,getAdminLogout,postAdminLogout,getOrders,postOrders,filterByCategory,adminOrderDetails,getSalesReport,downloadPdf,downloadExcel,salesFilter,
+
+
+  }
 
 
 

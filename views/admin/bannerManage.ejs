@@ -1,0 +1,181 @@
+<%- include('header') %>
+
+<style>
+  #banner-section {
+    max-width: 600px;
+
+    margin: 150px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+  }
+
+  #banner-section h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  #banner-upload-form {
+    margin-bottom: 20px;
+  }
+
+  #banner-upload-form label {
+    font-weight: bold;
+  }
+
+  #banner-list {
+    margin-top: 20px;
+  }
+
+  #banner-list h3 {
+    margin-bottom: 10px;
+  }
+
+  #banner-list ul {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  #banner-list li {
+    margin-bottom: 10px;
+  }
+
+  .img-thumbnail {
+    width: 100px;
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-right: 10px;
+  }
+
+  .remove-banner {
+    margin-left: 10px;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+  }
+
+  .btn-primary:hover {
+    background-color: #0056b3;
+  }
+
+  .btn-danger {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+  }
+
+  .btn-danger:hover {
+    background-color: #c82333;
+  }
+</style>
+
+<div id="banner-section">
+  <h2>Banner Management</h2>
+
+  <!-- Form for uploading new banner images -->
+  <form id="banner-upload-form" enctype="multipart/form-data" method="POST">
+    <div class="mb-3">
+      <label for="banner-image">Upload New Banner Image:</label>
+      <input
+        type="file"
+        class="form-control"
+        id="banner-image"
+        name="bannerImage"
+        accept="image/*"
+        required
+      />
+    </div>
+    <button type="submit" class="btn btn-primary">Add</button>
+  </form>
+
+  <!-- List of existing banner images with remove buttons -->
+  <div id="banner-list">
+    <h3>Existing Banner Images:</h3>
+    <ul>
+      <% banners.forEach(banner => { %>
+      <li>
+        <img
+          src="<%= banner.bannerImage %>"
+          alt="Banner Image"
+          class="img-thumbnail"
+        />
+        <button
+          class="btn btn-danger remove-banner"
+          data-id="<%= banner._id %>"
+        >
+          Remove
+        </button>
+      </li>
+      <% }); %>
+    </ul>
+  </div>
+</div>
+
+<%- include('footer') %>
+
+<script>
+  document
+    .getElementById("banner-upload-form")
+    .addEventListener("submit", async (event) => {
+      event.preventDefault(); // Prevent the form from submitting normally
+
+      const file = document.getElementById("banner-image").files[0];
+      console.log("Selected file:", file);
+
+      const formData = new FormData();
+      formData.append("bannerImage", file);
+
+      console.log(formData);
+
+      try {
+        console.log("Sending request...");
+        const response = await fetch("/admin/bannerUpload", {
+          method: "POST",
+          body: formData,
+        });
+
+        console.log("Response received:", response);
+
+        if (response.ok) {
+          console.log("Banner uploaded successfully.");
+
+          window.location.reload();
+          // Optionally, you can reload the page or update the UI to reflect the uploaded banner
+        } else {
+          console.error("Failed to upload banner. Status:", response.status);
+        }
+      } catch (error) {
+        console.error("Error uploading banner:", error);
+      }
+    });
+</script>
+
+<script>
+  document.querySelectorAll(".remove-banner").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const bannerId = button.dataset.id;
+
+      try {
+        const response = await fetch(`/admin/removeBanner/${bannerId}`, {
+          method: "DELETE",
+        });
+
+        if (response.ok) {
+          console.log("Banner image removed successfully.");
+
+          window.location.reload();
+          // Optionally, update the UI to reflect the removal of the banner image
+        } else {
+          console.error("Failed to remove banner image.");
+        }
+      } catch (error) {
+        console.error("Error removing banner image:", error);
+      }
+    });
+  });
+</script>

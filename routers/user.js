@@ -64,6 +64,6 @@ router.post("/verifyOtp", userController.postverifyOtp);
 router.post("/update-password",userController.postChangePassword);
 router.post("/payment-failure", cartController.paymentFailure);
 router.post("/retry-payment", cartController.retryPayment);
-router.patch('/update-order-status', cartController.updateOrderStatus);
+router.post('/update-order-status', cartController.updateOrderStatus);
 
 module.exports = router;

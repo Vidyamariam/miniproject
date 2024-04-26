@@ -32,10 +32,10 @@
     }
 
     #imagePreview img {
-        height: 60px;
-        max-width: 90px;
-        margin: 15px;
-      }
+      height: 60px;
+      max-width: 90px;
+      margin: 15px;
+    }
   </style>
 </head>
 
@@ -70,17 +70,16 @@
           <label id="PreviewOfImage">Image Preview:</label>
           <!-- Display existing images -->
           <% items.productImage.forEach((imageUrl, index)=> { %>
-            <div class="preview-item">
+            <div class="preview-item" style="display: flex;">
               <img src="<%= imageUrl %>" alt="Product Image" />
-             
+              <small class="text-danger" style="color:red" id="editImageError"></small>
             </div>
             <% }); %>
-              <!-- Display preview of newly selected images -->
-              <img id="selectedImagePreview" src="">
+
         </div>
       </div>
 
-    
+
 
       <div class="mb-3">
         <label for="description">Description:</label>
@@ -119,62 +118,86 @@
 
 
   <!--JS-->
-<script>
-  function previewImages() {
-  var input = document.getElementById('productImage');
-  var previewContainer = document.querySelector('.image-preview');
 
-  // Clear preview container
-  previewContainer.innerHTML = '';
+  <script>
+    function previewImages() {
+      var input = document.getElementById('productImage');
+      var previewContainer = document.querySelector('.image-preview');
 
-  var filesToUpload = []; // Array to store only the selected files
 
-  for (var i = 0; i < input.files.length; i++) {
-    var file = input.files[i];
-    var reader = new FileReader();
+       // Clear preview container
+    previewContainer.innerHTML = '';
 
-    reader.onload = (function (file) {
-      return function (e) {
-        var imgContainer = document.createElement('div');
-        imgContainer.classList.add('preview-item');
+      // Array to store only the selected files
+      var filesToUpload = [];
 
-        var img = document.createElement('img');
-        img.src = e.target.result;
-        img.alt = 'Selected Image';
-        imgContainer.appendChild(img);
+      // Process existing images
+  //  // Process existing images
+  //  <% items.productImage.forEach((imageUrl, index) => { %>
+  //     var existingImgContainer = document.createElement('div');
+  //     existingImgContainer.classList.add('preview-item');
+  //     var existingImg = document.createElement('img');
+  //     existingImg.src = '<%= imageUrl %>';
+  //     existingImg.alt = 'Existing Image';
+  //     existingImgContainer.appendChild(existingImg);
+  //     previewContainer.appendChild(existingImgContainer);
+  //   <% }); %>
 
-        // Check if the image is from existing images or newly uploaded ones
-        if (!file.dataset) { // If dataset doesn't exist, it's a newly uploaded image
-          var deselectBtn = document.createElement('button');
-          deselectBtn.innerHTML = 'Deselect';
-          deselectBtn.classList.add('deselect-btn');
-          deselectBtn.addEventListener('click', function () {
-            imgContainer.remove();
-            // Remove the deselected file from the array of files
-            var index = filesToUpload.indexOf(file);
-            if (index !== -1) {
-              filesToUpload.splice(index, 1);
+      // Process newly uploaded images
+      for (var i = 0; i < input.files.length; i++) {
+        (function (file) {
+          var reader = new FileReader();
+
+          reader.onload = function (e) {
+            var imgContainer = document.createElement('div');
+            imgContainer.classList.add('preview-item');
+
+            var img = document.createElement('img');
+            img.src = e.target.result;
+            img.alt = 'Selected Image';
+            imgContainer.appendChild(img);
+
+            // Check if the image is from existing images or newly uploaded ones
+            if (!file.dataset) { // If dataset doesn't exist, it's a newly uploaded image
+              var deselectBtn = document.createElement('button');
+              deselectBtn.innerHTML = 'Deselect';
+              deselectBtn.classList.add('deselect-btn');
+              deselectBtn.addEventListener('click', function () {
+                imgContainer.remove();
+                // Remove the deselected file from the array of files
+                var index = filesToUpload.indexOf(file);
+                if (index !== -1) {
+                  filesToUpload.splice(index, 1);
+                }
+              });
+
+              imgContainer.appendChild(deselectBtn);
+
+              // Add the file to the array of files to upload
+              filesToUpload.push(file);
             }
-          });
-          imgContainer.appendChild(deselectBtn);
 
-          // Add the file to the array of files to upload
-          filesToUpload.push(file);
-        }
+            previewContainer.appendChild(imgContainer);
+          };
 
-        previewContainer.appendChild(imgContainer);
-      };
-    })(file);
-
-    reader.readAsDataURL(file);
-  }
-}
-
-</script>
+          reader.readAsDataURL(file);
+        })(input.files[i]);
 
 
 
+      }
+
+
+    }
  
+ 
+ </script>
+
+
+
+
+
+
 
   <script>
     function validateForm() {
@@ -225,22 +248,22 @@
       const editDiscountError = document.getElementById('editDiscountError');
 
       const productPrice = parseFloat(document.getElementById('editPrice').value);
-        
-      if(isNaN(editOfferpriceInput.value) || editOfferpriceInput.value.trim() === '' ){
+
+      if (isNaN(editOfferpriceInput.value) || editOfferpriceInput.value.trim() === '') {
         editDiscountError.innerText = 'Discount percent is required';
         isValid = false;
       }
-     else if ( parseFloat(editOfferpriceInput.value) < 0) {
+      else if (parseFloat(editOfferpriceInput.value) < 0) {
         editDiscountError.innerText = 'Discount percent should be a non-negative number';
         isValid = false;
       } else if (parseFloat(editOfferpriceInput.value) > 50) {
         editDiscountError.innerText = 'Discount percent cannot be greater than 50';
         isValid = false;
-      }  else {
+      } else {
         editDiscountError.innerText = ''; // Clear any previous error message
       }
 
-    
+
       // Stock validation
       const editStockInput = document.getElementById('editStock');
       const editStockError = document.getElementById('editStockError');
@@ -251,12 +274,24 @@
         editStockError.innerText = ''; // Clear any previous error message
       }
 
+
+      // Product Image validation
+      // const productImageInput = document.getElementById('productImage');
+      // const editImageError = document.getElementById('editImageError');
+      // if (productImageInput.files.length === 0) {
+      //   editImageError.innerText = 'Please upload at least one image';
+      //   isValid = false;
+      // } else {
+      //   editImageError.innerText = ''; // Clear any previous error message
+      // }
+
+
       return isValid; // Return overall form validity
     }
   </script>
 
 
-<!-- <script>
+  <!-- <script>
   // Function to add delete buttons for uploaded images
   function addDeleteButtons() {
     let previewDiv = document.getElementById("imagePreview");

@@ -2,16 +2,24 @@
 
     width: 1000px;
     height: auto;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); 
+
 
 }
 
 .order-table tbody tr td{
-    padding: 20px;
+    padding: 8px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 15px;
+    font-size: 20px;
+    width: 150px;
+    text-align: center;
+
 }
 
 .order-table thead tr th{
-    padding: 20px;
+    padding: 8px;
+    text-align: center;
 }
 
 .order-actions a button{

@@ -7,7 +7,8 @@ const productsCollection = require('../model/productSchema');
 const nodemailer = require('nodemailer');
 const otpCollection = require("../model/otpSchema");
 const bcrypt = require('bcrypt');
-
+const categoryCollection = require("../model/category");
+const Banner = require('../model/bannerModel');
 
 
 const signupGet = (req, res) => { 
@@ -107,8 +108,12 @@ const sendOTPVerificationEmail = async (email, title, body) => {
 const getVerifyEmail = (req, res) => {
    
     try{
-        res.render("user/verifyEmail");
 
+          // Calculate the expiration time for the OTP
+          const expirationTime = new Date(Date.now() + 60 * 1000); // 60 seconds from now
+        
+          // Render the verify email page and pass the expiration time as a variable
+          res.render("user/verifyEmail", { expirationTime });
     }
     catch (error) {
         console.error("Error getting varify Email page:", error);
@@ -442,19 +447,20 @@ const login = (req, res) => {
 }
 
 const landing = async (req, res) => {
-   
-    try{
-        if(req.session.user)
-        return res.redirect("/home")
-        res.render("user/landing");
+    try {
+        if (req.session.user) {
+            return res.redirect("/home");
+        }
 
-    }
-    catch (error) {
+        // Fetch banner images from the database
+        const banners = await Banner.find();
+
+        // Render the landing page and pass banner data to the view
+        res.render("user/landing", { banners });
+    } catch (error) {
         console.error(error);
         return res.status(500).json({ error: "Internal Server Error" });
     }
-
-   
 }
 
 
@@ -553,9 +559,12 @@ const getHome = async (req, res) => {
 
         const productList = await productsCollection.find();
 
+          // Fetch banner images from the database
+          const banners = await Banner.find();
+
         if(userEmail){
            
-            res.render('user/home', { productList: productList });
+            res.render('user/home', { productList: productList , banners});
         }
 
     }
@@ -587,38 +596,84 @@ const getHome = async (req, res) => {
 
 
 const Ethnics = async (req, res) => {
+    try {
+        // Query the category collection to find the category discount for "Ethnic"
+        const category = await categoryCollection.findOne({ categoryName: "Ethnic" });
 
-    try{
+        // Retrieve the product list
         const productList = await productsCollection.find({ category: "Ethnic" });
 
-    res.render("user/ethnic", { productList });
+        // Initialize maxDiscount with the category discount if available
+        let maxDiscount = category && category.categoryOffer > 0 ? category.categoryOffer : 0;
 
-    }
-    catch (error) {
+        // Iterate through the products to find the maximum discount
+        productList.forEach(product => {
+            if (product.discount > maxDiscount) {
+                maxDiscount = product.discount;
+            }
+        });
+
+        // Calculate the discounted price for each product
+        productList.forEach(product => {
+            if (product.discount > 0) {
+                // Apply the maximum discount
+                const discountedPrice = product.price - (product.price * (maxDiscount / 100));
+                product.discountedPrice = discountedPrice;
+            } else {
+                // If there's no discount, set discounted price as the original price
+                product.discountedPrice = product.price;
+            }
+        });
+
+        res.render("user/ethnic", { productList });
+    } catch (error) {
         // Handle any errors that occur during database query or rendering
         console.error('Error getting page:', error);
         res.status(500).send('Internal Server Error');
     }
-
-    
 }
+
 
 
 const Contemporary = async (req, res) => {
+    try {
+        // Query the category collection to find the category discount for "Contemporary"
+        const category = await categoryCollection.findOne({ categoryName: "Contemporary" });
 
-    try{
+        // Retrieve the product list
         const productList = await productsCollection.find({ category: "Contemporary" });
 
-        res.render("user/Contemporary", { productList });
+        // Initialize maxDiscount with the category discount if available
+        let maxDiscount = category && category.categoryOffer > 0 ? category.categoryOffer : 0;
 
-    }
-    catch (error) {
+        // Iterate through the products to find the maximum discount
+        productList.forEach(product => {
+            if (product.discount > maxDiscount) {
+                maxDiscount = product.discount;
+            }
+        });
+
+        // Calculate the discounted price for each product
+        productList.forEach(product => {
+            if (product.discount > 0) {
+                // Apply the maximum discount
+                const discountedPrice = product.price - (product.price * (maxDiscount / 100));
+                product.discountedPrice = discountedPrice;
+            } else {
+                // If there's no discount, set discounted price as the original price
+                product.discountedPrice = product.price;
+            }
+        });
+
+        res.render("user/Contemporary", { productList });
+    } catch (error) {
         // Handle any errors that occur during database query or rendering
         console.error('Error getting page:', error);
         res.status(500).send('Internal Server Error');
     }
-   
 }
+
+
 
 
 const PRODUCTS_PER_PAGE = 10; // Define the number of products per page
