@@ -74,6 +74,28 @@ const postAddProduct = async (req, res) => {
 
         console.log("product details", req.body);
 
+            //validations
+         if (!name || !category || !description || !price || !discount || !stock || !isListed) {
+          return res.render("admin/addProduct", { error: "All fields are required" });
+      }
+
+      if (isNaN(price) || price <= 0) {
+          return res.render("admin/addProduct", { error: "Price must be a positive number" });
+      }
+
+      if (isNaN(discount) || discount < 0 || discount > 50) {
+          return res.render("admin/addProduct", { error: "Discount must be a number between 0 and 50" });
+      }
+
+      if (isNaN(stock) || stock < 0) {
+          return res.render("admin/addProduct", { error: "Stock must be a non-negative integer" });
+      }
+
+      if(!req.files || req.files.length === 0){
+
+        return res.render("admin/addProduct", {error: "Upload atleast one image"})
+      }
+
 
         let productImage = [];
 

@@ -118,19 +118,29 @@ background-color: rgb(199, 188, 188);
 <!--CONTAINER-->
 <div class="product-container">
 
-  <!-- Small Images Column -->
-  <div class="images-section">
-    <div class="small-images-column">
-      <% productdetails.productImage.forEach((image, index)=> { %>
-        <img src="<%= image %>" alt="Small Image <%= index + 1 %>" onclick="changeMainImage('<%= image %>')">
-      <% }); %>
-    </div>
+ <!-- Small Images Column -->
+<div class="images-section">
+  <div class="small-images-column">
+    <% productdetails.productImage.forEach((image, index)=> { %>
+      <img src="<%= image %>" alt="Small Image <%= index + 1 %>" onclick="changeMainImage('<%= image %>')">
+    <% }); %>
   </div>
+</div>
 
- <!-- Main Image -->
+<!-- Main Image -->
 <div id="mainContainer">
   <img id="mainImage" src="<%= productdetails.productImage[0] %>" alt=""/>
 </div>
+
+<script>
+  function changeMainImage(imageUrl) {
+    // Get the main image element
+    var mainImage = document.getElementById("mainImage");
+    // Change the src attribute to the clicked image URL
+    mainImage.src = imageUrl;
+  }
+</script>
+
 
 <script>
   const mainContainer = document.getElementById("mainContainer");

@@ -120,7 +120,7 @@ exports.downloadInvoice = async (req, res) => {
         doc.fontSize(14).text('Order Details', { align: 'center' }).moveDown();
         doc.fontSize(12).text(`Order ID: ${order.orderId}`);
         doc.fontSize(12).text(`Total Quantity: ${order.totalQuantity}`);
-        doc.fontSize(12).text(`Total Price: ${order.totalPrice}`);
+        doc.fontSize(12).text(`Total Price paid: ${order.totalPrice}`);
         doc.fontSize(12).text(`Order Date: ${order.orderDate}`);
         doc.fontSize(12).text(`Payment Method: ${order.paymentMethod}`);
         doc.moveDown();

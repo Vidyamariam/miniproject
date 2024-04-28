@@ -9,7 +9,7 @@ const Address = require('../model/addressSchema');
 const ordersCollection = require('../model/orderSchema');
 const Razorpay = require('razorpay');
 const moment = require('moment');
-
+const couponCollection = require('../model/couponModel');
 
 
 exports.getCart = async (req, res) => {
@@ -333,8 +333,10 @@ exports.getCheckoutPage = async (req, res) => {
 
     totalPrice = totalPrice.toFixed(2);
    
+     // Fetch available coupons from the database
+     const coupons = await couponCollection.find({ expiryDate: { $gte: new Date() } });
 
-    res.render("user/checkout", { userAddress, cart, totalPrice, discountedPrice });
+    res.render("user/checkout", { userAddress, cart, totalPrice, discountedPrice, coupons });
   } catch (error) {
     console.log(error);
     // Handle the error and possibly send an error response to the client

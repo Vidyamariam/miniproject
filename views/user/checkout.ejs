@@ -39,6 +39,83 @@
       font-weight: 500;
       font-style: normal;
     }
+
+
+    /* Add this CSS code to your existing CSS file or in a new file */
+.coupons-available {
+  margin-top: 20px;
+}
+
+.coupons-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.coupon-card {
+  background-color: #de6a6a;
+ 
+  border: 3px solid #ede4e4;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  border-radius: 15px;
+  padding: 10px;
+  margin: 10px;
+  width: 200px; /* Adjust width as needed */
+  height: 110px;
+  transition: background-color 0.3s ease;
+}
+
+.coupon-card:hover {
+  background-color: #d55353; /* Change background color on hover */
+}
+
+.coupon-details {
+  color: #e1dddd;
+}
+
+.coupon-code {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+
+
+/* CSS for hiding the popup by default */
+.popup {
+  position: absolute;
+  display: none;
+  background-color: #f2ebeb;
+ 
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  height: 80px;
+/* Position at the right of the card */
+}
+
+/* CSS for showing the popup on hover */
+.coupon-card:hover .popup {
+  display: block;
+}
+/* Add more styles as needed */
+
+/* CSS for the popup message */
+.popup-message {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #d55353;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+}
+
+.popup-message.hidden {
+  display: none;
+}
+
+
   </style>
 </head>
 
@@ -295,6 +372,78 @@
       </div>
 
       <hr style="width: 800px;height: 1rem;">
+
+      <div class="popup-message hidden">
+        <p>Coupon code copied to clipboard!</p>
+      </div>
+
+      <!-- Add this section to your HTML code -->
+<div class="coupons-available">
+  <h4>Available Coupons</h4>
+  <div class="coupons-container">
+    <% if (coupons && coupons.length > 0) { %>
+      <% coupons.forEach((coupon) => { %>
+        <div class="coupon-card">
+         
+          <div class="coupon-details">
+            <p class="coupon-code"><%= coupon.couponCode %>   <i class="fa fa-duotone fa-ticket fa-xl" style="--fa-primary-color: #d61f1f; --fa-secondary-color: #d61f1f;"></i> </p>
+            <h4 class="coupon-discount"><b> <%= coupon.discount %>% discount</b></h4>
+            <p class="coupon-expiry">Expires on: <%= coupon.expiryDate.toLocaleDateString() %></p>
+           <div class="coupon-amounts">
+      <p class="coupon-min-amount hidden" style="display: none;">Minimum purchase amount: <%= coupon.minAmount %></p>
+      <p class="coupon-max-amount hidden" style="display: none;">Maximum purchase amount: <%= coupon.maxAmount %></p>
+    </div>
+  </div>
+  <div class="popup hidden"></div>
+
+          </div>
+       
+      <% }); %>
+    <% } else { %>
+      <p>No coupons available</p>
+    <% } %>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const couponCards = document.querySelectorAll('.coupon-card');
+    
+    couponCards.forEach(card => {
+      const popup = card.querySelector('.popup');
+      const couponCode = card.querySelector('.coupon-code').textContent.trim();
+      const minAmount = card.querySelector('.coupon-min-amount').textContent;
+      const maxAmount = card.querySelector('.coupon-max-amount').textContent;
+      
+      card.addEventListener('mouseover', function () {
+        popup.innerHTML = `<p>${minAmount}</p><p>${maxAmount}</p>`;
+        popup.classList.remove('hidden');
+      });
+      
+      card.addEventListener('mouseleave', function () {
+        popup.classList.add('hidden');
+      });
+
+      card.addEventListener('click', function () {
+        // Copy coupon code to clipboard
+        navigator.clipboard.writeText(couponCode)
+          .then(() => {
+            console.log('Coupon code copied to clipboard:', couponCode);
+            // Show popup message
+            const messageContainer = document.querySelector('.popup-message');
+            messageContainer.classList.remove('hidden');
+            setTimeout(() => {
+              messageContainer.classList.add('hidden');
+            }, 3000); // Hide the message after 3 seconds
+          })
+          .catch(err => {
+            console.error('Failed to copy coupon code to clipboard:', err);
+            // Handle error
+          });
+      });
+    });
+  });
+</script>
 
 
       <div class="order-place">
