@@ -44,9 +44,9 @@ router.post("/visibility/:id",AdminAuthentcation ,productController.productVisib
 router.post("/blockuser/:userId",AdminAuthentcation ,adminController.blockUser);
 router.post("/adminlogout",AdminAuthentcation ,adminController.postAdminLogout);
 router.post("/updateOrderStatus",AdminAuthentcation ,adminController.postOrders);
-router.post("/sales-filter", adminController.salesFilter);
+router.post("/sales-filter",AdminAuthentcation, adminController.salesFilter);
 
-router.post("/bannerUpload", bannerUpload, bannerController.uploadBannerImage);
-router.delete("/removeBanner/:id", bannerController.removeBannerImage);
+router.post("/bannerUpload",AdminAuthentcation, bannerUpload, bannerController.uploadBannerImage);
+router.delete("/removeBanner/:id",AdminAuthentcation, bannerController.removeBannerImage);
 
 module.exports = router;

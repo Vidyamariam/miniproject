@@ -11,11 +11,11 @@ const categoryCollection = require("../model/category");
 const Banner = require('../model/bannerModel');
 
 
-const signupGet = (req, res) => { 
+const signupGet = (req, res) => {
 
-    try{
-        if(req.session.user)
-        return res.redirect("/home");
+    try {
+        if (req.session.user)
+            return res.redirect("/home");
 
         res.render("user/signup");
     }
@@ -23,18 +23,18 @@ const signupGet = (req, res) => {
         console.error(error); // Log the error details
         res.status(500).json({ message: 'Internal Server Error for signup' });
     }
-   
+
 }
 
 const signupPost = async (req, res) => {
-    const { name, email, password ,referralCode} = req.body;
-     
+    const { name, email, password, referralCode } = req.body;
+
     console.log("signuppost data", req.body);
 
     try {
-        if(req.session.user)
-        return res.redirect("/home");
-    
+        if (req.session.user)
+            return res.redirect("/home");
+
         const existingUser = await signupCollection.findOne({ email });
 
         console.log("existingUser in signup post", existingUser);
@@ -106,21 +106,21 @@ const sendOTPVerificationEmail = async (email, title, body) => {
 
 
 const getVerifyEmail = (req, res) => {
-   
-    try{
 
-          // Calculate the expiration time for the OTP
-          const expirationTime = new Date(Date.now() + 60 * 1000); // 60 seconds from now
-        
-          // Render the verify email page and pass the expiration time as a variable
-          res.render("user/verifyEmail", { expirationTime });
+    try {
+
+        // Calculate the expiration time for the OTP
+        const expirationTime = new Date(Date.now() + 60 * 1000); // 60 seconds from now
+
+        // Render the verify email page and pass the expiration time as a variable
+        res.render("user/verifyEmail", { expirationTime });
     }
     catch (error) {
         console.error("Error getting varify Email page:", error);
         throw error;
     }
 
-   
+
 }
 
 
@@ -138,7 +138,7 @@ const verifyEmailPost = async (req, res) => {
 
         const signupData = req.session.signupData;
 
-        console.log("signupData in verify email post",signupData);
+        console.log("signupData in verify email post", signupData);
 
         if (!signupData) {
             return res.render("user/verifyEmail", { error: "User data not found. Please sign up again." });
@@ -155,12 +155,12 @@ const verifyEmailPost = async (req, res) => {
         if (otpData === otpRecord.otp) {
             const newUser = new signupCollection({
 
-                name:signupData.name,
+                name: signupData.name,
                 email: signupData.email,
                 password: signupData.password,
                 referredCode: signupData.referredCode
             });
-             
+
             if (signupData.referredCode) {
                 // Add 50 Rs to the wallet balance
                 newUser.Wallet.balance += 50;
@@ -209,12 +209,12 @@ const resendOTP = async (req, res) => {
 
 
 
-const forgotPassword = (req,res)=> {
+const forgotPassword = (req, res) => {
 
-    try{
-        
+    try {
 
-        res.render("user/checkEmail");      
+
+        res.render("user/checkEmail");
 
     }
     catch (error) {
@@ -224,49 +224,49 @@ const forgotPassword = (req,res)=> {
 }
 
 
-const postForgotPassword = async (req,res)=> {
+const postForgotPassword = async (req, res) => {
 
-    const  email  = req.body.email;
+    const email = req.body.email;
 
-    try{
+    try {
 
         req.session.otpemail = req.body.email;
 
         console.log("email in forgot password", req.body);
-        
+
         // Check if the email exists in the user collection
         const existingUser = await signupCollection.findOne({ email });
 
-        console.log("existing user in forgot pw",existingUser);
+        console.log("existing user in forgot pw", existingUser);
 
-        if(!existingUser){
+        if (!existingUser) {
             return res.render("user/checkEmail", { errorMessage: "Email not found" });
         }
 
-        if(existingUser){
+        if (existingUser) {
 
             //generate otp
-        const otpGenerated = Math.floor(1000 + Math.random() * 9000).toString();
+            const otpGenerated = Math.floor(1000 + Math.random() * 9000).toString();
 
-        const otpData = new otpCollection({
-            email: email,
-            otp: otpGenerated
-        });
-        await otpData.save();
+            const otpData = new otpCollection({
+                email: email,
+                otp: otpGenerated
+            });
+            await otpData.save();
 
-        const mailBody = `Your OTP for registration is ${otpGenerated}`;
-        await sendOTPVerificationEmail(email, "otp registration", mailBody);
-        console.log("email otp");
+            const mailBody = `Your OTP for registration is ${otpGenerated}`;
+            await sendOTPVerificationEmail(email, "otp registration", mailBody);
+            console.log("email otp");
 
-        // Redirect to verify OTP page
-        return res.redirect('/verifyOtp');     
+            // Redirect to verify OTP page
+            return res.redirect('/verifyOtp');
 
         }
         else {
             // If the email doesn't exist, handle it based on your application's requirements
             return res.status(404).json({ error: 'Email not found' });
         }
-        
+
     }
     catch (error) {
         console.error(error);
@@ -274,9 +274,9 @@ const postForgotPassword = async (req,res)=> {
     }
 }
 
-const getverifyOtp = (req,res)=> {
+const getverifyOtp = (req, res) => {
 
-    try{
+    try {
 
         res.render("user/verifyOtp");
 
@@ -292,37 +292,37 @@ const getverifyOtp = (req,res)=> {
 
 
 
-const postverifyOtp = async (req,res)=> {
+const postverifyOtp = async (req, res) => {
 
-      try{
+    try {
 
-        const {n1, n2, n3, n4 } = req.body;
-        console.log("hgdsfj",req.body);
+        const { n1, n2, n3, n4 } = req.body;
+        console.log("hgdsfj", req.body);
         const isValidInput = n1 && n2 && n3 && n4 && /^\d+$/.test(n1 + n2 + n3 + n4);
-          
+
         if (!isValidInput) {
             return res.render("user/verifyOtp", { message: "Only numeric values, and no white spaces" });
         }
 
         const otpEntered = `${n1}${n2}${n3}${n4}`;
-        console.log("Entered OTP:", otpEntered);   
+        console.log("Entered OTP:", otpEntered);
 
         const otpData = await otpCollection.findOne({}).sort({ _id: -1 }).limit(1);
-           
-        console.log("otp data in postverifyOtp",otpData);
-      
-         // Check if the OTP exists and matches the entered OTP
-         if (otpData && otpEntered === otpData.otp ) {
-             // If OTP is valid, redirect to the change password route
-             return res.redirect('/update-password');
-         } else {
-             // If OTP is invalid or doesn't match, display an error message
-             return res.render("user/verifyOtp", { message: "Invalid OTP. Please try again." });
-         }
+
+        console.log("otp data in postverifyOtp", otpData);
+
+        // Check if the OTP exists and matches the entered OTP
+        if (otpData && otpEntered === otpData.otp) {
+            // If OTP is valid, redirect to the change password route
+            return res.redirect('/update-password');
+        } else {
+            // If OTP is invalid or doesn't match, display an error message
+            return res.render("user/verifyOtp", { message: "Invalid OTP. Please try again." });
+        }
 
 
-      }
-      catch (error) {
+    }
+    catch (error) {
         console.error(error);
         return res.status(500).json({ error: "Internal Server Error" });
     }
@@ -330,9 +330,9 @@ const postverifyOtp = async (req,res)=> {
 
 
 
-const resendForgotOtp = async (req,res)=> {
+const resendForgotOtp = async (req, res) => {
 
-    try{
+    try {
 
         const email = req.session.otpemail;
         console.log("email", email);
@@ -344,19 +344,19 @@ const resendForgotOtp = async (req,res)=> {
         }
 
 
-         //generate otp
-         const otpGenerated = Math.floor(1000 + Math.random() * 9000).toString();
+        //generate otp
+        const otpGenerated = Math.floor(1000 + Math.random() * 9000).toString();
 
-         const otpData = new otpCollection({
-             email: email,
-             otp: otpGenerated
-         });
-         await otpData.save();
- 
-         const mailBody = `Your OTP for registration is ${otpGenerated}`;
-         await sendOTPVerificationEmail(email, "otp registration", mailBody);
-         console.log("email otp");
- 
+        const otpData = new otpCollection({
+            email: email,
+            otp: otpGenerated
+        });
+        await otpData.save();
+
+        const mailBody = `Your OTP for registration is ${otpGenerated}`;
+        await sendOTPVerificationEmail(email, "otp registration", mailBody);
+        console.log("email otp");
+
 
         res.redirect("/verifyOtp");
 
@@ -369,10 +369,10 @@ const resendForgotOtp = async (req,res)=> {
 
 
 
-const getChangePassword = (req,res)=> {
+const getChangePassword = (req, res) => {
 
-    try{
-        
+    try {
+
         // Now you have access to the email in the route handler
         res.render("user/updatePassword");
 
@@ -397,15 +397,15 @@ const postChangePassword = async (req, res) => {
 
         // Hash the new password
         const hashedPassword = await bcrypt.hash(newPassword, 10);
-    
-           // Update the password field with the hashed password
-         user.password = hashedPassword;
 
-     // Save the updated user to the database
-        await user.save();     
-        
+        // Update the password field with the hashed password
+        user.password = hashedPassword;
 
-     res.redirect("/password-changed");
+        // Save the updated user to the database
+        await user.save();
+
+
+        res.redirect("/password-changed");
 
     } catch (error) {
         console.error(error);
@@ -414,12 +414,12 @@ const postChangePassword = async (req, res) => {
 };
 
 
-const passwordChangeSuccess = (req,res)=> {
+const passwordChangeSuccess = (req, res) => {
 
-    try{
+    try {
 
 
-           res.render("user/pwChangeSuccess");
+        res.render("user/pwChangeSuccess");
 
     }
     catch (error) {
@@ -433,9 +433,9 @@ const passwordChangeSuccess = (req,res)=> {
 
 const login = (req, res) => {
 
-    try{
-        if(req.session.user)
-        return res.redirect("/home")
+    try {
+        if (req.session.user)
+            return res.redirect("/home")
         res.render("user/login");
     }
     catch (error) {
@@ -443,7 +443,7 @@ const login = (req, res) => {
         return res.status(500).json({ error: "Internal Server Error" });
     }
 
-    
+
 }
 
 const landing = async (req, res) => {
@@ -514,9 +514,9 @@ const loginpost = async (req, res) => {
 
 const getLogout = (req, res) => {
 
-    try{
+    try {
         delete req.session.user;
-     res.redirect("/userlogin");
+        res.redirect("/userlogin");
 
     }
     catch (error) {
@@ -524,12 +524,12 @@ const getLogout = (req, res) => {
         console.error('Error logging out:', error);
         res.status(500).send('Internal Server Error');
     }
-  
+
 }
 
 const postLogout = (req, res) => {
 
-    try{
+    try {
         req.session.user = null;
 
         res.redirect("/userlogin");
@@ -540,31 +540,31 @@ const postLogout = (req, res) => {
         console.error('Error logging out:', error);
         res.status(500).send('Internal Server Error');
     }
-    
+
 }
 
 const getHome = async (req, res) => {
 
-    try{
+    try {
         const userEmail = req.session.user;
-        
+
         if (!userEmail) {
             // User is not authenticated, redirect to login page
             return res.redirect('/userlogin');
         }
-         
+
         const userdata = await signupCollection.findOne(userEmail);
         const userId = userdata._id;
-       console.log("userid in home page",userId);
+        console.log("userid in home page", userId);
 
         const productList = await productsCollection.find();
 
-          // Fetch banner images from the database
-          const banners = await Banner.find();
+        // Fetch banner images from the database
+        const banners = await Banner.find();
 
-        if(userEmail){
-           
-            res.render('user/home', { productList: productList , banners});
+        if (userEmail) {
+
+            res.render('user/home', { productList: productList, banners });
         }
 
     }
@@ -676,198 +676,242 @@ const Contemporary = async (req, res) => {
 
 
 
-const PRODUCTS_PER_PAGE = 10; // Define the number of products per page
-
+const ITEMS_PER_PAGE = 10;
 const allProducts = async (req, res) => {
     // Get the page number from the query parameters, default to 1 if not provided
-    const page = parseInt(req.query.page) || 1;
+    let action=req.params.action;
+    const page=+req.query.page||1;
+    const search=req.query.search
+    let searchquery;
+    console.log(req.query.page)
+    if(search){
+        searchquery=true;
+    }
+    try{
+        let product_count;
+        const products=await filterProducts(action,page,search,searchquery)
+        product_count=await productsCollection.find({isListed:true}).countDocuments();
+        if(searchquery){
+            product_count=await productsCollection.find({isListed:true,name:{ $regex: '^' + search, $options:'i'}}).countDocuments();
+        }
 
-    try {
-        // Fetch the total count of products
-        const totalCount = await productsCollection.countDocuments();
+         // Fetch distinct categories from the products collection
+         const categories = await productsCollection.distinct('category');
 
-        // Fetch a subset of products based on pagination using Mongoose's skip and limit methods
-        const products = await productsCollection
-            .find()
-            .skip((page - 1) * PRODUCTS_PER_PAGE)
-            .limit(PRODUCTS_PER_PAGE);
-
-        // Fetch all unique categories from the products collection
-        const categories = await productsCollection.distinct('category');
-
-        // Calculate the total number of pages based on the total count and products per page
-        const totalPages = Math.ceil(totalCount / PRODUCTS_PER_PAGE);
-
-        // Render the EJS template with the product list, categories, and pagination attributes
-        res.render('user/allProducts', {
+        /* console.log(products) */
+        res.render("user/allProducts",{
             products,
             categories,
             currentPage: page,
-            totalPages
-        });
-    } catch (error) {
-        // Handle any errors that occur during database query or rendering
-        console.error('Error fetching products:', error);
-        res.status(500).send('Internal Server Error');
+            hasNextPage: (page*ITEMS_PER_PAGE)<product_count,
+            hasPreviousPage: page>1,
+            nextPage: page+1,
+            previousPage: page-1,
+            lastPage:Math.ceil(product_count / ITEMS_PER_PAGE),
+            action:action,
+            search: (search)?search : ""
+        })
+    }catch(err){
+        console.log(err)
     }
+
 };
 
 
-const sortProduct = async (req, res) => {
-
-    try {
-        const sortBy = req.params.sortBy;
-        console.log("sortBy", sortBy);
-
-        let products;
-
-        switch (sortBy) {
-            case 'Popularity':
-                // Implement sorting by popularity logic
-                products = await productsCollection.find().sort({ popularity: -1 }); // Example: Sort in descending order of popularity
-                break;
-            case 'lowtoHigh':
-                // Implement sorting by price low to high logic
-                products = await productsCollection.find().sort({ price: 1 }); // Example: Sort in ascending order of price
-                break;
-            case 'HighToLow':
-                // Implement sorting by price high to low logic
-                products = await productsCollection.find().sort({ price: -1 }); // Example: Sort in descending order of price
-                break;
-            case 'newArrivals':
-                // Implement sorting by new arrivals logic
-                products = await productsCollection.find().sort({ createdAt: -1 }); // Example: Sort by descending order of createdAt
-                break;
-            case 'aA-zZ':
-                // Implement sorting by name A to Z logic
-                products = await productsCollection.find().collation({ locale: 'en' }).sort({ name: 1 });
-                break;
-            case 'zZ-aA':
-                // Implement sorting by name Z to A logic
-                products = await productsCollection.find().collation({ locale: 'en' }).sort({ name: -1 });
-                break;
-            default:
-                // Handle invalid sortBy parameter
-                return res.status(400).json({ error: 'Invalid sortBy parameter' });
-        }
-
-        const categories = await productsCollection.distinct("category");
-
-        // Fetch the total count of products (for pagination)
-        const totalCount = await productsCollection.countDocuments();
-
-        // Calculate the total number of pages based on the total count and products per page
-        const totalPages = Math.ceil(totalCount / PRODUCTS_PER_PAGE);
-
-        // Render the EJS template with the sorted items, pagination attributes, and other necessary data
-        res.render('user/allProducts', {
-            products,
-            categories,
-            currentPage: 1, // Assuming the current page is 1 after sorting
-            totalPages
-        });
-
-    } catch (error) {
-        console.error('Error sorting products:', error);
-        res.status(500).json({ error: 'Internal server error' });
-
+async function filterProducts(action,page,search,searchquery){   
+    let products;
+    if(action==="lowToHigh"&&searchquery){
+        products=await productsCollection.find({isListed:true,name:{ $regex: '^' + search, $options:'i'}}).sort({price:1}).skip((page-1)*ITEMS_PER_PAGE).limit(ITEMS_PER_PAGE).populate("category");  
+    }else if(action==="highToLow"&&searchquery){
+        products=await productsCollection.find({isListed:true,name:{ $regex: '^' + search, $options:'i'}}).sort({price:-1}).skip((page-1)*ITEMS_PER_PAGE).limit(ITEMS_PER_PAGE).populate("category");
+    }else if(action==="newArrivals"&&searchquery){
+        products=await productsCollection.find({isListed:true,name:{ $regex: '^' + search, $options:'i'}}).sort({_id:-1}).skip((page-1)*ITEMS_PER_PAGE).limit(ITEMS_PER_PAGE).populate("category");
+    }else if(action==="aA-Zz"&&searchquery){
+        products=await productsCollection.find({isListed:true,name:{ $regex: '^' + search, $options:'i'}}).sort({name:1}).skip((page-1)*ITEMS_PER_PAGE).limit(ITEMS_PER_PAGE).populate("category");
+    }else if(action==="Zz-aA"&&searchquery){
+        products=await productsCollection.find({isListed:true,name:{ $regex: '^' + search, $options:'i'}}).sort({name:-1}).skip((page-1)*ITEMS_PER_PAGE).limit(ITEMS_PER_PAGE).populate("category");
+    }else if(action==="lowToHigh"){
+        products=await productsCollection.find({isListed:true}).sort({price:1}).skip((page-1)*ITEMS_PER_PAGE).limit(ITEMS_PER_PAGE).populate("category");  
+    }else if(action==="highToLow"){
+        products=await productsCollection.find({isListed:true}).sort({price:-1}).skip((page-1)*ITEMS_PER_PAGE).limit(ITEMS_PER_PAGE).populate("category");
+    }else if(action==="newArrivals"){
+        products=await productsCollection.find({isListed:true}).sort({_id:-1}).skip((page-1)*ITEMS_PER_PAGE).limit(ITEMS_PER_PAGE).populate("category");
+    }else if(action==="aA-Zz"){
+        products=await productsCollection.find({isListed:true}).sort({name:1}).skip((page-1)*ITEMS_PER_PAGE).limit(ITEMS_PER_PAGE).populate("category");
+    }else if(action==="Zz-aA"){
+        products=await productsCollection.find({isListed:true}).sort({name:-1}).skip((page-1)*ITEMS_PER_PAGE).limit(ITEMS_PER_PAGE).populate("category");
+    }else if(searchquery){
+        products=await productsCollection.find({isListed:true,name:{ $regex: '^' + search, $options:'i'}}).skip((page-1)*ITEMS_PER_PAGE).limit(ITEMS_PER_PAGE).populate("category")
     }
-
+    else{
+        products=await productsCollection.find({isListed:true}).skip((page-1)*ITEMS_PER_PAGE).limit(ITEMS_PER_PAGE).populate("category");
+    }
+    return products 
 }
 
 
 
-const searchItems = async (req, res) => {
+
+
+const userFilterByCategory = async (req, res) => {
     try {
-        const searchTerm = req.query.q;
-        const page = parseInt(req.query.page) || 1; // Get the page number from query parameters
+        const category = req.query.category;
+        const page = +req.query.page || 1; // Get the page number from the query parameters, default to 1 if not provided
+        const search = req.query.search;
+        let searchquery;
 
-        // Fetch all unique categories
-        const categories = await productsCollection.distinct('category');
+        if (search) {
+            searchquery = true;
+        }
 
-        // Calculate the skip count based on the current page and number of items per page
-        const skipCount = (page - 1) * PRODUCTS_PER_PAGE;
+        let filter = {};
+        if (category) {
+            filter.category = category; // If a category is selected, add it to the filter
+        }
 
-        // Query the products collection for products matching the searchTerm, with pagination
-        const products = await productsCollection
-            .find({ name: { $regex: searchTerm, $options: 'i' } })
-            .skip(skipCount)
-            .limit(PRODUCTS_PER_PAGE);
+        // Apply the filter to fetch products with pagination
+        let products = await productsCollection.find(filter);
 
-        // Fetch the total count of matching products for pagination
-        const totalCount = await productsCollection.countDocuments({ name: { $regex: searchTerm, $options: 'i' } });
+        // Calculate the total count of products
+        let product_count = await productsCollection.find(filter).countDocuments();
 
-        // Calculate the total number of pages based on the total count and products per page
-        const totalPages = Math.ceil(totalCount / PRODUCTS_PER_PAGE);
+        // Calculate pagination variables
+        const hasNextPage = (page * ITEMS_PER_PAGE) < product_count;
+        const hasPreviousPage = page > 1;
+        const nextPage = page + 1;
+        const previousPage = page - 1;
+        const lastPage = Math.ceil(product_count / ITEMS_PER_PAGE);
 
-        // Render the EJS template with the search results, categories, and pagination attributes
-        res.render('user/allProducts', {
-            products,
+        // Fetch categories again to pass them to the frontend for rendering the filter dropdown
+        const categories = await productsCollection.distinct("category");
+
+        // Pass the action parameter to the template rendering context
+        const action = req.params.action;
+
+        // Render the template with necessary variables
+        res.render("user/allProducts", {
             categories,
+            products,
             currentPage: page,
-            totalPages
+            hasNextPage,
+            hasPreviousPage,
+            nextPage,
+            previousPage,
+            lastPage,
+            action,
+            search: search || "",
         });
-       
-    } catch (error) {
-        // Handle any errors that occur during database query or rendering
-        console.error('Error searching for products:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-};
-
-
-
-
-
- 
-
-const userFilterByCategory = async ( req,res)=> {
-
-    try{
-
-    const category = req.query.category;
-    console.log("category",category);
-    
-    let filter = {}; 
-      if (category) {
-          filter.category = category; // If a category is selected, add it to the filter
-      }
-
-      // Apply the filter to fetch products
-      const products = await productsCollection.find(filter);
-
-      // Fetch categories again to pass them to the frontend for rendering the filter dropdown
-      const categories = await productsCollection.distinct("category");
-
-      res.render("user/allProducts", {
-          categories,
-          products,
-          currentPage: 1, // Reset the page to 1 after applying filter
-          totalPages: 1, // In case pagination needs to be updated after applying filter
-      });
     } catch (error) {
         console.error(error);
         res.status(500).send("Internal Server Error");
     }
+};
 
-}
+// const sortProducts = async (products, sortBy) => {
+//     try {
+//         switch (sortBy) {
+//             case 'Popularity':
+//                 // Implement sorting by popularity logic
+//                 console.log("Sorting by popularity...");
+//                 return products.sort((a, b) => b.popularity - a.popularity); // Sort in descending order of popularity
+//             case 'lowtoHigh':
+//                 // Implement sorting by price low to high logic
+//                 console.log("Sorting by price low to high...");
+//                 return products.sort((a, b) => a.price - b.price); // Sort in ascending order of price
+//             case 'HighToLow':
+//                 // Implement sorting by price high to low logic
+//                 console.log("Sorting by price high to low...");
+//                 return products.sort((a, b) => b.price - a.price); // Sort in descending order of price
+//             case 'newArrivals':
+//                 // Implement sorting by new arrivals logic
+//                 console.log("Sorting by new arrivals...");
+//                 return products.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // Sort by descending order of createdAt
+//             case 'aA-zZ':
+//                 // Implement sorting by name A to Z logic
+//                 console.log("Sorting by name A to Z...");
+//                 return products.sort((a, b) => a.name.localeCompare(b.name));
+//             case 'zZ-aA':
+//                 // Implement sorting by name Z to A logic
+//                 console.log("Sorting by name Z to A...");
+//                 return products.sort((a, b) => b.name.localeCompare(a.name));
+//             default:
+//                 // Handle invalid sortBy parameter
+//                 console.error('Invalid sortBy parameter');
+//                 throw new Error('Invalid sortBy parameter');
+//         }
+//     } catch (error) {
+//         console.error("Error sorting products:", error);
+//         throw error;
+//     }
+// };
 
 
-const getWallet = async (req,res)=> {
+// const sortProduct = async (req, res) => {
+//     try {
+//         const sortBy = req.query.sortBy;
+//         console.log("Sort By:", sortBy);
 
-    try{
+//         // Fetch the category from the query parameters
+//         const category = req.query.category;
+//         console.log("Category:", category);
+
+//         // Prepare the filter object
+//         let filter = {};
+//         if (category) {
+//             filter.category = category;
+//         }
+
+//         // Fetch products based on the filter
+//         let products = await productsCollection.find(filter);
+//         console.log("Filtered Products:", products);
+
+//         // Sort the products based on the specified criteria
+//         products = await sortProducts(products, sortBy);
+//         console.log("Sorted Products:", products);
+
+//         // Fetch the distinct categories for rendering the filter dropdown
+//         const categories = await productsCollection.distinct("category");
+//         console.log("Categories:", categories);
+
+//         // Fetch the total count of products (for pagination)
+//         const totalCount = await productsCollection.countDocuments(filter);
+//         console.log("Total Count:", totalCount);
+
+//         // Calculate the total number of pages based on the total count and products per page
+//         const totalPages = Math.ceil(totalCount / PRODUCTS_PER_PAGE);
+//         console.log("Total Pages:", totalPages);
+
+//         // Render the EJS template with the sorted items, pagination attributes, and other necessary data
+//         res.render('user/allProducts', {
+//             products,
+//             categories,
+//             currentPage: 1, // Assuming the current page is 1 after sorting
+//             totalPages
+//         });
+//     } catch (error) {
+//         console.error('Error sorting products:', error);
+//         res.status(500).json({ error: 'Internal server error' });
+//     }
+// };
+
+
+
+
+const getWallet = async (req, res) => {
+
+    try {
 
         const userEmail = req.session.user;
         const userdata = await signupCollection.findOne(userEmail);
         const userId = userdata._id;
-        console.log("userid in wallet get",userId);
-       
+        console.log("userid in wallet get", userId);
 
-        const userDetails = await signupCollection.findById({_id: userId});
-         console.log("userdetails in wallet get",userDetails);
-        res.render("user/wallet",{userDetails});
 
-    }catch (error) {
+        const userDetails = await signupCollection.findById({ _id: userId });
+        console.log("userdetails in wallet get", userDetails);
+        res.render("user/wallet", { userDetails });
+
+    } catch (error) {
         // Handle any errors that occur during database query or rendering
         console.error('Error getting wallet:', error);
         res.status(500).json({ error: 'Internal server error' });
@@ -916,7 +960,7 @@ const generateReferralCode = () => {
 
 
 
-const checkReferralCode = async (req,res)=> {
+const checkReferralCode = async (req, res) => {
 
     const { referralCode } = req.body;
 
@@ -925,10 +969,10 @@ const checkReferralCode = async (req,res)=> {
         // Check if the referral code exists in the database
         const existingUser = await signupCollection.findOne({ referralCode });
         if (existingUser) {
-            
+
             return res.json({ isValid: true, message: 'Referral code is valid.' });
-        } 
-        else{
+        }
+        else {
             return res.json({ isValid: false, message: 'Invalid referral code.' });
 
         }
@@ -939,8 +983,7 @@ const checkReferralCode = async (req,res)=> {
 }
 
 module.exports = {
-    login, loginpost, signupGet, signupPost, landing, getVerifyEmail, verifyEmailPost, getLogout, postLogout,  getHome, resendOTP,
-    searchItems, allProducts, sortProduct,Ethnics,Contemporary,userFilterByCategory,getWallet,createReferral,checkReferralCode,forgotPassword,postForgotPassword,getverifyOtp,postverifyOtp,resendForgotOtp, getChangePassword, postChangePassword,passwordChangeSuccess
+    login, loginpost, signupGet, signupPost, landing, getVerifyEmail, verifyEmailPost, getLogout, postLogout, getHome, resendOTP, allProducts, Ethnics, Contemporary, userFilterByCategory, getWallet, createReferral, checkReferralCode, forgotPassword, postForgotPassword, getverifyOtp, postverifyOtp, resendForgotOtp, getChangePassword, postChangePassword, passwordChangeSuccess
 }
 
 

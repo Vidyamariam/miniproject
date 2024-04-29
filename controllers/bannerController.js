@@ -23,13 +23,13 @@ exports.getBannerManage = async (req, res) => {
         if (req.file) {
             const imageUrl = `/uploads/banners/${req.file.filename}`; // Construct the image URL based on the filename
             
-            // Create a new banner instance
+           
             const newBanner = new Banner({
                 title: req.body.title, // Assuming the title is sent in the request body
                 bannerImage: imageUrl // Save the image URL to the bannerImage field
             });
 
-            // Save the banner to the database
+            
             await newBanner.save();
 
             console.log("Uploaded banner image URL:", imageUrl);
