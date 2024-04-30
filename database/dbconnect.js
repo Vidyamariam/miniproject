@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-mongoose.connect("mongodb://127.0.0.1:27017/miniProject")
+mongoose.connect("mongodb+srv://vidyamathew13:H0JBnZVRAIwo6lKX@cluster0.wenh3ae.mongodb.net/miniProject?retryWrites=true&w=majority")
 .then(()=> {console.log("Data base is connected")
 }).catch(()=> {
     console.error("Mongodb has not connected")   
