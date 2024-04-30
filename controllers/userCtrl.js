@@ -6,7 +6,7 @@ const signupCollection = require('../model/userSignupSchema');
 const productsCollection = require('../model/productSchema');
 const nodemailer = require('nodemailer');
 const otpCollection = require("../model/otpSchema");
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const categoryCollection = require("../model/category");
 const Banner = require('../model/bannerModel');
 

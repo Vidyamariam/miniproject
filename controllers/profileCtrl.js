@@ -5,7 +5,7 @@ const Address = require("../model/addressSchema");
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const path = require('path');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 exports.getProfile = async (req,res) => {
 
