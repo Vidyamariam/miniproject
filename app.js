@@ -60,7 +60,7 @@ app.use('/', addressRouter);
 app.use('/',profileRouter);
 app.use('/',couponRouter);
 
-const port = process.env.PORT || 2001;
+const port = process.env.PORT || 3000;
 app.listen(port, ()=>{
 
     console.log("server is running on http://localhost:2001");
