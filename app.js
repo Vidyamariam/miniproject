@@ -63,7 +63,7 @@ app.use('/',couponRouter);
 const port = process.env.PORT || 3000;
 app.listen(port, ()=>{
 
-    console.log("server is running on http://localhost:2001");
+    console.log("server is running on http://localhost:3000");
 });
 
 
