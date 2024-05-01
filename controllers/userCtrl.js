@@ -678,7 +678,9 @@ const Contemporary = async (req, res) => {
 
 const ITEMS_PER_PAGE = 10;
 const allProducts = async (req, res) => {
-    // Get the page number from the query parameters, default to 1 if not provided
+   
+    try{
+         // Get the page number from the query parameters, default to 1 if not provided
     let action=req.params.action;
     const page=+req.query.page||1;
     const search=req.query.search
@@ -687,7 +689,6 @@ const allProducts = async (req, res) => {
     if(search){
         searchquery=true;
     }
-    try{
         let product_count;
         const products=await filterProducts(action,page,search,searchquery)
         product_count=await productsCollection.find({isListed:true}).countDocuments();
