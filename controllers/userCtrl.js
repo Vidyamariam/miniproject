@@ -82,14 +82,14 @@ const sendOTPVerificationEmail = async (email, title, body) => {
         let transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: 'vidyamathew13@gmail.com',
-                pass: 'hiun aukw qjto ghpb'
+                user: process.env.user,
+                pass: process.env.pass
             }
         });
 
         // Define email content
         let info = await transporter.sendMail({
-            from: 'vidyamathew13@gmail.com',
+            from: process.env.user,
             to: `${email}`,
             subject: `${title}`,
             html: `${body}`,
@@ -807,94 +807,6 @@ const userFilterByCategory = async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 };
-
-// const sortProducts = async (products, sortBy) => {
-//     try {
-//         switch (sortBy) {
-//             case 'Popularity':
-//                 // Implement sorting by popularity logic
-//                 console.log("Sorting by popularity...");
-//                 return products.sort((a, b) => b.popularity - a.popularity); // Sort in descending order of popularity
-//             case 'lowtoHigh':
-//                 // Implement sorting by price low to high logic
-//                 console.log("Sorting by price low to high...");
-//                 return products.sort((a, b) => a.price - b.price); // Sort in ascending order of price
-//             case 'HighToLow':
-//                 // Implement sorting by price high to low logic
-//                 console.log("Sorting by price high to low...");
-//                 return products.sort((a, b) => b.price - a.price); // Sort in descending order of price
-//             case 'newArrivals':
-//                 // Implement sorting by new arrivals logic
-//                 console.log("Sorting by new arrivals...");
-//                 return products.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // Sort by descending order of createdAt
-//             case 'aA-zZ':
-//                 // Implement sorting by name A to Z logic
-//                 console.log("Sorting by name A to Z...");
-//                 return products.sort((a, b) => a.name.localeCompare(b.name));
-//             case 'zZ-aA':
-//                 // Implement sorting by name Z to A logic
-//                 console.log("Sorting by name Z to A...");
-//                 return products.sort((a, b) => b.name.localeCompare(a.name));
-//             default:
-//                 // Handle invalid sortBy parameter
-//                 console.error('Invalid sortBy parameter');
-//                 throw new Error('Invalid sortBy parameter');
-//         }
-//     } catch (error) {
-//         console.error("Error sorting products:", error);
-//         throw error;
-//     }
-// };
-
-
-// const sortProduct = async (req, res) => {
-//     try {
-//         const sortBy = req.query.sortBy;
-//         console.log("Sort By:", sortBy);
-
-//         // Fetch the category from the query parameters
-//         const category = req.query.category;
-//         console.log("Category:", category);
-
-//         // Prepare the filter object
-//         let filter = {};
-//         if (category) {
-//             filter.category = category;
-//         }
-
-//         // Fetch products based on the filter
-//         let products = await productsCollection.find(filter);
-//         console.log("Filtered Products:", products);
-
-//         // Sort the products based on the specified criteria
-//         products = await sortProducts(products, sortBy);
-//         console.log("Sorted Products:", products);
-
-//         // Fetch the distinct categories for rendering the filter dropdown
-//         const categories = await productsCollection.distinct("category");
-//         console.log("Categories:", categories);
-
-//         // Fetch the total count of products (for pagination)
-//         const totalCount = await productsCollection.countDocuments(filter);
-//         console.log("Total Count:", totalCount);
-
-//         // Calculate the total number of pages based on the total count and products per page
-//         const totalPages = Math.ceil(totalCount / PRODUCTS_PER_PAGE);
-//         console.log("Total Pages:", totalPages);
-
-//         // Render the EJS template with the sorted items, pagination attributes, and other necessary data
-//         res.render('user/allProducts', {
-//             products,
-//             categories,
-//             currentPage: 1, // Assuming the current page is 1 after sorting
-//             totalPages
-//         });
-//     } catch (error) {
-//         console.error('Error sorting products:', error);
-//         res.status(500).json({ error: 'Internal server error' });
-//     }
-// };
-
 
 
 
