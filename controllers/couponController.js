@@ -293,6 +293,11 @@ exports.applyCoupon = async (req, res) => {
      // Calculate the discounted price
      const discountAmount = (coupon.discount / 100) * totalPrice;
      discountedPrice = (totalPrice - discountAmount).toFixed(2);
+
+     // Update cart with new total price
+     cart.totalPrice = discountedPrice;
+     await cart.save();
+
  
      // Pass the selected address, cart items, and discounted price to the checkout page
      return res.render('user/checkout', { userAddress, cart, totalPrice, discountedPrice,coupons });
