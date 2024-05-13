@@ -90,7 +90,7 @@
           <br> 
         </form>
         <div id="otp-timer"></div>
-         <a href="/resend" style="text-decoration: none; color: rgb(68, 67, 67);" >resend otp</a>    
+         <a href="/resend" style=" color: rgb(68, 67, 67);" >resend otp</a>    
       </div>
 
  <!--FOOTER SECTION-->
@@ -135,132 +135,138 @@
     if (window.history.replaceState) {
         window.history.replaceState(null, null, window.location.href);
     }
-</script> -->
+</script> 
 
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-  const inputs = document.querySelectorAll("input");
-  const button = document.querySelector("button");
-  const resendButton = document.getElementById("resendOTP");
-  const emailInput = document.getElementById("resendEmail");
+   <script>
 
-  inputs.forEach((input, index1) => {
-    input.addEventListener("keyup", (e) => {
-      const currentInput = input;
-      const nextInput = input.nextElementSibling;
-      const prevInput = input.previousElementSibling;
+document.addEventListener("DOMContentLoaded", function () {
+    const inputs = document.querySelectorAll("input");
+    const button = document.querySelector("button");
+    const resendButton = document.querySelector("a[href='/resend']");
+    const emailInput = document.querySelector("input[name='email']"); // Assuming there is an email input field with name 'email'
 
-      if (currentInput.value.length > 1) {
-        currentInput.value = "";
-        return;
-      }
+    // Hide the resend OTP button initially
+    resendButton.style.display = "none";
 
-      if (
-        nextInput &&
-        nextInput.hasAttribute("disabled") &&
-        currentInput.value !== ""
-      ) {
-        nextInput.removeAttribute("disabled");
-        nextInput.focus();
-      }
+    inputs.forEach((input, index1) => {
+        input.addEventListener("keyup", (e) => {
+            const currentInput = input;
+            const nextInput = input.nextElementSibling;
+            const prevInput = input.previousElementSibling;
 
-      if (e.key === "Backspace") {
-        inputs.forEach((input, index2) => {
-          if (index1 <= index2 && prevInput) {
-            input.setAttribute("disabled", true);
-            input.value = "";
-            prevInput.focus();
-          }
+            if (currentInput.value.length > 1) {
+                currentInput.value = "";
+                return;
+            }
+
+            if (
+                nextInput &&
+                nextInput.hasAttribute("disabled") &&
+                currentInput.value !== ""
+            ) {
+                nextInput.removeAttribute("disabled");
+                nextInput.focus();
+            }
+
+            if (e.key === "Backspace") {
+                inputs.forEach((input, index2) => {
+                    if (index1 <= index2 && prevInput) {
+                        input.setAttribute("disabled", true);
+                        input.value = "";
+                        prevInput.focus();
+                    }
+                });
+            }
+
+            if (!inputs[3].disabled && inputs[3].value !== "") {
+                button.classList.add("active");
+                return;
+            }
+            button.classList.remove("active");
         });
-      }
-
-      if (!inputs[3].disabled && inputs[3].value !== "") {
-        button.classList.add("active");
-        return;
-      }
-      button.classList.remove("active");
     });
-  });
 
+    // Function to show the resend OTP button after the timer expires
+    function showResendButton() {
+        resendButton.style.display = "inline"; // Display the resend OTP button
+    }
 
-  resendButton.addEventListener("click", async () => {
-      try {
-        // Make an AJAX request to the backend to resend OTP
-        const response = await fetch("/resendOtp", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email: emailInput.value }), // Replace with the actual email
-        });
+    // Set timer to 2 minutes (120 seconds)
+    let timeLeft = 120;
 
-        const responseData = await response.json();
-
-        if (responseData.success) {
-          // Handle success, e.g., show a message to the user
-          console.log("OTP resent successfully");
-        } else {
-          // Handle failure, e.g., show an error message to the user
-          console.error(responseData.error);
+    // Function to update the timer display
+    function updateTimer() {
+        const timerElement = document.getElementById("otp-timer");
+        if (timerElement) {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerElement.innerHTML = `Resend otp in ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
         }
-      } catch (error) {
-        console.error("An error occurred:", error);
-      }
+    }
+
+    // Function to decrement the timer and update the display
+    function decrementTimer() {
+        if (timeLeft > 0) {
+            timeLeft--;
+            updateTimer();
+        } else {
+            showResendButton(); // Show the resend OTP button when timer expires
+            clearInterval(timerInterval); // Stop the timer
+            // Optionally, handle expiration of OTP here
+        }
+    }
+
+    // Call the updateTimer function initially
+    updateTimer();
+
+    // Set an interval to decrement the timer every second
+    const timerInterval = setInterval(decrementTimer, 1000);
+
+    // Optionally, you can stop the timer when the form is submitted or when the user navigates away from the page
+    document.querySelector("form").addEventListener("submit", function () {
+        clearInterval(timerInterval);
     });
 
+    // Optionally, you can stop the timer when the user navigates away from the page
+    window.addEventListener("beforeunload", function () {
+        clearInterval(timerInterval);
+    });
 
+    // Resend OTP button click event handler
+    resendButton.addEventListener("click", async () => {
+        try {
+            // Make an AJAX request to the backend to resend OTP
+            const response = await fetch("/resendOtp", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email: emailInput.value }), // Replace with the actual email
+            });
+
+            const responseData = await response.json();
+
+            if (responseData.success) {
+                // Handle success, e.g., show a message to the user
+                console.log("OTP resent successfully");
+                // Reset the timer
+                timeLeft = 120;
+                updateTimer();
+                // Hide the resend OTP button again
+                resendButton.style.display = "none";
+                // Restart the timer interval
+                timerInterval = setInterval(decrementTimer, 1000);
+            } else {
+                // Handle failure, e.g., show an error message to the user
+                console.error(responseData.error);
+            }
+        } catch (error) {
+            console.error("An error occurred:", error);
+        }
+    });
 });
 
 
-
-
-////////////////////////////////////////
-
-document.addEventListener("DOMContentLoaded", function () {
-        // Get the expiration time passed from the server
-        const expirationTime = new Date("<%= expirationTime %>");
-        // Calculate the remaining time in seconds
-        let timeLeft = Math.floor((expirationTime - Date.now()) / 1000);
-
-        // Function to update the timer display
-        function updateTimer() {
-            const timerElement = document.getElementById("otp-timer");
-            if (timerElement) {
-                const minutes = Math.floor(timeLeft / 60);
-                const seconds = timeLeft % 60;
-                timerElement.innerHTML = `Time Left: ${minutes}:${seconds}`;
-            }
-        }
-
-        // Function to decrement the timer and update the display
-        function decrementTimer() {
-            if (timeLeft > 0) {
-                timeLeft--;
-                updateTimer();
-            } else {
-                // Optionally, handle expiration of OTP here
-            }
-        }
-
-        // Call the updateTimer function initially
-        updateTimer();
-
-        // Set an interval to decrement the timer every second
-        const timerInterval = setInterval(decrementTimer, 1000);
-
-        // Optionally, you can stop the timer when the form is submitted or when the user navigates away from the page
-        document.querySelector("form").addEventListener("submit", function () {
-            clearInterval(timerInterval);
-        });
-
-        // Optionally, you can stop the timer when the user navigates away from the page
-        window.addEventListener("beforeunload", function () {
-            clearInterval(timerInterval);
-        });
-    });
-
-    
-    </script>
-    
+   </script>    
 </body>
 </html>
