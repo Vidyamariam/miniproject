@@ -21,7 +21,8 @@ router.get("/ethnic",isBlock.isblocked,userController.Ethnics);
 router.get("/contemporary",isBlock.isblocked,userController.Contemporary);
 router.get("/logout",userController.getLogout);
 router.get("/resend", userController.resendOTP);
-router.get("/productDetails/:id",productDetailsCtrl.getProductDetails);
+router.get("/contemporary",isBlock.isblocked,userController.Contemporary);
+router.get("/productDetails/:id",isBlock.isblocked,productDetailsCtrl.getProductDetails);
 
 router.get("/cart",isBlock.isblocked,cartController.getCart);
 router.get("/remove/:productId",isBlock.isblocked, cartController.removeItem);
@@ -29,18 +30,16 @@ router.get("/checkout",isBlock.isblocked, cartController.getCheckoutPage);
 router.get("/order-success",isBlock.isblocked, cartController.orderSuccessPage);
 router.get("/order-history",isBlock.isblocked,cartController.orderHistory);
 router.get("/order-details/:orderId/:productId",isBlock.isblocked, cartController.orderDetails);
-// router.get("/search-results",isBlock.isblocked, userController.searchItems);
-// router.get("/sortProduct", isBlock.isblocked, userController.sortProduct);
 router.get("/wishlist",isBlock.isblocked, wishlistController.getWishlist);
 router.get("/remove-wishlist/:productId",isBlock.isblocked, wishlistController.removeWishlist);
 router.get("/userFilterproducts",isBlock.isblocked ,userController.userFilterByCategory);
 router.get("/wallet",isBlock.isblocked ,userController.getWallet);
-router.get("/verify-email", userController.forgotPassword);
-router.get("/verifyOtp", userController.getverifyOtp);
-router.get("/update-password",userController.getChangePassword);
-router.get("/password-changed", userController.passwordChangeSuccess);
-router.get("/resendforgot", userController.resendForgotOtp);
-router.get("/about-us", userController.aboutUs);
+router.get("/verify-email",isBlock.isblocked, userController.forgotPassword);
+router.get("/verifyOtp",isBlock.isblocked, userController.getverifyOtp);
+router.get("/update-password",isBlock.isblocked,userController.getChangePassword);
+router.get("/password-changed",isBlock.isblocked, userController.passwordChangeSuccess);
+router.get("/resendforgot",isBlock.isblocked, userController.resendForgotOtp);
+router.get("/about-us",isBlock.isblocked, userController.aboutUs);
  
 
 //POST METHODSs

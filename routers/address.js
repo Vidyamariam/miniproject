@@ -6,9 +6,9 @@ const addressController = require("../controllers/addressCtrl");
 const isBlock = require('../middleware/userAuth');
 
 router.get("/address",isBlock.isblocked, addressController.getAddressManage);
-router.get('/editAddress/:id', addressController.getEditAddress);
+router.get('/editAddress/:id',isBlock.isblocked, addressController.getEditAddress);
 
-router.post('/addAddress', addressController.addAddress);
-router.post('/editAddress/:id', addressController.postEditAddress);
-router.post('/deleteAddress/:addressId', addressController.deleteAddress);
+router.post('/addAddress',isBlock.isblocked, addressController.addAddress);
+router.post('/editAddress/:id',isBlock.isblocked, addressController.postEditAddress);
+router.post('/deleteAddress/:addressId',isBlock.isblocked, addressController.deleteAddress);
 module.exports = router;
