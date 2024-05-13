@@ -1,88 +1,407 @@
-<%- include('header')%>
-<style>
-  .middle-content {
-    margin-top: 100px;
-  }
+<!DOCTYPE html>
+<html lang="en">
 
-  .carousel-item img {
-    width: 100%;
-    height: auto;
-    max-height: 800px; /* Set your desired max height */
-    padding: 10px;
-    border-radius: 20px;
-  }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="/public/stylesheets/user/home.css" type="text/css" rel="stylesheet" />
+  <!-- <link
+      href="https://fonts.googleapis.com/css?family=Barlow+Semi+Condensed|Josefin+Sans&display=swap|Permanent+Marker&display&display=swap"
+      rel="stylesheet"
+    /> -->
 
-  /* Shop By Category section */
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bacasime+Antique&family=Italiana&display=swap" rel="stylesheet">
 
-  .category-section {
-    font-family: "Bacasime Antique", serif;
-  }
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
-  .row {
-    margin-top: 20px;
-    margin-bottom: 100px;
-  }
+  <!-- //font-awesome link -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-  .category-item {
-    position: relative;
-    margin-left: 20px;
-    flex: 1; /* Make each category item take equal space */
-    max-width: calc(
-      50% - 40px
-    ); /* Set maximum width for each item to occupy half of the container's width */
-  }
 
-  .category-item h2 {
-    font-family: "Bacasime Antique", serif;
-    z-index: 1;
-    text-align: center;
-    top: 10px;
-    left: 10px;
-    color: black;
-    font-size: 24px;
-    z-index: 1;
-  }
+  <!-- <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet"> -->
 
-  .explore-btn {
-    font-family: "Bacasime Antique", serif;
-    position: absolute;
-    top: 90%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 10px 20px;
-    background-color: transparent;
-    color: #000;
-    text-decoration: none;
-    font-size: 30px;
-    font-weight: bold;
-    border-radius: 5px;
-    z-index: 1;
-  }
+  <link rel="stylesheet" href="/stylesheets/user/cart.css">
+  <link rel="stylesheet" href="/stylesheets/user/profile.css" />
+  <link rel="stylesheet" href="/stylesheets/user/address.css">
+  <link rel="stylesheet" href="/stylesheets/user/editProfile.css" />
+  <link rel="stylesheet" href="/stylesheets/user/athletic.css" />
 
-  .explore-btn:hover {
-    color: palevioletred;
-  }
+  <title>Amoli</title>
+  <style>
+    body {}
 
-  .category-items {
-    display: flex;
-  }
-  .category-image {
-    position: relative;
-    overflow: hidden;
-    padding: 20px;
-  }
+    #categories-sidebar tr td a {
 
-  .category-image img {
-    border-radius: 20px;
-    height: 570px;
-    width: 650px;
-    transition: transform 0.3s ease-in-out;
-  }
+      text-decoration: none;
 
-  .category-image img:hover {
-    transform: scale(1.1);
-  }
-</style>
+      color: black;
+      font-size: 20px;
+
+    }
+
+    #categories-sidebar tr td a:hover {
+
+      color: gray;
+
+    }
+
+    /* Styling for the search bar */
+    .search-container {
+      display: inline-block;
+      position: relative;
+      border: 1px solid black;
+      border-radius: 5px;
+      width: 200px;
+    }
+
+
+    #search-bar {
+      padding: 8px;
+      border: none;
+      border-radius: 5px;
+      margin-right: 5px;
+      width: 159px;
+      /* Adjust width as needed */
+    }
+
+    #search-bar:focus {
+      outline: none;
+      border: 2px solid #007bff;
+      /* Change color as needed */
+    }
+
+    .searchbtn[type="submit"] {
+      background-color: white;
+      /* Change color as needed */
+      color: #101112;
+      border: none;
+      border-radius: 5px;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      padding: 8px 12px;
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      margin: auto;
+      /* Center the button vertically */
+    }
+
+    .searchbtn[type="submit"] i {
+      vertical-align: middle;
+      /* Align the icon vertically */
+    }
+
+    /* Pagination styling */
+    .pagination {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      list-style: none;
+      padding: 0;
+    }
+
+    .pagination li {
+      margin: 0 5px;
+    }
+
+    .pagination a {
+      text-decoration: none;
+      color: black;
+      padding: 5px 10px;
+      border: 1px solid black;
+      border-radius: 5px;
+    }
+
+    .pagination a:hover {
+      background-color: gray;
+      color: #fff;
+    }
+
+    .pagination .active a {
+      background-color: #007bff;
+      color: #fff;
+      cursor: default;
+    }
+
+    /* Custom styles for the sort button */
+    .dropdown-toggle {
+      background-color: black;
+      color: #fff;
+    }
+
+    .dropdown-toggle:hover {
+      background-color: #007bff;
+      color: #fff;
+    }
+
+    .dropdown-menu {
+      min-width: 10rem;
+      background-color: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      border-radius: 0.25rem;
+      padding: 0.5rem 0;
+    }
+
+    .dropdown-menu a {
+      display: block;
+      padding: 0.25rem 1.5rem;
+      clear: both;
+      font-weight: 400;
+      color: #212529;
+      text-align: inherit;
+      white-space: nowrap;
+      background-color: transparent;
+      border: 0;
+      text-decoration: none;
+    }
+
+    .dropdown-menu a:hover {
+      background-color: #f8f9fa;
+    }
+
+    /* Center the cards section */
+    #product-list-container {
+      margin-top: 20px;
+      /* Adjust margin as needed */
+    }
+
+    /* Center the individual card within the container */
+    #product-list-container .card {
+      margin-bottom: 20px;
+      /* Add space between cards if needed */
+    }
+
+    /* Adjust card styles if needed */
+    #product-list-container .card-body {
+      text-align: center;
+      /* Center text within the card body */
+    }
+
+    .all-products {
+      margin-left: 80px;
+    }
+
+    /* Sort Dropdown */
+    .dropdown {
+      display: inline-block;
+      position: relative;
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      z-index: 1;
+      background-color: #fff;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+      padding: 5px 0;
+      border-radius: 5px;
+    }
+
+    .dropdown-menu a {
+      color: #000;
+      text-decoration: none;
+      display: block;
+      padding: 10px;
+    }
+
+    .dropdown-menu a:hover {
+      background-color: #f2f2f2;
+    }
+
+    .dropdown:hover .dropdown-menu {
+      display: block;
+    }
+
+    /* Filter Dropdown */
+    .filter-dropdown {
+      display: inline-block;
+      margin-left: 20px;
+    }
+
+    .categoryForm {
+      padding: 5px;
+      border-radius: 5px;
+      margin-right: 10px;
+    }
+
+    .filter-dropdown select {
+
+      width: 150px;
+      height: 40px;
+    }
+
+    .filter-dropdown select option {
+
+      height: 50px;
+
+    }
+
+    header {
+
+      background-color: rgb(199, 188, 188);
+    }
+
+
+    #my-account-dropdown a#my-account:hover {
+    cursor: pointer;
+}
+
+.dropdown-content a:hover {
+      background-color: #f0f0f0; /* Change background color on hover */
+    }
+
+    #addtocart:hover,
+    #my-account:hover {
+      background-color: #f0f0f0; /* Change background color on hover */
+      width: 100px;
+     padding: 5px;
+     border-radius: 4px;
+    }
+
+
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div id="header-info">
+      <!-- <p id="contactus">Contact Us</p> -->
+      <img src="/img/amoli-jewels-high-resolution-logo-white-transparent.png" class="logo" />
+      <h1 id="store-name">Amoli Jewels</h1>
+      <div class="nav-icons">
+        <div class="dropdown" id="my-account-dropdown">
+          <a id="my-account" onclick="toggleDropdown()"><i class="fa fa-regular fa-user fa-xl"></i> My Account</a>
+          <div class="dropdown-content" id="account-options">
+            <a href="/profile"><i class="fa fa-regular fa-user fa-sm"></i> My Profile</a>
+            <a href="/order-history"><i class="fa fa-regular fa-receipt fa-sm"></i> Orders</a>
+            <a href="/wishlist"><i class="fa fa-regular fa-heart fa-sm"></i> Wishlist</a>
+            <a href="/coupons"><i class="fa fa-regular fa-ticket fa-sm"></i> Coupons</a>
+            <a href="/logout"><i class="fa fa-regular fa-sign-out-alt fa-sm"></i> Logout</a>
+          </div>
+        </div>
+
+        <a id="addtocart" href="/cart" style="color: black; text-decoration: none; margin-left: 10px;">My Cart
+          <i class="fa fa-duotone fa-cart-shopping fa-xl"></i>
+        </a>
+
+        <!-- Search bar -->
+        <!-- <div class="search-container" style="margin-left: 10px;">
+          <form action="/product-list/search" method="get" class="search-bar">
+            <input type="text" placeholder="Search..." name="search" id="search-bar">
+            <button type="submit" class="searchbtn"><i class="fa-solid fa-magnifying-glass fa-xl" style="color: black;"></i></button>
+          </form>  
+      </div> -->
+      
+
+        </a>
+      </div>
+    </div>
+    </div>
+
+    <nav id="nav-bar">
+      <a href="/home">Home</a>
+      <a href="/about-us">About us</a>
+      <a href="">Contact</a>
+      <a href="/product-list/all">Products</a>
+      <img src="" id="search-icon" />
+    </nav>
+
+    <style>
+      .middle-content {
+        margin-top: 100px;
+      }
+    
+      .carousel-item img {
+        width: 100%;
+        height: auto;
+        max-height: 800px; /* Set your desired max height */
+        padding: 10px;
+        border-radius: 20px;
+      }
+    
+      /* Shop By Category section */
+    
+      .category-section {
+        font-family: "Bacasime Antique", serif;
+      }
+    
+      .row {
+        margin-top: 20px;
+        margin-bottom: 100px;
+      }
+    
+      .category-item {
+        position: relative;
+        margin-left: 20px;
+        flex: 1; /* Make each category item take equal space */
+        max-width: calc(
+          50% - 40px
+        ); /* Set maximum width for each item to occupy half of the container's width */
+      }
+    
+      .category-item h2 {
+        font-family: "Bacasime Antique", serif;
+        z-index: 1;
+        text-align: center;
+        top: 10px;
+        left: 10px;
+        color: black;
+        font-size: 24px;
+        z-index: 1;
+      }
+    
+      .explore-btn {
+        font-family: "Bacasime Antique", serif;
+        position: absolute;
+        top: 90%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 10px 20px;
+        background-color: transparent;
+        color: #000;
+        text-decoration: none;
+        font-size: 30px;
+        font-weight: bold;
+        border-radius: 5px;
+        z-index: 1;
+      }
+    
+      .explore-btn:hover {
+        color: palevioletred;
+      }
+    
+      .category-items {
+        display: flex;
+      }
+      .category-image {
+        position: relative;
+        overflow: hidden;
+        padding: 20px;
+      }
+    
+      .category-image img {
+        border-radius: 20px;
+        height: 570px;
+        width: 650px;
+        transition: transform 0.3s ease-in-out;
+      }
+    
+      .category-image img:hover {
+        transform: scale(1.1);
+      }
+    </style>
+
+  </header>
+
 
 <!-- BANNER SECTION -->
 <div id="banner-section">

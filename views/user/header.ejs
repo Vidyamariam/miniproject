@@ -100,6 +100,10 @@ header{
   background-color: rgb(199, 188, 188);
 }
 
+#my-account-dropdown a#my-account:hover {
+    cursor: pointer;
+}
+
    
     </style>
   </head>
@@ -124,13 +128,13 @@ header{
             <i class="fa fa-duotone fa-cart-shopping fa-xl"></i>
           </a>
 
-          <!-- Search bar -->        
-          <div class="search-container" style="margin-left: 10px;">
-            <form id="search-form" action="/search-results" method="GET">
-              <input type="text" placeholder="Search..." id="search-bar" name="q">
-              <button type="submit" class="btn btn-sm searchbtn"><i class="fa-solid fa-magnifying-glass fa-xl" style="color: black;"></i></button>
-            </form>
-          </div>
+           <!-- Search bar -->
+        <div class="search-container" style="margin-left: 10px;">
+          <form action="/product-list/search" method="get" class="search-bar">
+            <input type="text" placeholder="Search..." name="search" id="search-bar">
+            <button type="submit" class="searchbtn"><i class="fa-solid fa-magnifying-glass fa-xl" style="color: black;"></i></button>
+          </form>  
+      </div>
         
           
           </a>

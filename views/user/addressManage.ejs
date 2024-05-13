@@ -40,6 +40,28 @@ header{
 
 background-color: rgb(199, 188, 188);
 }
+
+#my-account-dropdown a#my-account:hover {
+    cursor: pointer;
+  
+}
+
+
+
+.dropdown-content a:hover {
+      background-color: #f0f0f0; /* Change background color on hover */
+    }
+
+    #addtocart:hover,
+    #my-account:hover {
+      background-color: #f0f0f0; /* Change background color on hover */
+      width: 100px;
+     padding: 5px;
+     border-radius: 4px;
+    }
+
+ 
+
     
   </style>
 </head>
@@ -55,9 +77,9 @@ background-color: rgb(199, 188, 188);
           <a id="my-account" onclick="toggleDropdown()"><i class="fa fa-regular fa-user fa-xl"></i> My Account</a>
           <div class="dropdown-content" id="account-options">
             <a href="/profile"><i class="fa fa-regular fa-user fa-sm"></i> My Profile</a>
-            <a href="#"><i class="fa fa-regular fa-receipt fa-sm"></i> Orders</a>
-            <a href="#"><i class="fa fa-regular fa-heart fa-sm"></i> Wishlist</a>
-            <a href="#"><i class="fa fa-regular fa-ticket fa-sm"></i> Coupons</a>
+            <a href="/order-history"><i class="fa fa-regular fa-receipt fa-sm"></i> Orders</a>
+            <a href="/wishlist"><i class="fa fa-regular fa-heart fa-sm"></i> Wishlist</a>
+            <a href="/coupons"><i class="fa fa-regular fa-ticket fa-sm"></i> Coupons</a>
             <a href="/logout"><i class="fa fa-regular fa-sign-out-alt fa-sm"></i> Logout</a>
           </div>
         </div>
@@ -166,7 +188,7 @@ background-color: rgb(199, 188, 188);
                 </div>
               </div>
               <% }); %>
-                <!-- Repeat the above card structure for each existing address -->
+               
           </div>
         </div>
       </div>

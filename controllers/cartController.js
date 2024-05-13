@@ -417,6 +417,13 @@ exports.placeOrder = async (req, res) => {
       return res.status(400).json({ error: 'Cart is empty' });
     }
 
+     // Check if any product in the cart is out of stock
+     for (const cartItem of cart.items) {
+      if (cartItem.productId.stock < cartItem.quantity) {
+        return res.status(400).json({ error: `Product ${cartItem.productId.name} is out of stock` });
+      }
+    }
+
    
     // Check if payment option is wallet and user has sufficient balance
     if (paymentOption === 'walletPayment') {

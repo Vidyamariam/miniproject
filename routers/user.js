@@ -40,6 +40,7 @@ router.get("/verifyOtp", userController.getverifyOtp);
 router.get("/update-password",userController.getChangePassword);
 router.get("/password-changed", userController.passwordChangeSuccess);
 router.get("/resendforgot", userController.resendForgotOtp);
+router.get("/about-us", userController.aboutUs);
  
 
 //POST METHODSs

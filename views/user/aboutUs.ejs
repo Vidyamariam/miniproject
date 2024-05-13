@@ -1,0 +1,265 @@
+<%- include('header') %>
+
+<style>
+
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        outline: none;
+      }
+      body {
+        width: 100%;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        font-family: "Bacasime Antique", serif;
+      }
+      .container {
+        width: 90%;
+        height: 100%;
+        max-width: 1170px;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        align-items: center;
+        grid-gap: 60px;
+        padding: 35px 0;
+      }
+      .contentLeft,
+      .contentRight {
+        width: 100%;
+      }
+      .contentLeft .row {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-gap: 10px;
+      }
+      .contentLeft .row .imgWrapper {
+        width: 100%;
+        height: 450px;
+        overflow: hidden;
+        border-radius: 10px;
+        cursor: pointer;
+        box-shadow: 5px 10px 10px rgba(0, 0, 0, 0.15);
+      }
+      .contentLeft .row .imgWrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        user-select: none;
+        transition: 0.3s ease;
+      }
+      .contentLeft .row .imgWrapper:hover img {
+        transform: scale(1.5);
+      }
+      .contentLeft .row .imgWrapper:nth-child(odd) {
+        transform: translateY(-20px);
+      }
+      .contentLeft .row .imgWrapper:nth-child(even) {
+        transform: translateY(20px);
+      }
+      .contentRight .content {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+      .contentRight .content h4 {
+        font-size: 22px;
+        font-weight: 400;
+        color: #d35400;
+      }
+      .contentRight .content h2 {
+        font-size: 40px;
+        color: #1e272e;
+      }
+      .contentRight .content p {
+        font-size: 16px;
+        color: #343434;
+        line-height: 28px;
+        padding-bottom: 10px;
+      }
+      .contentRight .content a {
+        display: inline-block;
+        text-decoration: none;
+        font-size: 16px;
+        letter-spacing: 1px;
+        padding: 13px 30px;
+        color: #fff;
+        background: #d35400;
+        border-radius: 8px;
+        user-select: none;
+      }
+      @media (max-width: 768px) {
+        .container {
+          grid-template-columns: 1fr;
+        }
+        .contentLeft .row {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .contentLeft .row .imgWrapper {
+          height: 150px;
+        }
+        .contentRight .content h4 {
+          font-size: 18px;
+        }
+        .contentRight .content h2 {
+          font-size: 30px;
+        }
+      }
+
+      header{
+        width: 100%;
+        height: auto;
+      }
+
+
+      /* Modal Styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a shadow */
+}
+
+/* Modal Header */
+.modal-content h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+/* Modal Close Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Media Query for Modal Content Width */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 90%;
+    }
+}
+
+
+</style>
+
+
+
+    <div class="container">
+      <div class="contentLeft">
+        <div class="row">
+          <div class="imgWrapper">
+            <img src="/img/user/aboutUs1.jpg" alt="" />
+          </div>
+          <div class="imgWrapper">
+            <img src="/img/user/aboutUs (3).jpg" alt="" />
+          </div>
+          <div class="imgWrapper">
+            <img src="/img/user/aboutUs (1).jpg" alt="" />
+          </div>
+          <div class="imgWrapper">
+            <img src="/img/user/aboutUs (2).jpg" alt="" />
+          </div>
+        </div>
+      </div>
+      <div class="contentRight">
+        <div class="content">
+          <h4>Welcome To Amoli Fam</h4>
+          <h2>Our Story</h2>
+          <p>
+            Amoli Jewels is a vibrant and dynamic jewelry brand that seamlessly
+            blends the allure of tradition with the chic trends of contemporary
+            fashion. Specializing initially in exquisite necklaces, Amoli Jewels
+            stands as a testament to timeless elegance and modern
+            sophistication. Crafted with precision and passion, each necklace
+            from Amoli Jewels is a masterpiece in its own right, reflecting the
+            brand's commitment to quality and craftsmanship. From intricate
+            designs inspired by age-old cultural motifs to sleek, minimalist
+            styles that embody the essence of modern aesthetics, every piece is
+            meticulously curated to appeal to the diverse tastes of its
+            clientele.
+
+           
+          </p>
+          <p>
+            Contact Us
+            Phone No- 9878678756
+            Email - amolijewels@gmail.com
+          </p>
+          <a href="#" id="readMoreBtn">Read More...</a>
+        </div>
+      </div>
+    </div>
+
+
+   <!-- Modal Structure -->
+<div id="myModal" class="modal">
+  <div class="modal-content">
+      <span class="close">&times;</span>
+      <p>
+        At Amoli Jewels, the focus extends beyond mere adornment; it encapsulates a narrative of heritage, individuality, and self-expression. Each necklace serves as a canvas for self-discovery, allowing wearers to exude confidence and grace with every step they take.
+
+While currently specializing in necklaces, Amoli Jewels harbors ambitious plans for expansion, with future collections poised to include an array of other ornaments such as rings, bangles, earrings, and more. This strategic vision reflects the brand's unwavering dedication to evolving alongside the evolving preferences of its discerning patrons, ensuring that Amoli Jewels remains at the forefront of the jewelry industry, both now and in the future.
+      </p>
+  </div>
+</div>
+
+<script>
+  // Get the modal
+  var modal = document.getElementById("myModal");
+
+  // Get the button that opens the modal
+  var btn = document.getElementById("readMoreBtn");
+
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("close")[0];
+
+  // When the user clicks the button, open the modal
+  btn.onclick = function() {
+      modal.style.display = "block";
+  }
+
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function() {
+      modal.style.display = "none";
+  }
+
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+      if (event.target == modal) {
+          modal.style.display = "none";
+      }
+  }
+</script>
+
+
+  </body>
+</html>

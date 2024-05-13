@@ -577,19 +577,21 @@ const getHome = async (req, res) => {
 }
 
 
-//POST
-// const home =async (req,res)=>{
 
-//     if (!req.session.user) {
-//         // If the user is not logged in, redirect to the login page
-//         res.redirect('/userlogin');
-//     } else {
+const aboutUs = (req,res)=> {
 
-//         const productList = await productsCollection.find();
-//         // If the user is logged in, render the home page
-//         res.render('user/home', {productList});
-//     }
-// }
+    try{
+
+        res.render("user/aboutUs");
+
+    }
+    catch (error) {
+        // Handle any errors that occur during database query or rendering
+        console.error('Error getting aboutus page:', error);
+        res.status(500).send('Internal Server Error');
+    }
+
+}
 
 
 
@@ -896,7 +898,8 @@ const checkReferralCode = async (req, res) => {
 }
 
 module.exports = {
-    login, loginpost, signupGet, signupPost, landing, getVerifyEmail, verifyEmailPost, getLogout, postLogout, getHome, resendOTP, allProducts, Ethnics, Contemporary, userFilterByCategory, getWallet, createReferral, checkReferralCode, forgotPassword, postForgotPassword, getverifyOtp, postverifyOtp, resendForgotOtp, getChangePassword, postChangePassword, passwordChangeSuccess
+    login, loginpost, signupGet, signupPost, landing, getVerifyEmail, verifyEmailPost, getLogout, postLogout, getHome, resendOTP, allProducts, Ethnics, Contemporary, userFilterByCategory, getWallet, createReferral, checkReferralCode, forgotPassword, postForgotPassword, getverifyOtp, postverifyOtp, resendForgotOtp, getChangePassword, postChangePassword, passwordChangeSuccess,
+    aboutUs
 }
 
 
