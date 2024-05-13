@@ -246,7 +246,7 @@ const salesFilter = async (req, res) => {
 const getUserManage = async (req, res) => {
   try {
       const page = parseInt(req.query.page) || 1; // Get page number from query parameter, default to 1 if not provided
-      const limit = 5; // Number of users per page
+      const limit = 10; // Number of users per page
       const skip = (page - 1) * limit; // Calculate the number of documents to skip
 
       const totalUsers = await userCollection.countDocuments(); // Get total number of users

@@ -13,6 +13,7 @@ const isblocked = async (req, res, next) => {
           if (userData && userData.isBlocked === false) {
               next();
           } else {
+                delete req.session.user
               res.redirect("/userlogin");
           }
       } else {
