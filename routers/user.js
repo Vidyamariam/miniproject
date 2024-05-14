@@ -34,11 +34,11 @@ router.get("/wishlist",isBlock.isblocked, wishlistController.getWishlist);
 router.get("/remove-wishlist/:productId",isBlock.isblocked, wishlistController.removeWishlist);
 router.get("/userFilterproducts",isBlock.isblocked ,userController.userFilterByCategory);
 router.get("/wallet",isBlock.isblocked ,userController.getWallet);
-router.get("/verify-email",isBlock.isblocked, userController.forgotPassword);
-router.get("/verifyOtp",isBlock.isblocked, userController.getverifyOtp);
-router.get("/update-password",isBlock.isblocked,userController.getChangePassword);
-router.get("/password-changed",isBlock.isblocked, userController.passwordChangeSuccess);
-router.get("/resendforgot",isBlock.isblocked, userController.resendForgotOtp);
+router.get("/verify-email", userController.forgotPassword);
+router.get("/verifyOtp", userController.getverifyOtp);
+router.get("/update-password",userController.getChangePassword);
+router.get("/password-changed", userController.passwordChangeSuccess);
+router.get("/resendforgot", userController.resendForgotOtp);
 router.get("/about-us",isBlock.isblocked, userController.aboutUs);
  
 
