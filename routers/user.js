@@ -42,7 +42,7 @@ router.get("/resendforgot", userController.resendForgotOtp);
 router.get("/about-us",isBlock.isblocked, userController.aboutUs);
  
 
-//POST METHODSs
+//POST METHODS
 router.post("/userlogin",userController.loginpost);
 router.post("/signup",userController.signupPost);
 router.post("/logout",userController.postLogout);

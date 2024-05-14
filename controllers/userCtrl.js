@@ -386,6 +386,7 @@ const getChangePassword = (req, res) => {
 const postChangePassword = async (req, res) => {
 
     const newPassword = req.body.password;
+    const confirmPassword = req.body.confirmpassword;
     console.log("newpassword in post change pw", newPassword);
 
     try {
@@ -393,6 +394,11 @@ const postChangePassword = async (req, res) => {
 
         if (!user) {
             return res.status(404).send("User not found");
+        }
+
+        if (newPassword !== confirmPassword) {
+            // Render the page with error message
+            return res.render('user/updatePassword', { errorMessage: "Passwords do not match" });
         }
 
         // Hash the new password
