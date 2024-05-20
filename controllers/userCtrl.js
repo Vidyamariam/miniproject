@@ -684,7 +684,7 @@ const Contemporary = async (req, res) => {
 
 
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 9;
 const allProducts = async (req, res) => {
    
     try{
